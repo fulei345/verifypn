@@ -13,8 +13,10 @@ make
 
 
 build/verifypn/bin:
-./verifypn-linux64 --xml-queries 1 -s BestFS ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
+./verifypn-linux64 -s BestFS --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
 
+-smc <runs><depth>:
+./verifypn-linux64 -smc 1000 100 --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
 
 options.cpp
 	- not a search strategy but something else entirely

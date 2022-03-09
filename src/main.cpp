@@ -147,6 +147,21 @@ int main(int argc, const char** argv) {
             outputNet(builder, options.unfolded_out_file);
         }
 
+        //-------------------------- SMC Simulation --------------------------//
+        if (options.smc){
+            if(options.trace != TraceLevel::None) {
+                std::cout << "\nSMC Simulation:" << std::endl;
+                std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
+                std::cout << "Trace:" << std::endl;
+            }
+            else {
+                std::cout << "\nSMC Simulation:" << std::endl;
+                std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
+            }
+            
+            return to_underlying(ReturnValue::SuccessCode);
+        };
+
         //----------------------- Query Simplification -----------------------//
         bool alldone = options.queryReductionTimeout > 0;
         PetriNetBuilder b2(builder);

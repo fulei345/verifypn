@@ -58,6 +58,9 @@ enum class LTLHeuristic {
 };
 struct options_t {
 //    bool outputtrace = false;
+    bool smc = false;
+    int smcruns = 100;
+    int smcdepth = 10;
     int kbound = 0;
     const char* modelfile = nullptr;
     const char* queryfile = nullptr;
