@@ -16,6 +16,44 @@ build/verifypn/bin:
 ./verifypn-linux64 --xml-queries 1 -s BestFS ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
 
 
+options.cpp
+	- not a search strategy but something else entirely
+	- --smc <runs>
+		- for n runs
+		- and x depth?
+	- +trace
+
+use successorgenerator::next
+	- when this returns
+	- select the returned markings with their probability (calc with their domination)
+	- assume 1 at first to implement
+	- provide statistics 
+		- in a/total runs
+			- success?
+			- success for each transition?
+
+*extend nets with domination on transitions
+	- parser
+	- xml stuff
+
+*extend gui
+	- add domination to gui
+	- translate this to xml
+	- provide statistics
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 TODO:
 add -SMCS as search option
 	- print something to test that it works
@@ -34,8 +72,13 @@ extend RDFSS as SMC
 	- in memory m/n variables?
 	- how?
 
-???
-	- ???
 
-profit
-	- profit
+./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test003/model.pnml ../../../test_models/tricky-test003/query.xml
+	- tricky3 does not use strategy:RDFS?
+	- test print in switch case not procd
+
+./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test001/model.pnml ../../../test_models/tricky-test001/query.xml
+	- but tricky1 does
+	- test print in switch case procd
+
+neither procs prints in pop/push from RDFS strategy?????????
