@@ -32,7 +32,7 @@ use successorgenerator::next
 			- success?
 			- success for each transition?
 
-*extend nets with domination on transitions
+extend nets with domination on transitions
 	- parser
 	- xml stuff
 
