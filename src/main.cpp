@@ -162,8 +162,10 @@ int main(int argc, const char** argv) {
                 initial_size += qm0[i];
             }
 
-            SMCSuccessorGenerator SGS(*qnet);
-            //SuccessorGenerator SG(*qnet);
+            // SMC::SMCSuccessorGenerator SGS(*qnet)?
+            // SMC::SMCSimulation()?
+            //SMCSuccessorGenerator SGS(*qnet);
+            SuccessorGenerator SG(*qnet);
 
             // bool SMCSimulation(Structures::State& write, uint32_t &tindex) {
             //     int m, n, current_depth = 0;
@@ -189,20 +191,20 @@ int main(int argc, const char** argv) {
             else {
                 for (int i = 0; i < options.smcruns; i++) {
                     int m, n, current_depth, count = 0;
-                    // uint32_t tindex = std::numeric_limits<uint32_t>::min();
-                    // //SG.next(state, tindex)
-                    // while (SG.next(state) && current_depth <= options.smcdepth) {
-                    //     //m = qm0[0].domination();
-                    //     m = 1;
-                    //     n = n + m;
-                    //     current_depth++;
-                    //     if (m/n <= rand()){
-                    //         SG._fire(*tindex);
-                    //         if (property == true){
-                    //             count++;
-                    //         }
-                    //     }
-                    // }
+                    uint32_t tindex = std::numeric_limits<uint32_t>::min();
+                    //SG.next(state, tindex)
+                    while (SG.next(state, tindex) && current_depth <= options.smcdepth) {
+                        //m = qm0[0].domination();
+                        m = 1;
+                        n = n + m;
+                        current_depth++;
+                        if (m/n <= rand()){
+                            SG._fire(*tindex);
+                            if (property == true){
+                                count++;
+                            }
+                        }
+                    }
                 }
                 std::cout << "\nSMC Simulation:" << std::endl;
                 std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
