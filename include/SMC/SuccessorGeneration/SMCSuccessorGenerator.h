@@ -1,6 +1,8 @@
 #include "PetriEngine/SuccessorGenerator.h"
+#include "PetriEngine/PetriNet.h"
+#include "PetriEngine/Structures/State.h"
 
-namespace PetriEngine{
+namespace SMC{
     class SMCSuccessorGenerator : public PetriEngine::SuccessorGenerator{
         public:
         SMCSuccessorGenerator(const PetriEngine::PetriNet *net);
