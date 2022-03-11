@@ -1,4 +1,4 @@
-sudo apt install build-essential cmake flex bison git brz librapidxml-dev 
+sudo apt install build-essential cmake flex bison git bzr librapidxml-dev 
 
 mkdir build
 cd build
@@ -42,37 +42,6 @@ extend nets with domination on transitions
 	- add domination to gui
 	- translate this to xml
 	- provide statistics
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-TODO:
-add -SMCS as search option
-	- print something to test that it works
-
-print something in RDFSS to see what is in "W"
-	- so we know something when we extend
-
-extend petri net transitions (edges?) with our weight
-	- so they are available when we extend
-
-we should probably learn how much strategy is in the scripts and how much is in the engine?
-	- ???
-
-extend RDFSS as SMC
-	- where do vector<> thing go?
-	- in memory m/n variables?
-	- how?
 
 
 ./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test003/model.pnml ../../../test_models/tricky-test003/query.xml
