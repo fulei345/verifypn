@@ -1,0 +1,4 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+add_library(SuccessorGeneration SMCSuccessorGenerator.cpp)
+target_link_libraries(SuccessorGeneration)

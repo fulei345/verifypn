@@ -1,0 +1,6 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+add_subdirectory(Simulation)
+add_subdirectory(SuccessorGeneration)
+
+target_link_libraries(Simulation SuccessorGeneration)
