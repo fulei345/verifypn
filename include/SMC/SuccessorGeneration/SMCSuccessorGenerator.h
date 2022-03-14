@@ -1,13 +1,14 @@
 #include "PetriEngine/SuccessorGenerator.h"
+#include "PetriEngine/Structures/State.h"
 
-namespace PetriEngine{
+namespace SMC{
+    using namespace PetriEngine;
     class SMCSuccessorGenerator : public PetriEngine::SuccessorGenerator{
         public:
         SMCSuccessorGenerator(const PetriEngine::PetriNet *net);
     
-        public:
         bool next(Structures::State& write, uint32_t &tindex) {
-            bool has_suc = PetriEngine::SuccessorGenerator::next(write);
+            bool has_suc = PetriEngine::SuccessorGenerator::next(write, tindex);
             // do thing with tindex?
             return has_suc;
         }

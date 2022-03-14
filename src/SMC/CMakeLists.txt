@@ -5,4 +5,4 @@ add_subdirectory(SuccessorGeneration)
 
 add_library(SMC ${HEADER_FILES} Simulation SuccessorGeneration)
 
-target_link_libraries(SMC PUBLIC Simulation SMCSuccessorGeneration)
+target_link_libraries(SMC PUBLIC SMCSimulation SMCSuccessorGeneration)

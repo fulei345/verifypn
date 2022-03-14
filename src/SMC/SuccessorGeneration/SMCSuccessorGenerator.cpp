@@ -5,5 +5,5 @@ namespace SMC{
     using namespace PetriEngine;
 
     SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet *net)
-    : PetriEngine::SuccessorGenerator(*net) { }
+    : PetriEngine::SuccessorGenerator(*net){}
 }
