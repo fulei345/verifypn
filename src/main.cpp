@@ -156,17 +156,16 @@ int main(int argc, const char** argv) {
 
             std::unique_ptr<PetriNet> qnet(b2.makePetriNet(false));
             std::unique_ptr<MarkVal[]> qm0(qnet->makeInitialMarking());
-            Structures::State state;
-            state.setMarking(qm0.get());
+            //Structures::State state;
+            //state.setMarking(qm0.get());
             for(size_t i = 0; i < qnet->numberOfPlaces(); ++i) {
                 initial_size += qm0[i];
             }
 
-            // SMC::SMCSuccessorGenerator SGS(*qnet)?
-            // SMC::SMCSimulation()?
-            //SMCSuccessorGenerator SGS(*qnet);
-            SuccessorGenerator SG(*qnet);
+            //#include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
+            //SMC::SMCSuccessorGenerator SGS(*qnet);
 
+            SuccessorGenerator SG(*qnet);
             // bool SMCSimulation(Structures::State& write, uint32_t &tindex) {
             //     int m, n, current_depth = 0;
             //     while (SG.next(write, tindex) && current_depth < options.smcdepth){

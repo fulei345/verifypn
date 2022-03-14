@@ -1,4 +1,4 @@
-#include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
+#include "SMC/SMCSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
 namespace SMC{
