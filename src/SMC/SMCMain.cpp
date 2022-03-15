@@ -55,7 +55,7 @@ namespace SMC {
 
             // Check if there is a transition to fire
             if (tcurrent != max) {
-                SMCSG._fire(write, tindex);
+                SMCSG.fire(write, tcurrent);
             } else {
                 return false;
             }
