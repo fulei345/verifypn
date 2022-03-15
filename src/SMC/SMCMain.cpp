@@ -36,7 +36,7 @@ namespace SMC {
         // Fire transitions untill property is satisfied, deadlock, or max depth is reached
         while (current_depth <= depth) {            
             // Check if state satisfies property here
-            if (rand()/RAND_MAX < 0.6) {
+            if (false) {
                 return true;
             }
 
@@ -55,8 +55,7 @@ namespace SMC {
 
             // Check if there is a transition to fire
             if (tcurrent != max) {
-                // Then SMCSG._fire
-                return true;
+                SMCSG._fire(write, tindex);
             } else {
                 return false;
             }
