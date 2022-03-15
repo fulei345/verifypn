@@ -154,7 +154,17 @@ int main(int argc, const char** argv) {
 
             double probability = SMC::SMCMain(net.get(), options);
             std::cout << "\nSatisfied with probability of " << probability << std::endl;
-
+            
+            if(options.trace != TraceLevel::None) {
+                std::cout << "\nSMC Simulation:" << std::endl;
+                std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
+                std::cout << "Trace:" << std::endl;
+            }
+            else {
+                std::cout << "\nSMC Simulation:" << std::endl;
+                std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
+            }
+            
             return to_underlying(ReturnValue::SuccessCode);
         }
 
