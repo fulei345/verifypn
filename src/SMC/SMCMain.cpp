@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdlib.h>
 #include "SMC/SMCMain.h"
 
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
@@ -25,45 +26,58 @@
 using namespace PetriEngine;
 
 namespace SMC {
-    bool Simulator(PetriNet net, MarkVal write){
-        SMC::SMCSuccessorGenerator sgs(net);
+    bool SMCRun(const PetriNet *net, int depth){
+        
+        SMC::SMCSuccessorGenerator SMCSG(*net);
+        Structures::State write(net->makeInitialMarking());
 
-        uint32_t tindex = std::numeric_limits<uint32_t>::min();
+        int current_depth = 0;
+        uint32_t max = std::numeric_limits<uint32_t>::max();
+        // Fire transitions untill property is satisfied, deadlock, or max depth is reached
+        while (current_depth <= depth) {            
+            // Check if state satisfies property here
+            if (rand()/RAND_MAX < 0.6) {
+                return true;
+            }
 
-        MarkVal test = *write.get();
-        Structures::State state(&test);
+            int n = 1;
+            uint32_t tcurrent;
+            uint32_t tindex = std::numeric_limits<uint32_t>::min();
 
-        bool test = sgs.next(state, tindex);
-        return test;
+            // Choosing transition to fire with uniform probabilities
+            while (SMCSG.next(write, tindex)) {
+                float randomNum = rand()/RAND_MAX;
+                if (randomNum <= 1./((float)n)) {
+                    tcurrent = tindex;
+                }
+                n++;
+            }
 
-        // pseudo alg for smc simulator
-        // int m, n, current_depth = 0;
-        // while (SG.next(write, tindex) && current_depth < options.smcdepth){
-        //     //m = *tindex.Domination();
-        //     m = 1;
-        //     n = n + m;
-        //     if (m/n =< random(1)){
-        //         SG.fire(tindex);
-        //         if (property == yes){
-        //             return true;
-        //         }
-        //     }
-        // }
-        // return false;
-    }
-    double SMCMain(const PetriNet *net,
-                         options_t &options){
-            
-        auto qm0 = std::unique_ptr<MarkVal[]> (net->makeInitialMarking());
+            // Check if there is a transition to fire
+            if (tcurrent != max) {
+                // Then SMCSG._fire
+                return true;
+            } else {
+                return false;
+            }
 
-
-        for (size_t i = 0; i < options.smcruns; i++)
-        {
-            //if( Simulator(*net,write,tindex)) {
-            //  succ_count++;
-            //}
+            current_depth++;
         }
-        // return succ_count/options.smcruns
-        return 0.0;
+        return false;
+    }
+
+    double SMCMain(const PetriNet *net,
+                         options_t &options) {
+
+        int total_runs = 0;
+        int successful_runs = 0;
+
+        for (int i = 0; i < options.smcruns; i++) {
+            if (SMCRun(net, options.smcdepth)) {
+                successful_runs++;
+            }
+            total_runs++;
+        }
+        return ((double)successful_runs)/((double)total_runs);
     }
 }
