@@ -1,5 +1,5 @@
 /* Copyright (C) 2020  Emil F. L. Aagreen <emil.fulei@gmail.com>,
- *                     Frederik A. Jensen <frederik@arnfeldt-jensen.com>,
+ *                     Frederik A. Jensen <frederik@arnfeldt-jensen.dk>,
  *                     Mikkel T. Jensen <mikjen97@gmail.com>
  *                     Rasmus-Emil N. Herum <rasmus.emil.herum@gmail.com>
  *                     Tobias B. S. Hansen <tbsh18@student.aau.dk>
