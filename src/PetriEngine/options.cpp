@@ -113,6 +113,7 @@ void printHelp() {
         "for weighted P/T Petri nets extended with inhibitor arcs.\n"
         "\n"
         "Options:\n"
+        "  -smc <number of runs><depth>         Simulate a number of runs, with depth bound\n"
         "  -k, --k-bound <number of tokens>     Token bound, 0 to ignore (default)\n"
         "  -t, --trace                          Provide XML-trace to stderr\n"
         "  -s, --search-strategy <strategy>     Search strategy:\n"
@@ -230,6 +231,18 @@ bool options_t::parse(int argc, const char** argv) {
             if (sscanf(argv[++i], "%d", &kbound) != 1 || kbound < 0) {
                 throw base_error("Argument Error: Invalid number of tokens", std::quoted(argv[i]));
             }
+        } 
+        else if (std::strcmp(argv[i], "-smc") == 0) {
+            if (i == argc - 1) {
+                throw base_error("Missing numbers after ", std::quoted(argv[i]));
+            }
+            if (sscanf(argv[++i], "%d", &smcruns) != 1 || smcruns < 0) {
+                throw base_error("Argument Error: Invalid number of runs", std::quoted(argv[i]));
+            }
+            if (sscanf(argv[++i], "%d", &smcdepth) != 1 || smcdepth < 0) {
+                throw base_error("Argument Error: Invalid depth", std::quoted(argv[i]));
+            }
+            smc = true;
         } else if (std::strcmp(argv[i], "-s") == 0 || std::strcmp(argv[i], "--search-strategy") == 0) {
             if (i == argc - 1) {
                 throw base_error("Missing search strategy after ", std::quoted(argv[i]));

@@ -1,0 +1,55 @@
+sudo apt install build-essential cmake flex bison git bzr librapidxml-dev 
+
+mkdir build
+cd build
+
+compilation:
+cmake .. -DVERIFYPN_Static=ON -DVERIFYPN_MC_Simplification=OFF
+make
+
+for mcc:
+cmake .. -DVERIFYPN_Static=OFF -DVERIFYPN_MC_Simplification=ON
+make
+
+
+build/verifypn/bin:
+./verifypn-linux64 -s BestFS --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
+
+-smc <runs><depth>:
+./verifypn-linux64 -smc 1000 100 --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
+
+options.cpp
+	- not a search strategy but something else entirely
+	- --smc <runs>
+		- for n runs
+		- and x depth?
+	- +trace
+
+use successorgenerator::next
+	- when this returns
+	- select the returned markings with their probability (calc with their domination)
+	- assume 1 at first to implement
+	- provide statistics 
+		- in a/total runs
+			- success?
+			- success for each transition?
+
+extend nets with domination on transitions
+	- parser
+	- xml stuff
+
+*extend gui
+	- add domination to gui
+	- translate this to xml
+	- provide statistics
+
+
+./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test003/model.pnml ../../../test_models/tricky-test003/query.xml
+	- tricky3 does not use strategy:RDFS?
+	- test print in switch case not procd
+
+./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test001/model.pnml ../../../test_models/tricky-test001/query.xml
+	- but tricky1 does
+	- test print in switch case procd
+
+neither procs prints in pop/push from RDFS strategy?????????
