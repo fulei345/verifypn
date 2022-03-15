@@ -163,12 +163,17 @@ int main(int argc, const char** argv) {
             }
             // dummy "write" state and tindex pointers?
             Structures::State state;
-            state.setMarking(qm0.get());
+
+            //double free SIGABRT malloc auto delete when pointer deref or .get()???
+            //because unique_ptr -> default_delete -> int_free -> malloc???
+            //state.setMarking(qm0.get());
+
             uint32_t tindex = std::numeric_limits<uint32_t>::min();
 
             // our first succ gen now with public next?
             SMC::SMCSuccessorGenerator sgs(*qnet);
-            cout << sgs.next(state, tindex) << endl;
+            // cant use next when state is empty
+            //bool test = sgs.next(state, tindex);
 
             // pseudo alg for smc simulator
             // bool SMCSimulation(Structures::State& write, uint32_t &tindex) {
