@@ -31,5 +31,9 @@ namespace SMC{
             bool has_suc = SuccessorGenerator::next(write, tindex);
             return has_suc;
         }
+
+        void fire(Structures::State &write, uint32_t tindex){
+            _fire(write, tindex);
+        }
     };
 }
