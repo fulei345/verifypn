@@ -5,7 +5,7 @@ namespace SMC{
     using namespace PetriEngine;
     class SMCSuccessorGenerator : public PetriEngine::SuccessorGenerator{
         public:
-        SMCSuccessorGenerator(const PetriEngine::PetriNet *net);
+        SMCSuccessorGenerator(const PetriNet &net);
     
         bool next(Structures::State& write, uint32_t &tindex) {
             bool has_suc = PetriEngine::SuccessorGenerator::next(write, tindex);

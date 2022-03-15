@@ -47,6 +47,7 @@
 
 #include "VerifyPN.h"
 #include "PetriEngine/Synthesis/SimpleSynthesis.h"
+#include "SMC/SMCSuccessorGenerator.h"
 
 using namespace PetriEngine;
 using namespace PetriEngine::PQL;
@@ -161,11 +162,10 @@ int main(int argc, const char** argv) {
             for(size_t i = 0; i < qnet->numberOfPlaces(); ++i) {
                 initial_size += qm0[i];
             }
-
-            //#include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
-            //SMC::SMCSuccessorGenerator SGS(*qnet);
-
-            SuccessorGenerator SG(*qnet);
+            
+            SMC::SMCSuccessorGenerator sgs(*qnet);
+            //SuccessorGenerator SG(*qnet);
+            
             // bool SMCSimulation(Structures::State& write, uint32_t &tindex) {
             //     int m, n, current_depth = 0;
             //     while (SG.next(write, tindex) && current_depth < options.smcdepth){
