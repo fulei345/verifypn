@@ -1,7 +1,7 @@
 /* Copyright (C) 2020  Emil F. L. Aagreen <emil.fulei@gmail.com>,
  *                     Frederik A. Jensen <frederik@arnfeldt-jensen.com>,
  *                     Mikkel T. Jensen <mikjen97@gmail.com>
- *                     Rasmus-Emil N. Herum <>
+ *                     Rasmus-Emil N. Herum <rasmus.emil.herum@gmail.com>
  *                     Tobias B. S. Hansen <tbsh18@student.aau.dk>
  *
  * This program is free software: you can redistribute it and/or modify
