@@ -47,7 +47,6 @@
 
 #include "VerifyPN.h"
 #include "PetriEngine/Synthesis/SimpleSynthesis.h"
-#include "SMC/SMCSuccessorGenerator.h"
 
 using namespace PetriEngine;
 using namespace PetriEngine::PQL;
@@ -151,74 +150,11 @@ int main(int argc, const char** argv) {
         //-------------------------- SMC Simulation --------------------------//
         if (options.smc){
             PetriNetBuilder b2(builder);
-            std::set<size_t> initial_marking_solved;
-            size_t initial_size = 0;
-            ResultPrinter p2(&b2, &options, querynames);
+            auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
 
-            std::unique_ptr<PetriNet> qnet(b2.makePetriNet(false));
-            std::unique_ptr<MarkVal[]> qm0(qnet->makeInitialMarking());
-            
-            for(size_t i = 0; i < qnet->numberOfPlaces(); ++i) {
-                initial_size += qm0[i];
-            }
-            // dummy "write" state and tindex pointers?
-            Structures::State state;
+            double probability = SMC::SMCMain(net.get(), options);
+            std::cout << "\nSatisfied with probability of " << probability << std::endl;
 
-            // double free SIGABRT malloc auto delete when pointer deref or .get()???
-            // because unique_ptr -> default_delete -> int_free -> malloc???
-            //state.setMarking(qm0.get());
-
-            uint32_t tindex = std::numeric_limits<uint32_t>::min();
-
-            // our first succ gen now with public next?
-            SMC::SMCSuccessorGenerator sgs(*qnet);
-            
-            // cant use next when state is empty
-            //bool test = sgs.next(state, tindex);
-
-            // pseudo alg for smc simulator
-            // bool SMCSimulation(Structures::State& write, uint32_t &tindex) {
-            //     int m, n, current_depth = 0;
-            //     while (SG.next(write, tindex) && current_depth < options.smcdepth){
-            //         //m = *tindex.Domination();
-            //         m = 1;
-            //         n = n + m;
-            //         if (m/n =< random(1)){
-            //             SG.fire(tindex);
-            //             if (property == yes){
-            //                 return true;
-            //             }
-            //         }
-            //     }
-            //     return false;
-            // }
-
-            if(options.trace != TraceLevel::None) {
-                std::cout << "\nSMC Simulation:" << std::endl;
-                std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
-                std::cout << "Trace:" << std::endl;
-            }
-            else {
-                // for (int i = 0; i < options.smcruns; i++) {
-                //     int m, n, current_depth, count = 0;
-                //     uint32_t tindex = std::numeric_limits<uint32_t>::min();
-                //     //SG.next(state, tindex)
-                //     while (SG.next(state, tindex) && current_depth <= options.smcdepth) {
-                //         //m = qm0[0].domination();
-                //         m = 1;
-                //         n = n + m;
-                //         current_depth++;
-                //         if (m/n <= rand()){
-                //             SG.fire(*tindex);
-                //             if (property == true){
-                //                 count++;
-                //             }
-                //         }
-                //     }
-                // }
-                std::cout << "\nSMC Simulation:" << std::endl;
-                std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
-            }
             return to_underlying(ReturnValue::SuccessCode);
         }
 
