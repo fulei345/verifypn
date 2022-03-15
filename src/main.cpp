@@ -157,15 +157,20 @@ int main(int argc, const char** argv) {
 
             std::unique_ptr<PetriNet> qnet(b2.makePetriNet(false));
             std::unique_ptr<MarkVal[]> qm0(qnet->makeInitialMarking());
-            //Structures::State state;
-            //state.setMarking(qm0.get());
+            
             for(size_t i = 0; i < qnet->numberOfPlaces(); ++i) {
                 initial_size += qm0[i];
             }
-            
+            // dummy "write" state and tindex pointers?
+            Structures::State state;
+            state.setMarking(qm0.get());
+            uint32_t tindex = std::numeric_limits<uint32_t>::min();
+
+            // our first succ gen now with public next?
             SMC::SMCSuccessorGenerator sgs(*qnet);
-            //SuccessorGenerator SG(*qnet);
-            
+            cout << sgs.next(state, tindex) << endl;
+
+            // pseudo alg for smc simulator
             // bool SMCSimulation(Structures::State& write, uint32_t &tindex) {
             //     int m, n, current_depth = 0;
             //     while (SG.next(write, tindex) && current_depth < options.smcdepth){
