@@ -43,13 +43,7 @@ extend nets with domination on transitions
 	- translate this to xml
 	- provide statistics
 
-
-./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test003/model.pnml ../../../test_models/tricky-test003/query.xml
-	- tricky3 does not use strategy:RDFS?
-	- test print in switch case not procd
-
-./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test001/model.pnml ../../../test_models/tricky-test001/query.xml
-	- but tricky1 does
-	- test print in switch case procd
-
-neither procs prints in pop/push from RDFS strategy?????????
+-smc 10 10 --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
+	- runs
+-smc 10 10 --xml-queries 1 ../../../test_models/tricky-test002/model.pnml ../../../test_models/tricky-test002/query.xml
+	- segfault?

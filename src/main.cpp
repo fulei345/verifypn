@@ -153,7 +153,7 @@ int main(int argc, const char** argv) {
             auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
 
             double probability = SMC::SMCMain(net.get(), options);
-            std::cout << "\nSatisfied with probability of " << probability << std::endl;
+            std::cout << "\nSatisfied with " << probability << "% probability." << std::endl;
             
             if(options.trace != TraceLevel::None) {
                 std::cout << "\nSMC Simulation:" << std::endl;
