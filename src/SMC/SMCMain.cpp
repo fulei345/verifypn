@@ -68,7 +68,7 @@ namespace SMC {
                 n++;
             }
             // Check if there is a transition to fire
-            if (tcurrent != max && tcurrent > 1) {
+            if (tcurrent != max) {
                 std::cout << "tcurrent != max, tcurrent: " << tcurrent << std::endl;
                 sgen.fire(write, tcurrent);
                 return true;
