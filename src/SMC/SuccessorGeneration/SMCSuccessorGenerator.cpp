@@ -39,23 +39,25 @@ namespace SMC{
                     tindex = _net.placeToPtrs()[_suc_pcounter];
                 }
                 uint32_t last = _net.placeToPtrs()[_suc_pcounter + 1];
-                std::cout << "last: " << last << std::endl;
                 for (; tindex != last; ++tindex) {
+                    std::cout << "TOP: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
                     if (!checkPreset(tindex)){
                         continue;
                     }
                     else {
                         double randomNum = (double)rand()/RAND_MAX;
-                        if (randomNum <= 1./((double)n++)) {
+                        if (randomNum <= 1./((double)n)) {
                             tcurrent = tindex;
                         }
-
-                        if(tindex == last){
+                        if(tindex == last-1){
+                            std::cout << "FIRE: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
                             _fire(write, tcurrent);
                             ++tindex;
+                            // check whether property from query holds before returning true?
                             return true;
                         }
                     }
+                    n++;
                 }
                 tindex = std::numeric_limits<uint32_t>::max();
             }

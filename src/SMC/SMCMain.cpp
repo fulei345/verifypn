@@ -53,10 +53,13 @@ namespace SMC {
         for (int i = 0; i < options.smcruns; i++) {
             if (SMCRun(sgen, net, options.smcdepth)) {
                 successful_runs++;
+                std::cout << "run " << total_runs+1 << "/" << options.smcruns << " finished successfully.\n" << std::endl;
             }
-            std::cout << "run " << total_runs << " finished.\n" << std::endl;
+            else {
+                std::cout << "run " << total_runs+1 << "/" << options.smcruns << " finished.\n" << std::endl;
+            }
             total_runs++;
         }
-        return ((double)successful_runs)/((double)total_runs);
+        return ((double)successful_runs)/((double)total_runs)*100;
     }
 }
