@@ -25,7 +25,7 @@ namespace SMC{
     using namespace PetriEngine;
 
     SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet &net)
-    : SuccessorGenerator(net){};
+    : SuccessorGenerator(net){}
 
     bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex) {
         _parent = &write;
