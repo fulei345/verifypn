@@ -27,10 +27,12 @@ namespace SMC{
         public:
         SMCSuccessorGenerator(const PetriNet &net);
     
-        bool next(Structures::State &write, uint32_t &tindex) {
-            bool has_suc = SuccessorGenerator::next(write, tindex);
-            return has_suc;
-        }
+        // bool next(Structures::State &write, uint32_t &tindex) {
+        //     bool has_suc = next(write, tindex);
+        //     return has_suc;
+        // }
+
+        bool next(Structures::State &write, uint32_t &tindex);
 
         void fire(Structures::State &write, uint32_t tindex){
             _fire(write, tindex);

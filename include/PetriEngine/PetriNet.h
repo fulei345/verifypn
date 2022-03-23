@@ -71,6 +71,9 @@ namespace PetriEngine {
         uint32_t numberOfTransitions() const {
             return _ntransitions;
         }
+        const std::vector<uint32_t> placeToPtrs() const{
+            return _placeToPtrs;
+        }
 
         uint32_t numberOfPlaces() const {
             return _nplaces;

@@ -25,5 +25,42 @@ namespace SMC{
     using namespace PetriEngine;
 
     SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet &net)
-    : SuccessorGenerator(net){}
+    : SuccessorGenerator(net){};
+
+    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex) {
+        _parent = &write;
+        _suc_pcounter = 0;
+        u_int32_t tcurrent = 0;
+        int n = 0;
+        for (; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
+            // orphans are currently under "place 0" as a special case
+            if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0) {
+                if (tindex == std::numeric_limits<uint32_t>::max()) {
+                    tindex = _net.placeToPtrs()[_suc_pcounter];
+                }
+                uint32_t last = _net.placeToPtrs()[_suc_pcounter + 1];
+                std::cout << "last: " << last << std::endl;
+                for (; tindex != last; ++tindex) {
+                    if (!checkPreset(tindex)){
+                        continue;
+                    }
+                    else {
+                        double randomNum = (double)rand()/RAND_MAX;
+                        if (randomNum <= 1./((double)n++)) {
+                            tcurrent = tindex;
+                        }
+
+                        if(tindex == last){
+                            _fire(write, tcurrent);
+                            ++tindex;
+                            return true;
+                        }
+                    }
+                }
+                tindex = std::numeric_limits<uint32_t>::max();
+            }
+            tindex = std::numeric_limits<uint32_t>::max();
+        }
+        return false;
+    }
 }
