@@ -40,7 +40,9 @@ namespace SMC {
         int n_size = net->numberOfPlaces();
         std::cout << "size: " << n_size << std::endl;
         std::cout << "initial marking: " << *write.marking() << "\n" << std::endl;
-        return sgen.next(write, tindex);
+        while(sgen.next(write, tindex)){}
+        std::cout << "final marking: " << *write.marking() << ", tindex: " << tindex << std::endl;
+        return true;
     }
 
     double SMCMain(const PetriNet *net,

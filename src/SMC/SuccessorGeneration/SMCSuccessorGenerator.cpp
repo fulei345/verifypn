@@ -31,7 +31,8 @@ namespace SMC{
         _parent = &write;
         _suc_pcounter = 0;
         u_int32_t tcurrent = 0;
-        int n = 0;
+        tindex = 0;
+        n = 0;
         for (; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
             // orphans are currently under "place 0" as a special case
             if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0) {
@@ -39,7 +40,7 @@ namespace SMC{
                     tindex = _net.placeToPtrs()[_suc_pcounter];
                 }
                 uint32_t last = _net.placeToPtrs()[_suc_pcounter + 1];
-                for (; tindex != last; ++tindex) {
+                for (; tindex < last; ++tindex) {
                     std::cout << "TOP: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
                     if (!checkPreset(tindex)){
                         continue;
@@ -49,11 +50,10 @@ namespace SMC{
                         if (randomNum <= 1./((double)n)) {
                             tcurrent = tindex;
                         }
+                        ++tindex;
                         if(tindex == last-1){
                             std::cout << "FIRE: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
                             _fire(write, tcurrent);
-                            ++tindex;
-                            // check whether property from query holds before returning true?
                             return true;
                         }
                     }
