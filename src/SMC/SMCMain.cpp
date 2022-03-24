@@ -29,7 +29,7 @@ namespace SMC {
     bool SMCRun(SMCSuccessorGenerator& sgen, const PetriNet *net, int max_depth){
 
         int current_depth = 0;
-        uint32_t max, tcurrent = std::numeric_limits<uint32_t>::max();
+        uint32_t max = std::numeric_limits<uint32_t>::max();
         uint32_t tindex = 0;
 
 
@@ -40,9 +40,13 @@ namespace SMC {
         int n_size = net->numberOfPlaces();
         std::cout << "size: " << n_size << std::endl;
         std::cout << "initial marking: " << *write.marking() << "\n" << std::endl;
-        while(sgen.next(write, tindex)){}
+        while(sgen.next(write, tindex) && current_depth <= max_depth){current_depth++;}
         std::cout << "final marking: " << *write.marking() << ", tindex: " << tindex << std::endl;
+        if (tindex == max){
+            return false;
+        }
         return true;
+        
     }
 
     double SMCMain(const PetriNet *net,
@@ -62,6 +66,6 @@ namespace SMC {
             }
             total_runs++;
         }
-        return ((double)successful_runs)/((double)total_runs)*100;
+        return (((double)successful_runs)/((double)total_runs))*100;
     }
 }

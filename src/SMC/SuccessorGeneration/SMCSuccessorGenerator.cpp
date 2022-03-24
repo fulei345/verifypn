@@ -31,6 +31,7 @@ namespace SMC{
         _parent = &write;
         _suc_pcounter = 0;
         u_int32_t tcurrent = 0;
+
         tindex = 0;
         n = 0;
         for (; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
@@ -51,7 +52,7 @@ namespace SMC{
                             tcurrent = tindex;
                         }
                         ++tindex;
-                        if(tindex == last-1){
+                        if(tindex == last){
                             std::cout << "FIRE: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
                             _fire(write, tcurrent);
                             return true;
@@ -59,7 +60,6 @@ namespace SMC{
                     }
                     n++;
                 }
-                tindex = std::numeric_limits<uint32_t>::max();
             }
             tindex = std::numeric_limits<uint32_t>::max();
         }
