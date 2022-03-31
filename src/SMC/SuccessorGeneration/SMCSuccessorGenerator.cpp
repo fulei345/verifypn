@@ -28,12 +28,12 @@ namespace SMC{
     : SuccessorGenerator(net){}
 
     bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex) {
+        
         _parent = &write;
-        _suc_pcounter = 0;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
         n = 0;
 
-        for (; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
+        for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
             // orphans are currently under "place 0" as a special case
             if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0) {
                 tindex = _net.placeToPtrs()[_suc_pcounter];
@@ -41,12 +41,7 @@ namespace SMC{
                 for (; tindex < last; ++tindex) {
                     std::cout << "TOP: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
                     if (!checkPreset(tindex)){
-
                         std::cout << "continue tindex/last: " << tindex << "/" << last << std::endl;
-                        if (tindex == last-1){
-                            tindex = std::numeric_limits<uint32_t>::max();
-                            return false;
-                        }
                         continue;
                     }
                     else {
