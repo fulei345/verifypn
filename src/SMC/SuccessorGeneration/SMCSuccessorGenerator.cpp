@@ -31,7 +31,7 @@ namespace SMC{
         
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
-        n = 0;
+        int n = 0;
 
         for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
             // orphans are currently under "place 0" as a special case

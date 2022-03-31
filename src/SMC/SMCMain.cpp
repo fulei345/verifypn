@@ -60,6 +60,7 @@ namespace SMC {
             //    std::cout << "test eval" << std::endl;
             //    return true;
             // }
+            current_depth++;
         }
         std::cout << "final marking: " << *write.marking() << ", tindex: " << tindex << std::endl;
         std::cout << "depth: " << current_depth << std::endl;
