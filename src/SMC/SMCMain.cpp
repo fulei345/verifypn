@@ -36,7 +36,7 @@ namespace SMC {
 
         int current_depth = 0;
         uint32_t max = std::numeric_limits<uint32_t>::max();
-        uint32_t tindex = std::numeric_limits<uint32_t>::max();
+        uint32_t tindex = 0;
 
 
         Structures::State write(net->makeInitialMarking());
