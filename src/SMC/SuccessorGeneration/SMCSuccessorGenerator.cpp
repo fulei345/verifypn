@@ -31,9 +31,7 @@ namespace SMC{
         _parent = &write;
         _suc_pcounter = 0;
         u_int32_t tcurrent = 0;
-
-        tindex = 0;
-        n = 0;
+        n = 1;
         for (; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
             // orphans are currently under "place 0" as a special case
             if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0) {
@@ -44,22 +42,28 @@ namespace SMC{
                 for (; tindex < last; ++tindex) {
                     std::cout << "TOP: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
                     if (!checkPreset(tindex)){
+                        std::cout << "continue tindex/last: " << tindex << "/" << last << std::endl;
                         continue;
                     }
                     else {
                         double randomNum = (double)rand()/RAND_MAX;
+                        // TODO non-uniform m/(double)n
                         if (randomNum <= 1./((double)n)) {
+                            std::cout << "randomNum, n: " << randomNum << ", " << n << ", 1/n: " << (double)(1./((double)n)) << ", tcurrent/tindex/last " << tcurrent << "/" << tindex << "/" << last << std::endl;
                             tcurrent = tindex;
+                            return true;
                         }
-                        ++tindex;
                         if(tindex == last){
                             std::cout << "FIRE: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
                             _fire(write, tcurrent);
+                            ++tindex;
                             return true;
                         }
+                        // TODO non-uniform n+=m
+                        n++;
                     }
-                    n++;
                 }
+                tindex = std::numeric_limits<uint32_t>::max();
             }
             tindex = std::numeric_limits<uint32_t>::max();
         }

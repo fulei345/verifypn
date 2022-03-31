@@ -24,5 +24,6 @@
 
 namespace SMC{
     double SMCMain(const PetriEngine::PetriNet *net,
-                         options_t &options);
+                         options_t &options,
+                         std::vector<std::shared_ptr<PetriEngine::PQL::Condition>> &queries);
 }

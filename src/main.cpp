@@ -152,7 +152,7 @@ int main(int argc, const char** argv) {
             PetriNetBuilder b2(builder);
             auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
 
-            double probability = SMC::SMCMain(net.get(), options);
+            double probability = SMC::SMCMain(net.get(), options, queries);
             std::cout << "\nSatisfied with " << probability << "% probability." << std::endl;
 
             std::cout << "\nSMC Simulation:" << std::endl;

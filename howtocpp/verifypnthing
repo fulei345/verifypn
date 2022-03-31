@@ -18,14 +18,14 @@ build/verifypn/bin:
 -smc <runs><depth>:
 ./verifypn-linux64 -smc 1000 100 --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
 
-options.cpp
+@@@@@@options.cpp
 	- not a search strategy but something else entirely
 	- --smc <runs>
 		- for n runs
 		- and x depth?
 	- +trace
 
-use successorgenerator::next
+@@@@@@use successorgenerator::next
 	- when this returns
 	- select the returned markings with their probability (calc with their domination)
 	- assume 1 at first to implement
@@ -43,41 +43,8 @@ extend nets with domination on transitions
 	- translate this to xml
 	- provide statistics
 
+// simple-test001/query.xml is reachability of final state. 
 -smc 10 10 --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
-	- runs (but not with fire)
-	size: 3
-	initial marking: 1
 
-	c_depth: 0
-	tindex:0, checkpreset: 1, write: 1
-	fire tid: 0
-	current t: 0, next t: 1
-	tcurrent != max, tcurrent: 1
-	fire tid: 1
-
-	void PetriEngine::SuccessorGenerator::_fire(PetriEngine::Structures::State&, uint32_t):	Assertion `checkPreset(tid)' failed.
-	Program received signal SIGABRT, Aborted.
-
-
--------------------------------
 -smc 10 10 --xml-queries 1 ../../../test_models/tricky-test001/model.pnml ../../../test_models/tricky-test001/query.xml
-	- segfault (even without fire)
-	size: 7
-	initial marking: 0
-	
-	c_depth: 0
-	tindex:0, checkpreset: 0, write: 0
-	fire tid: 1
-	current t: 0, next t: 2
-	fire tid: 2
-	current t: 2, next t: 3
-	fire tid: 3
-	fire tid: 4
-	fire tid: 6
-	fire tid: 7
 
-	Program received signal SIGSEGV, Segmentation fault.
-
-	PetriEngine::SuccessorGenerator::producePostset (this=0x7fffffffc4f0, write=..., t=7)
-    at src/PetriEngine/SuccessorGenerator.cpp:85
-		- size_t n = write.marking()[_net._invariants[finv].place];
