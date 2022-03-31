@@ -36,7 +36,7 @@ namespace SMC {
 
         int current_depth = 0;
         uint32_t max = std::numeric_limits<uint32_t>::max();
-        uint32_t tindex = std::numeric_limits<uint32_t>::max();
+        uint32_t tindex = 0;
 
 
         Structures::State write(net->makeInitialMarking());
@@ -48,18 +48,18 @@ namespace SMC {
         std::cout << "initial marking: " << *write.marking() << std::endl;
 
         std::cout << "query: ";
-        queries[0].get()->toString(std::cout);
+        queries[0].get()->toString();
         std::cout << "\nisReach?: " << (isReachability(queries[0]) ? "True" : "False") << std::endl;
         std::cout << std::endl;
 
         while(sgen.next(write, tindex) && current_depth <= max_depth){
             // simply check whether query is true for each place visited?
-            PQL::EvaluationContext ec(write.marking(), net);
-            if(PQL::evaluate(queries[0].get(), ec) == PQL::Condition::RTRUE)
-            {
-                std::cout << "test eval" << std::endl;
-                return true;
-            }
+            //PQL::EvaluationContext ec(write.marking(), net);
+            //if(PQL::evaluate(queries[0].get(), ec) == PQL::Condition::RTRUE)
+            //{
+            //    std::cout << "test eval" << std::endl;
+            //    return true;
+            //}
             current_depth++;
         }
         std::cout << "final marking: " << *write.marking() << ", tindex: " << tindex << std::endl;
