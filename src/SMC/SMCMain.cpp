@@ -44,30 +44,27 @@ namespace SMC {
         sgen.reset();
         
         int n_size = net->numberOfPlaces();
-        std::cout << "size: " << n_size << std::endl;
-        std::cout << "initial marking: " << *write.marking() << std::endl;
+        // std::cout << "size: " << n_size << std::endl;
+        // std::cout << "initial marking: " << *write.marking() << std::endl;
 
-        std::cout << "query: ";
-        queries[0].get()->toString(std::cout);
-        std::cout << "\nisReach?: " << (isReachability(queries[0]) ? "True" : "False") << std::endl;
-        std::cout << std::endl;
+        // std::cout << "query: ";
+        // queries[0].get()->toString(std::cout);
+        // std::cout << "\nisReach?: " << (isReachability(queries[0]) ? "True" : "False") << std::endl;
+        // std::cout << std::endl;
 
         while(sgen.next(write, tindex) && current_depth <= max_depth){
             // simply check whether query is true for each place visited?
-            PQL::EvaluationContext ec(write.marking(), net);
-            if(PQL::evaluate(queries[0].get(), ec) == PQL::Condition::RTRUE)
-            {
-                std::cout << "test eval" << std::endl;
-                return true;
-            }
-            current_depth++;
+            // PQL::EvaluationContext ec(write.marking(), net);
+            // if(PQL::evaluate(queries[0].get(), ec) == PQL::Condition::RTRUE)
+            // {
+            //    std::cout << "test eval" << std::endl;
+            //    return true;
+            // }
         }
         std::cout << "final marking: " << *write.marking() << ", tindex: " << tindex << std::endl;
-        if (tindex == max){
-            return false;
-        }
-        return true;
-        
+        std::cout << "depth: " << current_depth << std::endl;
+
+        return false;
     }
 
     double SMCMain(const PetriNet *net,
@@ -88,6 +85,6 @@ namespace SMC {
             }
             total_runs++;
         }
-        return (((double)successful_runs)/((double)total_runs))*100;
+        return (((double)successful_runs)/((double)total_runs))*100.;
     }
 }

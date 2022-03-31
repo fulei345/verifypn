@@ -30,14 +30,12 @@ namespace SMC{
     bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex) {
         _parent = &write;
         _suc_pcounter = 0;
-        u_int32_t tcurrent = 0;
-        n = 1;
+        u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
+        n = 0;
         for (; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
             // orphans are currently under "place 0" as a special case
             if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0) {
-                if (tindex == std::numeric_limits<uint32_t>::max()) {
-                    tindex = _net.placeToPtrs()[_suc_pcounter];
-                }
+                tindex = _net.placeToPtrs()[_suc_pcounter];
                 uint32_t last = _net.placeToPtrs()[_suc_pcounter + 1];
                 for (; tindex < last; ++tindex) {
                     std::cout << "TOP: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
@@ -46,27 +44,24 @@ namespace SMC{
                         continue;
                     }
                     else {
+                        // TODO increment n with potency instead
+                        n++;
                         double randomNum = (double)rand()/RAND_MAX;
-                        // TODO non-uniform m/(double)n
                         if (randomNum <= 1./((double)n)) {
                             std::cout << "randomNum, n: " << randomNum << ", " << n << ", 1/n: " << (double)(1./((double)n)) << ", tcurrent/tindex/last " << tcurrent << "/" << tindex << "/" << last << std::endl;
                             tcurrent = tindex;
-                            return true;
                         }
-                        if(tindex == last){
-                            std::cout << "FIRE: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
-                            _fire(write, tcurrent);
-                            ++tindex;
-                            return true;
-                        }
-                        // TODO non-uniform n+=m
-                        n++;
                     }
                 }
-                tindex = std::numeric_limits<uint32_t>::max();
             }
-            tindex = std::numeric_limits<uint32_t>::max();
         }
+        
+        if(tcurrent != std::numeric_limits<uint32_t>::max()){
+            std::cout << "FIRE: tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
+            _fire(write, tcurrent);
+            return true;
+        }
+
         return false;
     }
 }
