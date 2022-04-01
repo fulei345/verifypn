@@ -21,48 +21,51 @@
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
-namespace SMC{
+namespace SMC
+{
     using namespace PetriEngine;
 
     SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
-    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex) {
-        
+    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
+    {
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
         int n = 0;
-
-        for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter) {
+        for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
+        {
             // orphans are currently under "place 0" as a special case
-            if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0) {
+            if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0)
+            {
                 tindex = _net.placeToPtrs()[_suc_pcounter];
                 uint32_t last = _net.placeToPtrs()[_suc_pcounter + 1];
-                for (; tindex < last; ++tindex) {
-                    std::cout << "TOP: last: " << last << ", tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
-                    if (!checkPreset(tindex)){
-                        std::cout << "continue tindex/last: " << tindex << "/" << last << std::endl;
+                for (; tindex < last; ++tindex)
+                {
+                    if (!checkPreset(tindex))
+                    {
                         continue;
                     }
-                    else {
+                    else
+                    {
                         // TODO increment n with potency instead
                         ++n;
                         double randomNum = (double)rand()/RAND_MAX;
-                        if (randomNum <= 1./((double)n)) {
-                            std::cout << "randomNum, n: " << randomNum << ", " << n << ", 1/n: " << (double)(1./((double)n)) << ", tcurrent/tindex/last " << tcurrent << "/" << tindex << "/" << last << std::endl;
+                        if (randomNum <= 1./((double)n))
+                        {
                             tcurrent = tindex;
                         }
                     }
                 }
             }
         }
-        
-        if(tcurrent != std::numeric_limits<uint32_t>::max()){
-            std::cout << "FIRE: tindex: " << tindex << ", tcurrent: " << tcurrent << std::endl;
+        tindex = tcurrent;
+        if(tcurrent != std::numeric_limits<uint32_t>::max())
+        {
             _fire(write, tcurrent);
+            std::cout << "Fire: " << tcurrent << std::endl;   
             return true;
         }
-
         return false;
     }
 }

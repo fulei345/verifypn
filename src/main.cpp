@@ -152,11 +152,13 @@ int main(int argc, const char** argv) {
             PetriNetBuilder b2(builder);
             auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
 
-            double probability = SMC::SMCMain(net.get(), options, queries);
-            std::cout << "\nSatisfied with " << probability << "% probability." << std::endl;
-
             std::cout << "\nSMC Simulation:" << std::endl;
             std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
+
+            for (size_t i = 0; i < queries.size(); ++i) {
+                double probability = SMC::SMCMain(net.get(), options, queries[i]);
+                std::cout << "\nSatisfied with " << probability << "% probability." << std::endl;
+            }
 
             if(options.trace != TraceLevel::None) {
                 std::cout << "Trace:" << std::endl;

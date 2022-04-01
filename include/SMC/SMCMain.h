@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "PetriEngine/PetriNet.h"
+#include "PetriEngine/PQL/PQL.h"
 #include "PetriEngine/options.h"
 
 namespace SMC{
     double SMCMain(const PetriEngine::PetriNet *net,
                          options_t &options,
-                         std::vector<std::shared_ptr<PetriEngine::PQL::Condition>> &queries);
+                         const PetriEngine::PQL::Condition_ptr &query);
 }
