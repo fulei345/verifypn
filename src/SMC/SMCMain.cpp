@@ -43,8 +43,6 @@ namespace SMC
         sgen.prepare(&write);
         sgen.reset();
         PQL::EvaluationContext context(write.marking(), net);
-        PQL::ContainsFireabilityVisitor has_fireability;
-        PQL::Visitor::visit(has_fireability, query);
         while(sgen.next(write, tindex) && current_depth <= max_depth)
         {
             context.setMarking(write.marking());
