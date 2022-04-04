@@ -147,17 +147,6 @@ int main(int argc, const char** argv) {
             outputNet(builder, options.unfolded_out_file);
         }
 
-        //-------------------------- SMC Simulation --------------------------//
-        if (options.smc){
-            PetriNetBuilder b2(builder);
-            auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
-
-            double probability = SMC::SMCMain(net.get(), options);
-            std::cout << "\nSatisfied with probability of " << probability << std::endl;
-
-            return to_underlying(ReturnValue::SuccessCode);
-        }
-
         //----------------------- Query Simplification -----------------------//
         bool alldone = options.queryReductionTimeout > 0;
         PetriNetBuilder b2(builder);
@@ -271,6 +260,17 @@ int main(int argc, const char** argv) {
         }
 
         options.queryReductionTimeout = 0;
+
+        //-------------------------- SMC Simulation --------------------------//
+        if (options.smc){
+            auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
+
+            for (size_t i = 0; i < queries.size(); ++i) {
+                double probability = SMC::SMCMain(net.get(), options, queries[i]);
+            }
+            
+            return to_underlying(ReturnValue::SuccessCode);
+        }
 
         //--------------------- Apply Net Reduction ---------------//
 

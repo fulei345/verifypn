@@ -18,14 +18,14 @@ build/verifypn/bin:
 -smc <runs><depth>:
 ./verifypn-linux64 -smc 1000 100 --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
 
-options.cpp
+@@@@@@options.cpp
 	- not a search strategy but something else entirely
 	- --smc <runs>
 		- for n runs
 		- and x depth?
 	- +trace
 
-use successorgenerator::next
+@@@@@@use successorgenerator::next
 	- when this returns
 	- select the returned markings with their probability (calc with their domination)
 	- assume 1 at first to implement
@@ -43,13 +43,8 @@ extend nets with domination on transitions
 	- translate this to xml
 	- provide statistics
 
+// simple-test001/query.xml is reachability of final state. 
+-smc 10 10 --xml-queries 1 ../../../test_models/simple-test001/model.pnml ../../../test_models/simple-test001/query.xml
 
-./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test003/model.pnml ../../../test_models/tricky-test003/query.xml
-	- tricky3 does not use strategy:RDFS?
-	- test print in switch case not procd
+-smc 10 10 --xml-queries 1 ../../../test_models/tricky-test001/model.pnml ../../../test_models/tricky-test001/query.xml
 
-./verifypn-linux64 --xml-queries 1 -s RDFS ../../../test_models/tricky-test001/model.pnml ../../../test_models/tricky-test001/query.xml
-	- but tricky1 does
-	- test print in switch case procd
-
-neither procs prints in pop/push from RDFS strategy?????????

@@ -18,77 +18,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <memory>
 #include "SMC/SMCMain.h"
 
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
+#include "PetriEngine/PQL/PQL.h"
+#include "PetriEngine/PQL/Contexts.h"
+#include "PetriEngine/PQL/Evaluation.h"
+#include "PetriEngine/PQL/PredicateCheckers.h"
 
 using namespace PetriEngine;
 
-namespace SMC {
+namespace SMC
+{
+    bool SMCRun(SMCSuccessorGenerator &sgen,
+                const PetriNet *net,
+                const PQL::Condition_ptr &query,
+                int max_depth)
+    {
+        int current_depth = 0;
+        uint32_t tindex = 0;
+        
+        Structures::State write(net->makeInitialMarking());
+        sgen.prepare(&write);
+        sgen.reset();
+        
+        PQL::EvaluationContext context(write.marking(), net);
+        while(current_depth < max_depth && sgen.next(write, tindex))
+        {
+            context.setMarking(write.marking());
+            if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
+            {
+                return true;
+            }
+            current_depth++;
+        }
+        return false;
+    }
+
     double SMCMain(const PetriNet *net,
-                         options_t &options){
-                    std::unique_ptr<MarkVal[]> qm0(qnet->makeInitialMarking());
-            
-            for(size_t i = 0; i < qnet->numberOfPlaces(); ++i) {
-                initial_size += qm0[i];
+                         options_t &options,
+                         const PQL::Condition_ptr &query)
+    {
+        int total_runs = 0;
+        int successful_runs = 0;
+        SMCSuccessorGenerator sgen(*net);
+        
+        for (int i = 0; i < options.smcruns; i++)
+        {
+            if (SMCRun(sgen, net, query, options.smcdepth))
+            {
+                successful_runs++;
             }
-            // dummy "write" state and tindex pointers?
-            Structures::State state;
-
-            // double free SIGABRT malloc auto delete when pointer deref or .get()???
-            // because unique_ptr -> default_delete -> int_free -> malloc???
-            //state.setMarking(qm0.get());
-
-            uint32_t tindex = std::numeric_limits<uint32_t>::min();
-
-            // our first succ gen now with public next?
-            SMC::SMCSuccessorGenerator sgs(*qnet);
-            
-            // cant use next when state is empty
-            //bool test = sgs.next(state, tindex);
-
-            // pseudo alg for smc simulator
-            // bool SMCSimulation(Structures::State& write, uint32_t &tindex) {
-            //     int m, n, current_depth = 0;
-            //     while (SG.next(write, tindex) && current_depth < options.smcdepth){
-            //         //m = *tindex.Domination();
-            //         m = 1;
-            //         n = n + m;
-            //         if (m/n =< random(1)){
-            //             SG.fire(tindex);
-            //             if (property == yes){
-            //                 return true;
-            //             }
-            //         }
-            //     }
-            //     return false;
-            // }
-
-            if(options.trace != TraceLevel::None) {
-                std::cout << "\nSMC Simulation:" << std::endl;
-                std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
-                std::cout << "Trace:" << std::endl;
-            }
-            else {
-                // for (int i = 0; i < options.smcruns; i++) {
-                //     int m, n, current_depth, count = 0;
-                //     uint32_t tindex = std::numeric_limits<uint32_t>::min();
-                //     //SG.next(state, tindex)
-                //     while (SG.next(state, tindex) && current_depth <= options.smcdepth) {
-                //         //m = qm0[0].domination();
-                //         m = 1;
-                //         n = n + m;
-                //         current_depth++;
-                //         if (m/n <= rand()){
-                //             SG.fire(*tindex);
-                //             if (property == true){
-                //                 count++;
-                //             }
-                //         }
-                //     }
-                // }
-                std::cout << "\nSMC Simulation:" << std::endl;
-                std::cout << "Simulate " << options.smcruns << " runs, with " << options.smcdepth << " max depth." << std::endl;
-            }
+            total_runs++;
+        }
+        return (((double)successful_runs)/((double)total_runs))*100.;
     }
 }
