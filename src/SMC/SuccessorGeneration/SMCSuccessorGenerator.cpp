@@ -48,6 +48,7 @@ namespace SMC
                     }
                     else
                     {
+                        // In here we check the tindex against our currently chosen transition
                         // TODO increment n with potency instead
                         ++n;
                         double randomNum = (double)rand()/RAND_MAX;
@@ -59,11 +60,11 @@ namespace SMC
                 }
             }
         }
+        // Set tindex to chosen transition so we can read it in main
         tindex = tcurrent;
         if(tcurrent != std::numeric_limits<uint32_t>::max())
         {
             _fire(write, tcurrent);
-            std::cout << "Fire: " << tcurrent << std::endl;   
             return true;
         }
         return false;
