@@ -64,15 +64,9 @@ namespace SMC
         SMCSuccessorGenerator sgen(*net);
         for (int i = 0; i < options.smcruns; i++)
         {
-            std::cout << "Starting run number " << i + 1 << std::endl;
             if (SMCRun(sgen, net, query, options.smcdepth))
             {
                 successful_runs++;
-                std::cout << "Success" << std::endl;
-            }
-            else
-            {
-                std::cout << "Fail" << std::endl;
             }
             total_runs++;
         }
