@@ -52,6 +52,7 @@ namespace SMC
                         // TODO non-uniform, increment n with potency instead n+=m
                         ++n;
                         double randomNum = (double)rand()/RAND_MAX;
+                        
                         // TODO non-uniform, (double)m/(double)n
                         if (randomNum <= 1./((double)n))
                         {

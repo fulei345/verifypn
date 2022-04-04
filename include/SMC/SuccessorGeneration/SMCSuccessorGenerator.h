@@ -26,7 +26,6 @@ namespace SMC{
     class SMCSuccessorGenerator : public SuccessorGenerator{
         public:
         SMCSuccessorGenerator(const PetriNet &net);
-    
 
         bool next(Structures::State &write, uint32_t &tindex);
 
