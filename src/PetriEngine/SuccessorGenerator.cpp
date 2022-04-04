@@ -117,7 +117,6 @@ namespace PetriEngine {
     }
 
     void SuccessorGenerator::_fire(Structures::State &write, uint32_t tid) {
-        std::cout << "fire tid: " << tid << std::endl;
         assert(checkPreset(tid));
         memcpy(write.marking(), (*_parent).marking(), _net._nplaces * sizeof (MarkVal));
         consumePreset(write, tid);
