@@ -263,7 +263,6 @@ int main(int argc, const char** argv) {
 
         //-------------------------- SMC Simulation --------------------------//
         if (options.smc){
-            PetriNetBuilder b2(builder);
             auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
 
             for (size_t i = 0; i < queries.size(); ++i) {

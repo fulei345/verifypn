@@ -33,7 +33,8 @@ namespace SMC
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
         int n = 0;
-        for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
+        
+        for (; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
         {
             // orphans are currently under "place 0" as a special case
             if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0)
@@ -48,10 +49,10 @@ namespace SMC
                     }
                     else
                     {
-                        // In here we check the tindex against our currently chosen transition
-                        // TODO increment n with potency instead
+                        // TODO non-uniform, increment n with potency instead n+=m
                         ++n;
                         double randomNum = (double)rand()/RAND_MAX;
+                        // TODO non-uniform, (double)m/(double)n
                         if (randomNum <= 1./((double)n))
                         {
                             tcurrent = tindex;

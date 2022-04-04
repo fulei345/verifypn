@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//#include <stdlib.h>
 #include <memory>
 #include "SMC/SMCMain.h"
 
@@ -39,9 +38,11 @@ namespace SMC
     {
         int current_depth = 0;
         uint32_t tindex = 0;
+        
         Structures::State write(net->makeInitialMarking());
         sgen.prepare(&write);
         sgen.reset();
+        
         PQL::EvaluationContext context(write.marking(), net);
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
@@ -62,6 +63,7 @@ namespace SMC
         int total_runs = 0;
         int successful_runs = 0;
         SMCSuccessorGenerator sgen(*net);
+        
         for (int i = 0; i < options.smcruns; i++)
         {
             if (SMCRun(sgen, net, query, options.smcdepth))
