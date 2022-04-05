@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SMS/SMCPetriNetBuilder.h"
+#include "SMC/SMCPetriNetBuilder.h"
 #include "utils/errors.h"
 
 #include <tuple>
 using std::get;
 namespace PetriEngine {
-    SMCPetriNetBuilder::SMCPetriNetBuilder(){
+    PetriNetBuilder::PetriNetBuilder() : AbstractPetriNetBuilder(),
+    reducer(this){
     }
 
     SMCPetriNetBuilder::SMCPetriNetBuilder(const SMCPetriNetBuilder& orig)
@@ -42,10 +43,6 @@ namespace PetriEngine {
 
     void SMCPetriNetBuilder::addTransition(const std::string& name, int32_t player, double x, double y) {
         _ptBuilder.addTransition(name, player, x, y);
-    }
-
-    void SMCPetriNetBuilder::addTransition(const std::string& name, const Colored::GuardExpression_ptr& guard, int32_t player, double x, double y) {
-        // LOL
     }
 
     void SMCPetriNetBuilder::addInputArc(const std::string& place, const std::string& transition, bool inhibitor, int weight) {
