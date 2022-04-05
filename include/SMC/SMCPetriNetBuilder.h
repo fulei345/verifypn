@@ -25,11 +25,11 @@
 #include <chrono>
 #include "PetriEngine/AbstractPetriNetBuilder.h"
 #include "PetriEngine/PetriNetBuilder.h"
-#include "PQL/PQL.h"
+#include "PetriEngine/PQL/PQL.h"
 #include "PetriEngine/PetriNet.h"
 #include "PetriEngine/Reducer.h"
 #include "PetriEngine/NetStructures.h"
-#include "Reachability/ReachabilityResult.h"
+#include "PetriEngine/Reachability/ReachabilityResult.h"
 
 
 namespace PetriEngine {
@@ -39,9 +39,8 @@ namespace PetriEngine {
         friend class Reducer;
 
     public:
-        PetriNetBuilder();
-        PetriNetBuilder(const PetriNetBuilder& other);
-        PetriNetBuilder(PetriNetBuilder&&);
+        SMCPetriNetBuilder();
+        SMCPetriNetBuilder(const SMCPetriNetBuilder& other);
         void addPlace(const std::string& name, uint32_t tokens, double x, double y) override;
         void addTransition(const std::string& name,
                 int32_t player,
@@ -155,6 +154,8 @@ namespace PetriEngine {
         Reducer reducer;
 
         std::vector<int> _transitionpotency;
+
+        PetriNetBuilder _ptBuilder;
     };
 
 }

@@ -30,6 +30,6 @@ namespace PetriEngine {
 
     void SMCPetriNetBuilder::addTransition(const std::string& name, int32_t player, double x, double y, int potency) {
         _ptBuilder.addTransition(name, player, x, y);
-        _transitionlocations.push_back(potency);
+        _transitionpotency.push_back(potency);
     }
 }
