@@ -40,6 +40,7 @@ namespace PetriEngine {
     PetriNetBuilder::PetriNetBuilder(const PetriNetBuilder& other)
     : _placenames(other._placenames), _transitionnames(other._transitionnames),
        _placelocations(other._placelocations), _transitionlocations(other._transitionlocations),
+       _transitionpotency(other._transitionpotency),
        _transitions(other._transitions), _places(other._places),
        initialMarking(other.initialMarking), reducer(this)
     {
@@ -49,6 +50,7 @@ namespace PetriEngine {
     PetriNetBuilder::PetriNetBuilder(PetriNetBuilder&& other)
     : _placenames(std::move(other._placenames)), _transitionnames(std::move(other._transitionnames)),
        _placelocations(std::move(other._placelocations)), _transitionlocations(std::move(other._transitionlocations)),
+       _transitionpotency(std::move(other._transitionpotency)),
        _transitions(std::move(other._transitions)), _places(std::move(other._places)),
        initialMarking(std::move(other.initialMarking)), reducer(this) {}
 
@@ -68,7 +70,7 @@ namespace PetriEngine {
     }
 
     void PetriNetBuilder::addTransition(const std::string &name,
-            int32_t player, double x, double y) {
+            int32_t player, double x, double y, int potency) {
         if(_transitionnames.count(name) == 0)
         {
             uint32_t next = _transitionnames.size();
@@ -76,6 +78,7 @@ namespace PetriEngine {
             _transitionnames[name] = next;
             _transitionlocations.push_back(std::tuple<double, double>(x,y));
             _transitions.back()._player = player;
+            _transitionpotency.push_back(potency);
         }
     }
 
@@ -352,6 +355,7 @@ namespace PetriEngine {
 
         net->_placelocations = _placelocations;
         net->_transitionlocations = _transitionlocations;
+        net->_transitionpotency = _transitionpotency;
 
         // reindex place-names
         net->_placenames.resize(_placenames.size());
