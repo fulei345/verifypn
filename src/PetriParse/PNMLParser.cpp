@@ -73,9 +73,9 @@ void PNMLParser::parse(std::istream& xml,
     //Add all the transition
     for (auto & transition : _transitions)
         if (!isColored) {
-            builder->addTransition(transition.id, transition._player, transition.x, transition.y);
+            builder->addTransition(transition.id, transition._player, transition.x, transition.y, transition.potency);
         } else {
-            builder->addTransition(transition.id, transition.expr, transition._player, transition.x, transition.y);
+            builder->addTransition(transition.id, transition.expr, transition._player, transition.x, transition.y, transition.potency);
         }
 
     //Add all the arcs
