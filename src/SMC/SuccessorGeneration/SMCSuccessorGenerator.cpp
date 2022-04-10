@@ -55,7 +55,6 @@ namespace SMC
 
                         if (randomNum <= (double)p/(double)n)
                         {
-                            std::cout << "\ntindex:" << tindex << std::endl;
                             tcurrent = tindex;
                         }
                     }
