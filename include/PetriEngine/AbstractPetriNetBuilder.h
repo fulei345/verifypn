@@ -54,13 +54,15 @@ namespace PetriEngine {
         virtual void addTransition(const std::string& name,
                 int32_t player,
                 double x,
-                double y) = 0;
+                double y,
+                int potency) = 0; 
         /** Add a new colored transition with a unique name */
         virtual void addTransition(const std::string& name,
                 const Colored::GuardExpression_ptr& guard,
                 int32_t player,
                 double x,
-                double y)
+                double y,
+                int potency)
         {
             throw base_error("Colored transitions are not supported in standard P/T nets");
         }

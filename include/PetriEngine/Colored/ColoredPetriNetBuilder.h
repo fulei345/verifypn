@@ -47,12 +47,14 @@ namespace PetriEngine {
         void addTransition(const std::string& name,
                 int32_t player,
                 double x,
-                double y) override;
+                double y,
+                int potency) override; 
         void addTransition(const std::string& name,
                 const Colored::GuardExpression_ptr& guard,
                 int32_t player,
                 double x,
-                double y) override;
+                double y,
+                int potency) override;
         void addInputArc(const std::string& place,
                 const std::string& transition,
                 bool inhibitor,
