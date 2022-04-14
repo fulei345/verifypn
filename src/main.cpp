@@ -267,7 +267,7 @@ int main(int argc, const char** argv) {
 
             for (size_t i = 0; i < queries.size(); ++i) {
                 double probability = SMC::SMCMain(net.get(), options, queries[i]);
-                std::cout << "Query is satisfied" << std::endl;
+                std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << std::endl;
                 std::cout << "result percent: " << probability << std::endl;
             }
             
