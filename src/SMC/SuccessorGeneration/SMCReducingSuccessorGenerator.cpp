@@ -43,32 +43,24 @@ namespace SMC
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
         int n = 0;
         
-        for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
-        {
-            // orphans are currently under "place 0" as a special case
-            if (_suc_pcounter == 0 || (*_parent).marking()[_suc_pcounter] > 0)
+        tindex = _stubSet->next(); 
+        while(tindex != std::numeric_limits<uint32_t>::max()){
+            if (!checkPreset(tindex))
             {
-                tindex = _net.placeToPtrs()[_suc_pcounter];
-                uint32_t last = _net.placeToPtrs()[_suc_pcounter + 1];
-                for (; tindex < last; ++tindex)
-                {
-                    if (!checkPreset(tindex))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        int p = _net.transitionPotency()[tindex];
-                        n+=p;
-                        double randomNum = (double)rand()/RAND_MAX;
+                continue;
+            }
+            else
+            {
+                int p = _net.transitionPotency()[tindex];
+                n+=p;
+                double randomNum = (double)rand()/RAND_MAX;
 
-                        if (randomNum <= (double)p/(double)n)
-                        {
-                            tcurrent = tindex;
-                        }
-                    }
+                if (randomNum <= (double)p/(double)n)
+                {
+                    tcurrent = tindex;
                 }
             }
+            tindex = _stubSet->next();
         }
         // Set tindex to chosen transition so we can read it in main
         tindex = tcurrent;
@@ -78,5 +70,10 @@ namespace SMC
             return true;
         }
         return false;
+    }
+
+    bool SMCReducingSuccessorGenerator::prepare(const Structures::State *state) {
+        _parent = state;
+        return _stubSet->prepare(state);
     }
 }

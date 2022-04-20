@@ -35,13 +35,14 @@ namespace SMC{
 
             bool next(Structures::State &write, uint32_t &tindex);
 
+            bool prepare(const Structures::State *state) override;
+
             void fire(Structures::State &write, uint32_t tindex){
                 _fire(write, tindex);
             }
 
         private:
             std::shared_ptr<StubbornSet> _stubSet;
-            uint32_t _current;
  
             std::vector<PQL::Condition *> _queries;
     };
