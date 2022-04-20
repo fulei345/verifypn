@@ -22,16 +22,25 @@
 #include "SMC/SMCMain.h"
 
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
+#include "SMC/SuccessorGeneration/SMCReducingSuccessorGenerator.h"
+
 #include "PetriEngine/PQL/PQL.h"
 #include "PetriEngine/PQL/Contexts.h"
 #include "PetriEngine/PQL/Evaluation.h"
 #include "PetriEngine/PQL/PredicateCheckers.h"
+#include "PetriEngine/Stubborn/ReachabilityStubbornSet.h"
 
 using namespace PetriEngine;
 
 namespace SMC
 {
-    bool SMCRun(SMCSuccessorGenerator &sgen,
+    inline SMCReducingSuccessorGenerator _makeSucGen(PetriNet &net, std::vector<PQL::Condition_ptr> &queries) {
+        auto stubset = std::make_shared<ReachabilityStubbornSet>(net, queries);
+        stubset->setInterestingVisitor<InterestingTransitionVisitor>();
+        return SMCReducingSuccessorGenerator{net, stubset};
+    }
+
+    bool SMCRun(SMCReducingSuccessorGenerator &sgen,
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
                 int max_depth)
@@ -69,6 +78,8 @@ namespace SMC
     {
         int total_runs = 0;
         int successful_runs = 0;
+
+        //SMCReducingSuccessorGenerator sgen = _makeSucGen(&net , query);
         SMCSuccessorGenerator sgen(*net);
         
         for (int i = 0; i < options.smcruns; i++)
@@ -81,4 +92,6 @@ namespace SMC
         }
         return (((double)successful_runs)/((double)total_runs))*100.;
     }
+
+
 }
