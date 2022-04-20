@@ -30,8 +30,8 @@ namespace SMC{
     class SMCReducingSuccessorGenerator : public SuccessorGenerator{
         public:
             SMCReducingSuccessorGenerator(const PetriNet &net);
-            SMCReducingSuccessorGenerator(const PetriNet& net, std::vector<std::shared_ptr<PQL::Condition> >& queries);
 
+            void reset();
 
             bool next(Structures::State &write, uint32_t &tindex);
 

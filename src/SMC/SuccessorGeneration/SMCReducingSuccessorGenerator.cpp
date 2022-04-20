@@ -21,12 +21,21 @@
 #include "SMC/SuccessorGeneration/SMCReducingSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
+#include <cassert>
+#include <utility>
+#include "PetriEngine/PQL/Contexts.h"
+
 namespace SMC
 {
     using namespace PetriEngine;
 
     SMCReducingSuccessorGenerator::SMCReducingSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
+
+    void SMCReducingSuccessorGenerator::reset() {
+        SuccessorGenerator::reset();
+        _stubSet->reset();
+    }
 
     bool SMCReducingSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
     {
