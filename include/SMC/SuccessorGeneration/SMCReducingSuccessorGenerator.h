@@ -31,6 +31,8 @@ namespace SMC{
         public:
             SMCReducingSuccessorGenerator(const PetriNet &net);
 
+            SMCReducingSuccessorGenerator(const PetriNet &net, std::shared_ptr<StubbornSet> stubbornSet);
+
             void reset();
 
             bool next(Structures::State &write, uint32_t &tindex);

@@ -32,6 +32,10 @@ namespace SMC
     SMCReducingSuccessorGenerator::SMCReducingSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
+    ReducingSuccessorGenerator::ReducingSuccessorGenerator(const PetriNet &net,
+                                                           std::shared_ptr<StubbornSet> stubbornSet)
+    : SuccessorGenerator(net), _stubSet(std::move(stubbornSet)) {}
+
     void SMCReducingSuccessorGenerator::reset() {
         SuccessorGenerator::reset();
         _stubSet->reset();
