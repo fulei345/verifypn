@@ -1,0 +1,5 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+add_library(InterestingSMCTransitionVisitor ${HEADER_FILES} InterestingSMCTransitionVisitor.cpp)
+
+target_link_libraries(InterestingSMCTransitionVisitor bddx spot)
