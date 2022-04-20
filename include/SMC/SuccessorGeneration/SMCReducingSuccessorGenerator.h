@@ -21,7 +21,7 @@
 #include "PetriEngine/SuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 #include "PetriEngine/Stubborn/StubbornSet.h"
-#include "PQL/PQL.h"
+#include "PetriEngine/PQL/PQL.h"
 #include "utils/structures/light_deque.h"
 #include <memory>
 
@@ -29,20 +29,20 @@ namespace SMC{
     using namespace PetriEngine;
     class SMCReducingSuccessorGenerator : public SuccessorGenerator{
         public:
-        SMCSuccessorGenerator(const PetriNet &net);
-        SuccessorGenerator(const PetriNet& net, std::vector<std::shared_ptr<PQL::Condition> >& queries);
+            SMCReducingSuccessorGenerator(const PetriNet &net);
+            SMCReducingSuccessorGenerator(const PetriNet& net, std::vector<std::shared_ptr<PQL::Condition> >& queries);
 
 
-        bool next(Structures::State &write, uint32_t &tindex);
+            bool next(Structures::State &write, uint32_t &tindex);
 
-        void fire(Structures::State &write, uint32_t tindex){
-            _fire(write, tindex);
+            void fire(Structures::State &write, uint32_t tindex){
+                _fire(write, tindex);
+            }
 
         private:
             std::shared_ptr<StubbornSet> _stubSet;
             uint32_t _current;
  
             std::vector<PQL::Condition *> _queries;
-        }
     };
 }

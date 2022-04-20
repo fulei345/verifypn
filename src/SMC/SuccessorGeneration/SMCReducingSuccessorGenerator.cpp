@@ -18,17 +18,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
+#include "SMC/SuccessorGeneration/SMCReducingSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
 namespace SMC
 {
     using namespace PetriEngine;
 
-    SMCSuccessorGenerator::SMCReducingSuccessorGenerator(const PetriNet &net)
+    SMCReducingSuccessorGenerator::SMCReducingSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
-    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
+    bool SMCReducingSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
     {
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
