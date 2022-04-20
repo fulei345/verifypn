@@ -43,6 +43,7 @@ namespace PetriEngine {
             GuardExpression_ptr guard;
             int32_t _player;
             double _x = 0, _y = 0;
+            int _potency;
             std::vector<Arc> input_arcs;
             std::vector<Arc> output_arcs;
         };

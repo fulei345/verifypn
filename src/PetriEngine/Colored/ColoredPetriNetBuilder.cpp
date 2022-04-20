@@ -66,17 +66,17 @@ namespace PetriEngine {
         }
     }
 
-    void ColoredPetriNetBuilder::addTransition(const std::string& name, int32_t player, double x, double y) {
+    void ColoredPetriNetBuilder::addTransition(const std::string& name, int32_t player, double x, double y, int potency) {
         if (!_isColored) {
-            _ptBuilder.addTransition(name, player, x, y);
+            _ptBuilder.addTransition(name, player, x, y, potency);
         }
     }
 
-    void ColoredPetriNetBuilder::addTransition(const std::string& name, const Colored::GuardExpression_ptr& guard, int32_t player, double x, double y) {
+    void ColoredPetriNetBuilder::addTransition(const std::string& name, const Colored::GuardExpression_ptr& guard, int32_t player, double x, double y, int potency) {
         if(_transitionnames.count(name) == 0)
         {
             uint32_t next = _transitionnames.size();
-            _transitions.emplace_back(Colored::Transition {name, guard, player, x, y});
+            _transitions.emplace_back(Colored::Transition {name, guard, player, x, y, potency});
             _transitionnames[name] = next;
         }
     }

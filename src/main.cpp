@@ -312,9 +312,10 @@ int main(int argc, const char **argv)
             double probability = 0;
             auto begin = std::chrono::high_resolution_clock::now();
 
-            for (size_t i = 0; i < queries.size(); ++i)
-            {
-                probability = SMC::SMCMain(net.get(), options, queries[i]);
+            for (size_t i = 0; i < queries.size(); ++i) {
+                double probability = SMC::SMCMain(net.get(), options, queries[i]);
+                std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << std::endl;
+                std::cout << "result percent: " << probability << std::endl;
             }
 
             auto end = std::chrono::high_resolution_clock::now();

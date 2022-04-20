@@ -45,6 +45,13 @@ namespace SMC
         sgen.reset();
         
         PQL::EvaluationContext context(write.marking(), net);
+        
+        // This if-statement is new :)
+        if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
+        {
+            return true;
+        }
+
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());

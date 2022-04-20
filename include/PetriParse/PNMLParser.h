@@ -50,6 +50,7 @@ class PNMLParser {
         int _player  = 0;
         double x = 0, y = 0;
         PetriEngine::Colored::GuardExpression_ptr expr = nullptr;
+        int potency = 1;
     };
     typedef std::vector<Transition> TransitionList;
     typedef TransitionList::iterator TransitionIter;
