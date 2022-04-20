@@ -243,6 +243,17 @@ bool options_t::parse(int argc, const char** argv) {
                 throw base_error("Argument Error: Invalid depth", std::quoted(argv[i]));
             }
             smc = true;
+        } else if (std::strcmp(argv[i], "-smcn") == 0) {
+            if (i == argc - 1) {
+                throw base_error("Missing numbers after ", std::quoted(argv[i]));
+            }
+            if (sscanf(argv[++i], "%d", &smcruns) != 1 || smcruns < 0) {
+                throw base_error("Argument Error: Invalid number of runs", std::quoted(argv[i]));
+            }
+            if (sscanf(argv[++i], "%d", &smcdepth) != 1 || smcdepth < 0) {
+                throw base_error("Argument Error: Invalid depth", std::quoted(argv[i]));
+            }
+            smc = true;
         } else if (std::strcmp(argv[i], "-s") == 0 || std::strcmp(argv[i], "--search-strategy") == 0) {
             if (i == argc - 1) {
                 throw base_error("Missing search strategy after ", std::quoted(argv[i]));

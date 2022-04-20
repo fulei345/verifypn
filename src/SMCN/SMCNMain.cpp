@@ -19,9 +19,9 @@
  */
 
 #include <memory>
-#include "SMC/SMCMain.h"
+#include "SMCN/SMCNMain.h"
 
-#include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
+#include "SMCN/SuccessorGeneration/SMCNSuccessorGenerator.h"
 #include "PetriEngine/PQL/PQL.h"
 #include "PetriEngine/PQL/Contexts.h"
 #include "PetriEngine/PQL/Evaluation.h"
@@ -29,9 +29,9 @@
 
 using namespace PetriEngine;
 
-namespace SMC
+namespace SMCN
 {
-    bool SMCRun(SMCSuccessorGenerator &sgen,
+    bool SMCRun(SMCNSuccessorGenerator &sgen,
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
                 int max_depth,
@@ -58,17 +58,17 @@ namespace SMC
         return false;
     }
 
-    double SMCMain(const PetriNet *net,
+    double SMCNMain(const PetriNet *net,
                          options_t &options,
                          const PQL::Condition_ptr &query)
     {
         int total_runs = 0;
         int successful_runs = 0;
-        SMCSuccessorGenerator sgen(*net);
+        SMCNSuccessorGenerator sgen(*net);
 
         int outdepth = 0;
         int totaldepth = 0;
-        
+
         for (int i = 0; i < options.smcruns; i++)
         {
             bool succ = SMCRun(sgen, net, query, options.smcdepth, outdepth);

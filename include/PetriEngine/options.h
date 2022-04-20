@@ -59,6 +59,7 @@ enum class LTLHeuristic {
 struct options_t {
 //    bool outputtrace = false;
     bool smc = false;
+    bool smcn = false;
     int smcruns = 1000;
     int smcdepth = 1000;
     int kbound = 0;

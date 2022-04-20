@@ -18,21 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
+#include <random>
+
+#include "SMCN/SuccessorGeneration/SMCNSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
-namespace SMC
+namespace SMCN
 {
     using namespace PetriEngine;
 
-    SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet &net)
+    SMCNSuccessorGenerator::SMCNSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
-    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
+    bool SMCNSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
     {
         _parent = &write;
-        u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
-        int n = 0;
+        std::vector<u_int32_t> enabled;
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
         
         for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
         {
@@ -49,26 +53,20 @@ namespace SMC
                     }
                     else
                     {
-                        // TODO non-uniform, increment n with potency instead n+=m
-                        ++n;
-                        double randomNum = (double)random()/RAND_MAX;
-                        
-                        // TODO non-uniform, (double)m/(double)n
-                        if (randomNum <= 1./((double)n))
-                        {
-                            tcurrent = tindex;
-                        }
+                        enabled.push_back(tindex);
                     }
                 }
             }
         }
         // Set tindex to chosen transition so we can read it in main
-        tindex = tcurrent;
-        if(tcurrent != std::numeric_limits<uint32_t>::max())
+        if(!enabled.empty())
         {
-            _fire(write, tcurrent);
+            std::uniform_int_distribution<> distr(0, enabled.size());
+            tindex = distr(gen);
+            _fire(write, tindex);
             return true;
         }
+        tindex = std::numeric_limits<uint32_t>::max();;
         return false;
     }
 }

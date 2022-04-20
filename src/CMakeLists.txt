@@ -5,9 +5,10 @@ add_subdirectory(LTL)
 add_subdirectory(PetriParse)
 add_subdirectory(PetriEngine)
 add_subdirectory(SMC)
+add_subdirectory(SMCN)
 
 add_library(verifypn VerifyPN.cpp)
-target_link_libraries(verifypn PUBLIC CTL LTL PetriEngine PetriParse SMC)
+target_link_libraries(verifypn PUBLIC CTL LTL PetriEngine PetriParse SMC SMCN)
 
 add_dependencies(verifypn glpk-ext spot-ext)
 

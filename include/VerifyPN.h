@@ -98,6 +98,7 @@
 #include "LTL/LTLMain.h"
 
 #include "SMC/SMCMain.h"
+#include "SMCN/SMCNMain.h"
 
 #include "PetriEngine/TraceReplay.h"
 
