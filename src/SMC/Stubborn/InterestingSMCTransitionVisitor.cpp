@@ -21,6 +21,11 @@
 #include "SMC/Stubborn/InterestingSMCTransitionVisitor.h"
 
 namespace PetriEngine {
+    void InterestingSMCTransitionVisitor::_accept(const PQL::DeadlockCondition *element)
+    {
+        // TODO implement this
+    }
+
     void InterestingSMCTransitionVisitor::_accept(const PQL::LessThanCondition *element)
     {
         // TODO implement this
@@ -41,7 +46,77 @@ namespace PetriEngine {
         // TODO implement this
     }
 
+    void InterestingSMCTransitionVisitor::_accept(const PQL::AndCondition *element)
+    {
+        // TODO implement this
+    }
+
+        void InterestingSMCTransitionVisitor::_accept(const PQL::OrCondition *element)
+    {
+        // TODO implement this
+    }
+
     void InterestingSMCTransitionVisitor::_accept(const PQL::CompareConjunction *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::IncrVisitor::_accept(const PQL::PlusExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::DecrVisitor::_accept(const PQL::PlusExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::IncrVisitor::_accept(const PQL::SubtractExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::DecrVisitor::_accept(const PQL::SubtractExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::IncrVisitor::_accept(const PQL::MultiplyExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::DecrVisitor::_accept(const PQL::MultiplyExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::IncrVisitor::_accept(const PQL::MinusExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::DecrVisitor::_accept(const PQL::MinusExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::IncrVisitor::_accept(const PQL::LiteralExpr *element)
+    {
+        // Add nothing
+    }
+
+    void InterestingSMCTransitionVisitor::DecrVisitor::_accept(const PQL::LiteralExpr *element)
+    {
+        // Add nothing
+    }
+
+    void InterestingSMCTransitionVisitor::IncrVisitor::_accept(const PQL::UnfoldedIdentifierExpr *element)
+    {
+        // TODO implement this
+    }
+
+    void InterestingSMCTransitionVisitor::DecrVisitor::_accept(const PQL::UnfoldedIdentifierExpr *element)
     {
         // TODO implement this
     }
