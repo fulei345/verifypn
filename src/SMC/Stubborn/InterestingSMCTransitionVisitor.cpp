@@ -24,7 +24,10 @@
 namespace PetriEngine {
     void InterestingSMCTransitionVisitor::_accept(const PQL::DeadlockCondition *element)
     {
-        // TODO implement this
+        for (uint32_t t = 0; t < _stubborn._net.numberOfTransitions(); t++)
+        {
+            _stubborn.addToStub(t);
+        } 
     }
 
     void InterestingSMCTransitionVisitor::_accept(const PQL::EqualCondition *element)
