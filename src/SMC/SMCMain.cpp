@@ -22,7 +22,6 @@
 #include "SMC/SMCMain.h"
 
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
-#include "SMC/SuccessorGeneration/SMCReducingSuccessorGenerator.h"
 
 #include "PetriEngine/PQL/PQL.h"
 #include "PetriEngine/PQL/Contexts.h"
@@ -30,17 +29,13 @@
 #include "PetriEngine/PQL/PredicateCheckers.h"
 #include "PetriEngine/Stubborn/ReachabilityStubbornSet.h"
 
+#include <vector>
+
 using namespace PetriEngine;
 
 namespace SMC
 {
-    inline SMCReducingSuccessorGenerator _makeSucGen(PetriNet &net, std::vector<PQL::Condition_ptr> &queries) {
-        auto stubset = std::make_shared<ReachabilityStubbornSet>(net, queries);
-        stubset->setInterestingVisitor<InterestingTransitionVisitor>();
-        return SMCReducingSuccessorGenerator{net, stubset};
-    }
-
-    bool SMCRun(SMCReducingSuccessorGenerator &sgen,
+    bool SMCRun(SMCSuccessorGenerator &sgen,
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
                 int max_depth)
@@ -60,12 +55,28 @@ namespace SMC
             return true;
         }
 
+        auto stubset = std::make_shared<ReachabilityStubbornSet>(*net, query);
+        stubset->setInterestingVisitor<InterestingTransitionVisitor>();
+        stubset->prepare(&write);
+        auto stubborn = stubset->stubborn();
+        std::cout << "stubborn: " << *stubset->stubborn() << std::endl;
+
+
+
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
-            if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
+            //stubset->prepare(&write);
+            //stubset->reset();
+            //stubborn = stubset->stubborn();
+
+            if((*stubset->stubborn() + tindex))
             {
-                return true;
+                std::cout << "tindex: " << tindex << std::endl;
+                if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
+                {
+                    return true;
+                }
             }
             current_depth++;
         }
@@ -79,7 +90,6 @@ namespace SMC
         int total_runs = 0;
         int successful_runs = 0;
 
-        //SMCReducingSuccessorGenerator sgen = _makeSucGen(&net , query);
         SMCSuccessorGenerator sgen(*net);
         
         for (int i = 0; i < options.smcruns; i++)
