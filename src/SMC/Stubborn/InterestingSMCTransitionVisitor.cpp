@@ -24,6 +24,8 @@
 namespace PetriEngine {
     void InterestingSMCTransitionVisitor::_accept(const PQL::DeadlockCondition *element)
     {
+        // If the property is a deadlock property we add all transitions
+        // TODO make sure that "_net" is not a reduced net?
         for (uint32_t t = 0; t < _stubborn._net.numberOfTransitions(); t++)
         {
             _stubborn.addToStub(t);
