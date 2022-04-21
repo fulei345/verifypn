@@ -34,6 +34,7 @@ namespace PetriEngine {
 
     void InterestingSMCTransitionVisitor::_accept(const PQL::EqualCondition *element)
     {
+        // We are more pessimistic so we add more transitions when the property is an equality property
         if (!negated) {               // equal
             if (element->getExpr1()->getEval() == element->getExpr2()->getEval()) { return; }
             Visitor::visit(incr, element->getExpr1());
