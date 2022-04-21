@@ -31,60 +31,14 @@ namespace PetriEngine {
     protected:
         void _accept(const PQL::DeadlockCondition *element) override;
 
-        void _accept(const PQL::LessThanCondition *element) override;
-
-        void _accept(const PQL::LessThanOrEqualCondition *element) override;
-
         void _accept(const PQL::EqualCondition *element) override;
 
         void _accept(const PQL::NotEqualCondition *element) override;
 
-        void _accept(const PQL::AndCondition *element) override;
-
-        void _accept(const PQL::OrCondition *element) override;
-
         void _accept(const PQL::CompareConjunction *element) override;
 
-    private:
-        class IncrVisitor : public PQL::ExpressionVisitor {
-        private:
-            void _accept(const PQL::IdentifierExpr *element) override
-            {
-                Visitor::visit(this, element->compiled());
-            }
-
-            void _accept(const PQL::UnfoldedIdentifierExpr *element) override;
-
-            void _accept(const PQL::LiteralExpr *element) override;
-
-            void _accept(const PQL::PlusExpr *element) override;
-
-            void _accept(const PQL::MultiplyExpr *element) override;
-
-            void _accept(const PQL::MinusExpr *element) override;
-
-            void _accept(const PQL::SubtractExpr *element) override;
-        };
-
-        class DecrVisitor : public PQL::ExpressionVisitor {
-        private:
-            void _accept(const PQL::IdentifierExpr *element) override
-            {
-                Visitor::visit(this, element->compiled());
-            }
-
-            void _accept(const PQL::UnfoldedIdentifierExpr *element) override;
-
-            void _accept(const PQL::LiteralExpr *element) override;
-
-            void _accept(const PQL::PlusExpr *element) override;
-
-            void _accept(const PQL::MultiplyExpr *element) override;
-
-            void _accept(const PQL::MinusExpr *element) override;
-
-            void _accept(const PQL::SubtractExpr *element) override;
-        };
+        class IncrVisitor : public PQL::ExpressionVisitor {};
+        class DecrVisitor : public PQL::ExpressionVisitor {};
 
         IncrVisitor incr;
         DecrVisitor decr;
