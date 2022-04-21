@@ -30,6 +30,11 @@ namespace PetriEngine {
             setInterestingVisitor<InterestingTransitionVisitor>();
         }
 
+        ReachabilityStubbornSet(const PetriNet &net, const PQL::Condition_ptr &query, bool closure = true)
+                : StubbornSet(net, query), _closure(closure) {
+            setInterestingVisitor<InterestingTransitionVisitor>();
+        }
+
         ReachabilityStubbornSet(const PetriNet &net, bool closure = true)
                 : StubbornSet(net) , _closure(closure) {
             setInterestingVisitor<InterestingTransitionVisitor>();
