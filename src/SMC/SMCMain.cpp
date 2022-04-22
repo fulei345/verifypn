@@ -55,22 +55,25 @@ namespace SMC
             return true;
         }
 
+
         auto stubset = std::make_shared<ReachabilityStubbornSet>(*net, query);
         stubset->setInterestingVisitor<InterestingTransitionVisitor>();
         stubset->prepare(&write);
-        auto stubborn = stubset->stubborn();
-        std::cout << "stubborn: " << *stubset->stubborn() << std::endl;
 
+        for(int i = 0; i < net->numberOfTransitions(); i++){
+            std::cout << "stubborn out " << i << ": " << stubset->_stubborn[i] << std::endl;
+        }
 
 
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
-            //stubset->prepare(&write);
+
+
             //stubset->reset();
             //stubborn = stubset->stubborn();
 
-            if((*stubset->stubborn() + tindex))
+            if(stubset->_stubborn[tindex])
             {
                 std::cout << "tindex: " << tindex << std::endl;
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
@@ -78,6 +81,13 @@ namespace SMC
                     return true;
                 }
             }
+
+            stubset->prepare(&write);
+
+            for(int i = 0; i < net->numberOfTransitions(); i++){
+                std::cout << "stubborn in " << i << ": " << stubset->_stubborn[i] << std::endl;
+            }
+
             current_depth++;
         }
         return false;

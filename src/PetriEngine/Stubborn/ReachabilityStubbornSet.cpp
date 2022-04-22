@@ -25,21 +25,24 @@ namespace PetriEngine {
         reset();
         _parent = state;
 
-        constructEnabled();
-        if (_ordering.size() == 0) return false;
-        if (_ordering.size() == 1) {
-            _stubborn[_ordering.front()] = true;
-            return true;
-        }
+        //constructEnabled();
+        //if (_ordering.size() == 0) return false;
+        //if (_ordering.size() == 1) {
+        //    _stubborn[_ordering.front()] = true;
+        //    return true;
+        //}
         assert(!_queries.empty());
         for (auto &q : _queries) {
             PetriEngine::PQL::evaluateAndSet(q, PQL::EvaluationContext((*_parent).marking(), &_net));
+
+            std::cout << "stubborninrss0: " << _stubborn[0] << std::endl;
+            std::cout << "stubborninrss1: " << _stubborn[1] << std::endl;
 
             assert(_interesting->get_negated() == false);
             PQL::Visitor::visit(_interesting, q);
         }
 
-        closure();
+        //closure();
         return true;
     }
 }
