@@ -27,7 +27,7 @@
 #include "PetriEngine/PQL/Contexts.h"
 #include "PetriEngine/PQL/Evaluation.h"
 #include "PetriEngine/PQL/PredicateCheckers.h"
-#include "PetriEngine/Stubborn/ReachabilityStubbornSet.h"
+#include "SMC/SMCStubbornSet.h"
 
 #include <vector>
 
@@ -56,7 +56,7 @@ namespace SMC
         }
 
 
-        auto stubset = std::make_shared<ReachabilityStubbornSet>(*net, query);
+        auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         stubset->setInterestingVisitor<InterestingTransitionVisitor>();
         auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
