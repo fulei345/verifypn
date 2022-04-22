@@ -58,10 +58,11 @@ namespace SMC
 
         auto stubset = std::make_shared<ReachabilityStubbornSet>(*net, query);
         stubset->setInterestingVisitor<InterestingTransitionVisitor>();
+        auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
 
         for(int i = 0; i < net->numberOfTransitions(); i++){
-            std::cout << "stubborn out " << i << ": " << stubset->_stubborn[i] << std::endl;
+            std::cout << "stubborn out " << i << ": " << stubborn[i] << std::endl;
         }
 
 
@@ -71,9 +72,8 @@ namespace SMC
 
 
             //stubset->reset();
-            //stubborn = stubset->stubborn();
 
-            if(stubset->_stubborn[tindex])
+            if(stubborn[tindex])
             {
                 std::cout << "tindex: " << tindex << std::endl;
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
@@ -85,7 +85,7 @@ namespace SMC
             stubset->prepare(&write);
 
             for(int i = 0; i < net->numberOfTransitions(); i++){
-                std::cout << "stubborn in " << i << ": " << stubset->_stubborn[i] << std::endl;
+                std::cout << "stubborn in " << i << ": " << stubborn[i] << std::endl;
             }
 
             current_depth++;

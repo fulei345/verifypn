@@ -112,7 +112,7 @@ namespace PetriEngine {
         static constexpr auto PresetSeen = 1;
         static constexpr auto PostsetSeen = 2;
         static constexpr auto InhibPostsetSeen = 4;
-    
+    protected:
         const Structures::State *_parent;
 
         struct place_t {
