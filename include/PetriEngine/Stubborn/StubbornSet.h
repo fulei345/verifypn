@@ -101,6 +101,8 @@ namespace PetriEngine {
             _queries = conds;
         }
 
+        virtual void addToStub(uint32_t t);
+
         [[nodiscard]] size_t nenabled() const { return _nenabled; }
 
         [[nodiscard]] bool *enabled() const { return _enabled.get(); };
@@ -148,8 +150,6 @@ namespace PetriEngine {
             else
                 return post_size;
         }
-
-        virtual void addToStub(uint32_t t);
 
         template <typename T = std::nullptr_t>
         void closure(T&& callback = nullptr) {
