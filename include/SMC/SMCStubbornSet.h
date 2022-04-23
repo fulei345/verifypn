@@ -18,9 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#include "PetriEngine/Stubborn/StubbornSet.h"
-#include "PetriEngine/Stubborn/InterestingTransitionVisitor.h"
+#include "SMC/Stubborn/InterestingSMCTransitionVisitor.h"
 
 namespace SMC {
     using namespace PetriEngine;
@@ -28,7 +26,7 @@ namespace SMC {
     public:
         SMCStubbornSet(const PetriNet &net, const PQL::Condition_ptr &query, bool closure = false)
                 : StubbornSet(net, query), _closure(closure) {
-            setInterestingVisitor<InterestingTransitionVisitor>();
+            setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
         }
 
         bool prepare(const Structures::State *state) override;
@@ -40,7 +38,7 @@ namespace SMC {
         }
 
     private:
-        std::unique_ptr<InterestingTransitionVisitor> _interesting;
+        std::unique_ptr<PetriEngine::InterestingSMCTransitionVisitor> _interesting;
 
         bool _closure;
     };

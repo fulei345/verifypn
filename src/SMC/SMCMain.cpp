@@ -57,7 +57,7 @@ namespace SMC
 
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
-        stubset->setInterestingVisitor<InterestingTransitionVisitor>();
+        stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
         auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
 
