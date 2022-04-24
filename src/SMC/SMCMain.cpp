@@ -27,7 +27,7 @@
 #include "PetriEngine/PQL/Contexts.h"
 #include "PetriEngine/PQL/Evaluation.h"
 #include "PetriEngine/PQL/PredicateCheckers.h"
-#include "SMC/SMCStubbornSet.h"
+#include "SMC/Stubborn/SMCStubbornSet.h"
 
 #include <vector>
 
