@@ -55,23 +55,14 @@ namespace SMC
             return true;
         }
 
-
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
         auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
 
-        for(int i = 0; i < net->numberOfTransitions(); i++){
-            std::cout << "stubborn out " << i << ": " << stubborn[i] << std::endl;
-        }
-
-
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
-
-
-            //stubset->reset();
 
             if(stubborn[tindex])
             {
@@ -83,11 +74,6 @@ namespace SMC
             }
 
             stubset->prepare(&write);
-
-            for(int i = 0; i < net->numberOfTransitions(); i++){
-                std::cout << "stubborn in " << i << ": " << stubborn[i] << std::endl;
-            }
-
             current_depth++;
         }
         return false;
@@ -112,6 +98,4 @@ namespace SMC
         }
         return (((double)successful_runs)/((double)total_runs))*100.;
     }
-
-
 }
