@@ -60,6 +60,10 @@ namespace SMC
         auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
 
+        for(int i = 0; i < net->numberOfTransitions(); i++){
+            std::cout << "stubborn in " << i << ": " << stubborn[i] << std::endl;
+        }
+
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
@@ -75,6 +79,10 @@ namespace SMC
 
             stubset->prepare(&write);
             current_depth++;
+
+            for(int i = 0; i < net->numberOfTransitions(); i++){
+                std::cout << "stubborn out " << i << ": " << stubborn[i] << std::endl;
+            }
         }
         return false;
     }
