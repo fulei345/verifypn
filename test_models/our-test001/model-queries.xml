@@ -2,8 +2,8 @@
 <property-set xmlns="http://tapaal.net/">
   
   <property>
-    <id>Query Comment/Name Here</id>
-    <description>Query Comment/Name Here</description>
+    <id>Equal</id>
+    <description>Equal</description>
     <formula>
       <exists-path>
         <finally>
@@ -18,12 +18,25 @@
     </formula>
   </property>
   <property>
-    <id>Query Comment/Name Here</id>
-    <description>Query Comment/Name Here</description>
+    <id>Deadlcok</id>
+    <description>Deadlcok</description>
     <formula>
       <exists-path>
         <finally>
           <deadlock/>
+        </finally>
+      </exists-path>
+    </formula>
+  </property>
+  <property>
+    <id>T</id>
+    <description>T</description>
+    <formula>
+      <exists-path>
+        <finally>
+          <is-fireable>
+            <transition>T0</transition>
+          </is-fireable>
         </finally>
       </exists-path>
     </formula>
