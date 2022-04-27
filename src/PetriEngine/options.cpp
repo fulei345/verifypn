@@ -114,6 +114,7 @@ void printHelp() {
         "\n"
         "Options:\n"
         "  -smc <number of runs><depth>         Simulate a number of runs, with depth bound\n"
+        "  -i                                   Use Aphi Visitor\n"
         "  -k, --k-bound <number of tokens>     Token bound, 0 to ignore (default)\n"
         "  -t, --trace                          Provide XML-trace to stderr\n"
         "  -s, --search-strategy <strategy>     Search strategy:\n"
