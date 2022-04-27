@@ -133,7 +133,6 @@ namespace PetriEngine {
         bool negated = false;
 
 
-    public:
 
         /*
          * Mutually recursive visitors for incrementing/decrementing of places.
