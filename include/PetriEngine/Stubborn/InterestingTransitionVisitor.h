@@ -131,7 +131,8 @@ namespace PetriEngine {
         void _accept(const PQL::BooleanCondition *element) override;
 
         bool negated = false;
-    private:
+
+
 
         /*
          * Mutually recursive visitors for incrementing/decrementing of places.

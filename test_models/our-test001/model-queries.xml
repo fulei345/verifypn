@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<property-set xmlns="http://tapaal.net/">
+  
+  <property>
+    <id>Equal</id>
+    <description>Equal</description>
+    <formula>
+      <exists-path>
+        <finally>
+          <integer-eq>
+            <tokens-count>
+              <place>Final</place>
+            </tokens-count>
+            <integer-constant>1</integer-constant>
+          </integer-eq>
+        </finally>
+      </exists-path>
+    </formula>
+  </property>
+  <property>
+    <id>Deadlcok</id>
+    <description>Deadlcok</description>
+    <formula>
+      <exists-path>
+        <finally>
+          <deadlock/>
+        </finally>
+      </exists-path>
+    </formula>
+  </property>
+  <property>
+    <id>T</id>
+    <description>T</description>
+    <formula>
+      <exists-path>
+        <finally>
+          <is-fireable>
+            <transition>T0</transition>
+          </is-fireable>
+        </finally>
+      </exists-path>
+    </formula>
+  </property>
+</property-set>

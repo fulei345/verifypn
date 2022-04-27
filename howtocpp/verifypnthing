@@ -48,3 +48,4 @@ extend nets with domination on transitions
 
 -smc 10 10 --xml-queries 1 ../../../test_models/tricky-test001/model.pnml ../../../test_models/tricky-test001/query.xml
 
+./verifypn-linux64 -smc 1000 100 --xml-queries 1 ../../../test_models/our-test001/model.pnml ../../../test_models/our-test001/model-queries.xml -x 2

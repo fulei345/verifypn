@@ -66,7 +66,6 @@ namespace SMC
 
             if(stubborn[tindex])
             {
-                std::cout << "tindex: " << tindex << std::endl;
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
                     return true;
