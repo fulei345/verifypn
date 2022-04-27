@@ -22,10 +22,14 @@
 #include "SMC/SMCMain.h"
 
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
+
 #include "PetriEngine/PQL/PQL.h"
 #include "PetriEngine/PQL/Contexts.h"
 #include "PetriEngine/PQL/Evaluation.h"
 #include "PetriEngine/PQL/PredicateCheckers.h"
+#include "SMC/Stubborn/SMCStubbornSet.h"
+
+#include <vector>
 
 using namespace PetriEngine;
 
@@ -51,13 +55,24 @@ namespace SMC
             return true;
         }
 
+        auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
+        stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+        auto stubborn = stubset->stubborn();
+        stubset->prepare(&write);
+
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
-            if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
+
+            if(stubborn[tindex])
             {
-                return true;
+                if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
+                {
+                    return true;
+                }
             }
+
+            stubset->prepare(&write);
             current_depth++;
         }
         return false;
@@ -69,6 +84,7 @@ namespace SMC
     {
         int total_runs = 0;
         int successful_runs = 0;
+
         SMCSuccessorGenerator sgen(*net);
         
         for (int i = 0; i < options.smcruns; i++)
