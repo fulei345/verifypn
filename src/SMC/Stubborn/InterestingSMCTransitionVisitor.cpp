@@ -19,7 +19,6 @@
  */
 
 #include "SMC/Stubborn/InterestingSMCTransitionVisitor.h"
-#include "PetriEngine/Stubborn/InterestingTransitionVisitor.h"
 
 namespace PetriEngine {
     void InterestingSMCTransitionVisitor::_accept(const PQL::DeadlockCondition *element)

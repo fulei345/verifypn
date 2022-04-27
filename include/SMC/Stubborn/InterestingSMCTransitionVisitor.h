@@ -37,10 +37,10 @@ namespace PetriEngine {
 
         void _accept(const PQL::CompareConjunction *element) override;
 
-        class IncrVisitor : public PQL::ExpressionVisitor {};
-        class DecrVisitor : public PQL::ExpressionVisitor {};
+        // class IncrVisitor : public PQL::ExpressionVisitor {};
+        // class DecrVisitor : public PQL::ExpressionVisitor {};
 
-        IncrVisitor incr;
-        DecrVisitor decr;
+        // IncrVisitor incr;
+        // DecrVisitor decr;
     };
 }
