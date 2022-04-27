@@ -38,7 +38,8 @@ namespace SMC
     bool SMCRun(SMCSuccessorGenerator &sgen,
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
-                int max_depth)
+                int max_depth,
+                bool aphi)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -56,7 +57,12 @@ namespace SMC
         }
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
-        stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+        if(aphi){
+            stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
+        }
+        else{
+            stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+        }
         auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
 
@@ -72,7 +78,9 @@ namespace SMC
                 }
             }
 
-            stubset->prepare(&write);
+            if(aphi){
+                stubset->prepare(&write);
+            }
             current_depth++;
         }
         return false;
@@ -89,7 +97,7 @@ namespace SMC
         
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.useAphi))
             {
                 successful_runs++;
             }
