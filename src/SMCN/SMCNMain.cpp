@@ -58,7 +58,7 @@ namespace SMCN
         return false;
     }
 
-    double SMCNMain(const PetriNet *net,
+    std::vector<int> SMCNMain(const PetriNet *net,
                          options_t &options,
                          const PQL::Condition_ptr &query)
     {
@@ -69,16 +69,29 @@ namespace SMCN
         int outdepth = 0;
         int totaldepth = 0;
 
+        std::vector<int> results;
+
         for (int i = 0; i < options.smcruns; i++)
         {
+            // begin timer
+            auto begin = std::chrono::high_resolution_clock::now();
+
             bool succ = SMCRun(sgen, net, query, options.smcdepth, outdepth);
             totaldepth += outdepth;
             if (succ)
             {
                 successful_runs++;
             }
+
+            // end timer
+            auto end = std::chrono::high_resolution_clock::now();
+            auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+
+            results.push_back(time);
         }
         //return (((double)successful_runs)/((double)options.smcruns))*100.;
-        return ((double)totaldepth/(double)options.smcruns);
+        //return ((double)totaldepth/(double)options.smcruns);
+        results.push_back(((double)totaldepth/(double)options.smcruns));
+        return results;
     }
 }

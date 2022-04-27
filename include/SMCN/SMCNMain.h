@@ -23,7 +23,7 @@
 #include "PetriEngine/options.h"
 
 namespace SMCN{
-    double SMCNMain(const PetriEngine::PetriNet *net,
+    std::vector<int> SMCNMain(const PetriEngine::PetriNet *net,
                          options_t &options,
                          const PetriEngine::PQL::Condition_ptr &query);
 }

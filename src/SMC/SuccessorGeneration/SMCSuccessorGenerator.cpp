@@ -49,20 +49,23 @@ namespace SMC
                     }
                     else
                     {
-                        // TODO non-uniform, increment n with potency instead n+=m
-                        //++n;
-                        //double randomNum = (double)random()/RAND_MAX;
-                        
-                        // TODO non-uniform, (double)m/(double)n
-                        //if (randomNum <= 1./((double)n))
-                        int p = _net.transitionPotency()[tindex];
-                        n+=p;
-                        double randomNum = (double)rand()/RAND_MAX;
-
-                        if (randomNum <= (double)p/(double)n)
+                        // uniform
+                        ++n;
+                        double randomNum = (double)random()/RAND_MAX;
+                        if (randomNum <= 1./((double)n))
                         {
-                            tcurrent = tindex;
+                           tcurrent = tindex;
                         }
+
+                        // non-uniform (also uniform)
+                        // int p = _net.transitionPotency()[tindex];
+                        // n += p;
+                        
+                        // double randomNum = (double)random()/RAND_MAX;
+                        // if (randomNum <= (double)p/(double)n)
+                        // {
+                        //     tcurrent = tindex;
+                        // }
                     }
                 }
             }

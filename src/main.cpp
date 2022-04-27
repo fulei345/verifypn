@@ -46,6 +46,7 @@
 
 #include "VerifyPN.h"
 #include "PetriEngine/Synthesis/SimpleSynthesis.h"
+#include <random>
 
 using namespace PetriEngine;
 using namespace PetriEngine::PQL;
@@ -309,22 +310,31 @@ int main(int argc, const char **argv)
         if (options.smc)
         {
             auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
-            double probability = 0;
-            auto begin = std::chrono::high_resolution_clock::now();
+            //double probability = 0;
+            std::vector<int> probability;
+
+            // random potency generator
+            // std::random_device rd;
+            // std::mt19937 gen(rd());
+            // std::uniform_int_distribution<> distr(1, 100);
+            // auto p_nums = net->transitionPotency().size();
+            // for (int i = 0; i < p_nums; i++)
+            // {
+            //     net->transitionPotency()[i] = distr(gen);
+            // }
 
             for (size_t i = 0; i < queries.size(); ++i) {
-                double probability = SMC::SMCMain(net.get(), options, queries[i]);
-                std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << std::endl;
-                std::cout << "result percent: " << probability << std::endl;
+                probability = SMC::SMCMain(net.get(), options, queries[i]);
+                //std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << std::endl;
+                //std::cout << "result percent: " << probability << std::endl;
             }
 
-            auto end = std::chrono::high_resolution_clock::now();
-            auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-
-            std::cout << "Places," << net->numberOfPlaces();
-            std::cout << ",Transitions," << net->numberOfTransitions();
-            std::cout << ",Avg_depth," << probability;
-            std::cout << ",Duration," << time << std::endl;
+            std::cout << "" << net->numberOfPlaces();
+            std::cout << "," << net->numberOfTransitions();
+            for(auto &element : probability){
+                std::cout << "," << element;
+            }
+            std::cout << std::endl;
 
             return to_underlying(ReturnValue::SuccessCode);
         }
@@ -333,21 +343,30 @@ int main(int argc, const char **argv)
         if (options.smcn)
         {
             auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
-            double probability = 0;
-            auto begin = std::chrono::high_resolution_clock::now();
+            //double probability = 0;
+            std::vector<int> probability;
+            
+            // random potency generator
+            // std::random_device rd;
+            // std::mt19937 gen(rd());
+            // std::uniform_int_distribution<> distr(1, 100);
+            // auto p_nums = net->transitionPotency().size();
+            // for (int i = 0; i < p_nums; i++)
+            // {
+            //    net->transitionPotency()[i] = distr(gen);
+            // }
 
             for (size_t i = 0; i < queries.size(); ++i)
             {
                 probability = SMCN::SMCNMain(net.get(), options, queries[i]);
             }
-
-            auto end = std::chrono::high_resolution_clock::now();
-            auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             
-            std::cout << "Places," << net->numberOfPlaces();
-            std::cout << ",Transitions," << net->numberOfTransitions();
-            std::cout << ",Avg_depth," << probability;
-            std::cout << ",Duration," << time << std::endl;
+            std::cout << "" << net->numberOfPlaces();
+            std::cout << "," << net->numberOfTransitions();
+            for(auto &element : probability){
+                std::cout << "," << element;
+            }
+            std::cout << std::endl;
 
             return to_underlying(ReturnValue::SuccessCode);
         }

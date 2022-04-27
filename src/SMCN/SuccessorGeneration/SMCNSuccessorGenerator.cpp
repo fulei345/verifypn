@@ -34,6 +34,7 @@ namespace SMCN
     {
         _parent = &write;
         std::vector<u_int32_t> enabled;
+        std::vector<u_int32_t> enabledPotencies;
 
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -54,6 +55,7 @@ namespace SMCN
                     else
                     {
                         enabled.push_back(tindex);
+                        enabledPotencies.push_back(_net.transitionPotency()[tindex]);
                     }
                 }
             }
@@ -61,8 +63,16 @@ namespace SMCN
         // Set tindex to chosen transition so we can read it in main
         if(!enabled.empty())
         {
+            //uniform
             std::uniform_int_distribution<> distr(0, enabled.size());
-            tindex = distr(gen);
+            int select_tindex = distr(gen);
+            tindex = enabled[select_tindex];
+
+            //non-uniform (also uniform)
+            // std::discrete_distribution<> distr(enabledPotencies.begin(), enabledPotencies.end());
+            // int select_tindex = distr(gen);
+            // tindex = enabled[select_tindex];
+            
             _fire(write, tindex);
             return true;
         }
