@@ -60,7 +60,6 @@ namespace SMC
         auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
 
-
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
@@ -75,7 +74,6 @@ namespace SMC
 
             stubset->prepare(&write);
             current_depth++;
-
         }
         return false;
     }
