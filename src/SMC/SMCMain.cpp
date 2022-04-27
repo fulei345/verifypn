@@ -60,9 +60,6 @@ namespace SMC
         auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
 
-        for(int i = 0; i < net->numberOfTransitions(); i++){
-            std::cout << "stubborn in " << i << ": " << stubborn[i] << std::endl;
-        }
 
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
@@ -70,7 +67,6 @@ namespace SMC
 
             if(stubborn[tindex])
             {
-                std::cout << "tindex: " << tindex << std::endl;
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
                     return true;
@@ -80,9 +76,6 @@ namespace SMC
             stubset->prepare(&write);
             current_depth++;
 
-            for(int i = 0; i < net->numberOfTransitions(); i++){
-                std::cout << "stubborn out " << i << ": " << stubborn[i] << std::endl;
-            }
         }
         return false;
     }
