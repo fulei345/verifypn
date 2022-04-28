@@ -114,7 +114,10 @@ void printHelp() {
         "\n"
         "Options:\n"
         "  -smc <number of runs><depth>         Simulate a number of runs, with depth bound\n"
-        "  -i                                   Use Aphi Visitor\n"
+        "  -i, <int transtions>                 Interesting Transitions:\n"
+        "                                       - SMCIT_ALL    Int trans for all trans\n"
+        "                                       - SMCIT_AM     Int trans for given marking\n"
+        "                                       - SMCIT_A      Int trans for a given p/n\n"
         "  -k, --k-bound <number of tokens>     Token bound, 0 to ignore (default)\n"
         "  -t, --trace                          Provide XML-trace to stderr\n"
         "  -s, --search-strategy <strategy>     Search strategy:\n"
@@ -245,7 +248,19 @@ bool options_t::parse(int argc, const char** argv) {
             }
             smc = true;
         } else if (std::strcmp(argv[i], "-i") == 0) {
-            useAphi = true;
+            if (i == argc - 1) {
+                throw base_error("Missing search strategy after ", std::quoted(argv[i]));
+            }
+            auto* s = argv[++i];
+            if (std::strcmp(s, "SMCIT_ALL") == 0)
+                smcit = 0;
+            else if (std::strcmp(s, "SMCIT_AM") == 0)
+                smcit = 1;
+            else if (std::strcmp(s, "SMCIT_A") == 0)
+                smcit = 2;
+            else {
+                throw base_error("Argument Error: Unrecognized search strategy ", std::quoted(s));
+            }
         } else if (std::strcmp(argv[i], "-s") == 0 || std::strcmp(argv[i], "--search-strategy") == 0) {
             if (i == argc - 1) {
                 throw base_error("Missing search strategy after ", std::quoted(argv[i]));
