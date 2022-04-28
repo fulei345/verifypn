@@ -70,4 +70,9 @@ namespace PetriEngine {
     {
         // TODO implement this
     }
+
+    void InterestingSMCTransitionVisitor::_accept(const PQL::AndCondition *element)
+    {
+        for (auto &c : *element) Visitor::visit(this, c);
+    }
 }

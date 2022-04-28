@@ -37,6 +37,6 @@ namespace PetriEngine {
 
         void _accept(const PQL::CompareConjunction *element) override;
 
-
+        void _accept(const PQL::AndCondition *element) override;
     };
 }
