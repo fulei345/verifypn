@@ -38,5 +38,9 @@ namespace PetriEngine {
         void _accept(const PQL::CompareConjunction *element) override;
 
         void _accept(const PQL::AndCondition *element) override;
+
+        void _accept(const PQL::LessThanCondition *element) override;
+
+        void _accept(const PQL::LessThanOrEqualCondition *element) override;
     };
 }

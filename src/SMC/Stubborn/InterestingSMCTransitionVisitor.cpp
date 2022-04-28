@@ -33,37 +33,18 @@ namespace PetriEngine {
 
     void InterestingSMCTransitionVisitor::_accept(const PQL::EqualCondition *element)
     {
-        // We are more pessimistic so we add more transitions when the property is an equality property
-        if (!negated) {               // equal
-            if (element->getExpr1()->getEval() == element->getExpr2()->getEval()) { return; }
-            Visitor::visit(incr, element->getExpr1());
-            Visitor::visit(decr, element->getExpr1());
-            Visitor::visit(incr, element->getExpr2());
-            Visitor::visit(decr, element->getExpr2());
-        } else {                    // not equal
-            if (element->getExpr1()->getEval() != element->getExpr2()->getEval()) { return; }
-            Visitor::visit(incr, element->getExpr1());
-            Visitor::visit(decr, element->getExpr1());
-            Visitor::visit(incr, element->getExpr2());
-            Visitor::visit(decr, element->getExpr2());
-        }
+        Visitor::visit(incr, element->getExpr1());
+        Visitor::visit(decr, element->getExpr1());
+        Visitor::visit(incr, element->getExpr2());
+        Visitor::visit(decr, element->getExpr2());
     }
 
     void InterestingSMCTransitionVisitor::_accept(const PQL::NotEqualCondition *element)
-    {
-        if (!negated) {               // not equal
-            if (element->getExpr1()->getEval() != element->getExpr2()->getEval()) { return; }
-            Visitor::visit(incr, element->getExpr1());
-            Visitor::visit(decr, element->getExpr1());
-            Visitor::visit(incr, element->getExpr2());
-            Visitor::visit(decr, element->getExpr2());
-        } else {                    // equal
-            if (element->getExpr1()->getEval() == element->getExpr2()->getEval()) { return; }
-            Visitor::visit(incr, element->getExpr1());
-            Visitor::visit(decr, element->getExpr1());
-            Visitor::visit(incr, element->getExpr2());
-            Visitor::visit(decr, element->getExpr2());
-        }
+    {       
+        Visitor::visit(incr, element->getExpr1());
+        Visitor::visit(decr, element->getExpr1());
+        Visitor::visit(incr, element->getExpr2());
+        Visitor::visit(decr, element->getExpr2());
     }
 
     void InterestingSMCTransitionVisitor::_accept(const PQL::CompareConjunction *element)
@@ -74,5 +55,27 @@ namespace PetriEngine {
     void InterestingSMCTransitionVisitor::_accept(const PQL::AndCondition *element)
     {
         for (auto &c : *element) Visitor::visit(this, c);
+    }
+
+    void InterestingSMCTransitionVisitor::_accept(const PQL::LessThanCondition *element)
+    {
+        if (!negated) {               // less than
+            Visitor::visit(decr, element->getExpr1());
+            Visitor::visit(incr, element->getExpr2());
+        } else {                    // greater than or equal
+            Visitor::visit(incr, element->getExpr1());
+            Visitor::visit(decr, element->getExpr2());
+        }
+    }
+
+    void InterestingSMCTransitionVisitor::_accept(const PQL::LessThanOrEqualCondition *element)
+    {
+        if (!negated) {               // less than or equal
+            Visitor::visit(decr, element->getExpr1());
+            Visitor::visit(incr, element->getExpr2());
+        } else {                    // greater than
+            Visitor::visit(incr, element->getExpr1());
+            Visitor::visit(decr, element->getExpr2());
+        }
     }
 }
