@@ -33,12 +33,12 @@ namespace SMC {
             PetriEngine::PQL::evaluateAndSet(q, PQL::EvaluationContext((*_parent).marking(), &_net));
 
             if(aphi){
-                assert(_interesting->get_negated() == false);
-                PQL::Visitor::visit(_interesting, q);
-            }
-            else{
                 assert(_interestingSMC->get_negated() == false);
                 PQL::Visitor::visit(_interestingSMC, q);
+            }
+            else{
+                assert(_interesting->get_negated() == false);
+                PQL::Visitor::visit(_interesting, q);
             }
         }
 

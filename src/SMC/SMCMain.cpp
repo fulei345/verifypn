@@ -58,10 +58,10 @@ namespace SMC
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         if(aphi){
-            stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
+            stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
         }
         else{
-            stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+            stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
         }
         auto stubborn = stubset->stubborn();
         stubset->prepare(&write);
@@ -78,7 +78,7 @@ namespace SMC
                 }
             }
 
-            if(aphi){
+            if(!aphi){
                 stubset->prepare(&write);
             }
             current_depth++;
