@@ -39,7 +39,7 @@ namespace SMC
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
                 int max_depth,
-                bool aphi)
+                int SMCit)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -56,21 +56,23 @@ namespace SMC
             return true;
         }
 
-        auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
-        if(aphi){
-            stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+        if(SMCit){
+            auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
+            if(SMCit == 1){
+                stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+            }
+            else{
+                stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingTransitionVisitor>();
+            }
+            auto stubborn = stubset->stubborn();
+            stubset->prepare(&write);
         }
-        else{
-            stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
-        }
-        auto stubborn = stubset->stubborn();
-        stubset->prepare(&write);
 
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
 
-            if(stubborn[tindex])
+            if(!SMCit || stubborn[tindex])
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
@@ -78,7 +80,7 @@ namespace SMC
                 }
             }
 
-            if(!aphi){
+            if(SMCit == 1){
                 stubset->prepare(&write);
             }
             current_depth++;
