@@ -61,7 +61,7 @@ struct options_t {
     bool smc = false;
     int smcruns = 1000;
     int smcdepth = 1000;
-    bool useAphi = false;
+    int smcit = 0;
     int kbound = 0;
     const char* modelfile = nullptr;
     const char* queryfile = nullptr;
