@@ -47,11 +47,6 @@ namespace PetriEngine {
         Visitor::visit(decr, element->getExpr2());
     }
 
-    void InterestingSMCTransitionVisitor::_accept(const PQL::CompareConjunction *element)
-    {
-        // TODO implement this
-    }
-
     void InterestingSMCTransitionVisitor::_accept(const PQL::AndCondition *element)
     {
         for (auto &c : *element) Visitor::visit(this, c);
