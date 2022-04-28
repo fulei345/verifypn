@@ -56,15 +56,16 @@ namespace SMC
             return true;
         }
 
+        auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
+        auto stubborn = stubset->stubborn();
+
         if(SMCit){
-            auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
             if(SMCit == 1){
-                stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+                stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
             }
             else{
-                stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingTransitionVisitor>();
+                stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
-            auto stubborn = stubset->stubborn();
             stubset->prepare(&write);
         }
 
@@ -99,7 +100,7 @@ namespace SMC
         
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, options.useAphi))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit))
             {
                 successful_runs++;
             }
