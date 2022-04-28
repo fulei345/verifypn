@@ -41,14 +41,14 @@ namespace SMC {
         void setInterestingSMCVisitor()
         {
                 _interestingSMC = std::make_unique<TVisitorSMC>(*this, _closure);
-                aphi = true;
+                SMCit = true;
         }
 
     private:
         std::unique_ptr<PetriEngine::InterestingTransitionVisitor> _interesting;
         std::unique_ptr<PetriEngine::InterestingSMCTransitionVisitor> _interestingSMC;
 
-        bool aphi = false;
+        bool SMCit = false;
 
         bool _closure;
     };
