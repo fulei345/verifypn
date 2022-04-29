@@ -19,6 +19,8 @@
  */
 
 #include "SMC/Stubborn/InterestingSMCTransitionVisitor.h"
+#include "PetriEngine/Stubborn/InterestingTransitionVisitor.h"
+
 
 namespace SMC {
     using namespace PetriEngine;
@@ -26,7 +28,6 @@ namespace SMC {
     public:
         SMCStubbornSet(const PetriNet &net, const PQL::Condition_ptr &query, bool closure = false)
                 : StubbornSet(net, query), _closure(closure) {
-            setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
         }
 
         bool prepare(const Structures::State *state) override;
@@ -34,11 +35,20 @@ namespace SMC {
         template <typename TVisitor>
         void setInterestingVisitor()
         {
-            _interesting = std::make_unique<TVisitor>(*this, _closure);
+                _interesting = std::make_unique<TVisitor>(*this, _closure);
+        }
+        template <typename TVisitorSMC>
+        void setInterestingSMCVisitor()
+        {
+                _interestingSMC = std::make_unique<TVisitorSMC>(*this, _closure);
+                SMCit = true;
         }
 
     private:
-        std::unique_ptr<PetriEngine::InterestingSMCTransitionVisitor> _interesting;
+        std::unique_ptr<PetriEngine::InterestingTransitionVisitor> _interesting;
+        std::unique_ptr<PetriEngine::InterestingSMCTransitionVisitor> _interestingSMC;
+
+        bool SMCit = false;
 
         bool _closure;
     };

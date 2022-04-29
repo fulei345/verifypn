@@ -38,7 +38,8 @@ namespace SMC
     bool SMCRun(SMCSuccessorGenerator &sgen,
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
-                int max_depth)
+                int max_depth,
+                int SMCit)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -56,15 +57,27 @@ namespace SMC
         }
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
-        stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
         auto stubborn = stubset->stubborn();
-        stubset->prepare(&write);
+
+        if(SMCit){
+            if(SMCit == 1){
+                stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
+            }
+            else{
+                stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+            }
+            stubset->prepare(&write);
+            for(int i = 0; i < net->numberOfTransitions(); i++){
+                std::cout << "stubborn in " << i << ": " << stubborn[i] <<  " name: " << net->transitionNames()[i] <<std::endl;
+            }
+
+        }
 
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
 
-            if(stubborn[tindex])
+            if(!SMCit || stubborn[tindex])
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
@@ -72,7 +85,9 @@ namespace SMC
                 }
             }
 
-            stubset->prepare(&write);
+            if(SMCit == 1){
+                stubset->prepare(&write);
+            }
             current_depth++;
         }
         return false;
@@ -89,7 +104,7 @@ namespace SMC
         
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit))
             {
                 successful_runs++;
             }

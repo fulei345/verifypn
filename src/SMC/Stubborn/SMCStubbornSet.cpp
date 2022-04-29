@@ -32,8 +32,14 @@ namespace SMC {
         for (auto &q : _queries) {
             PetriEngine::PQL::evaluateAndSet(q, PQL::EvaluationContext((*_parent).marking(), &_net));
 
-            assert(_interesting->get_negated() == false);
-            PQL::Visitor::visit(_interesting, q);
+            if(SMCit){
+                assert(_interestingSMC->get_negated() == false);
+                PQL::Visitor::visit(_interestingSMC, q);
+            }
+            else{
+                assert(_interesting->get_negated() == false);
+                PQL::Visitor::visit(_interesting, q);
+            }
         }
 
         return true;
