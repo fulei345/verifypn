@@ -67,10 +67,6 @@ namespace SMC
                 stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
             stubset->prepare(&write);
-            for(int i = 0; i < net->numberOfTransitions(); i++){
-                std::cout << "stubborn in " << i << ": " << stubborn[i] <<  " name: " << net->transitionNames()[i] <<std::endl;
-            }
-
         }
 
         while(current_depth < max_depth && sgen.next(write, tindex))
