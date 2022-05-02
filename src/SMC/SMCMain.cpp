@@ -114,6 +114,10 @@ namespace SMC
                 successful_runs++;
             }
             total_runs++;
+
+            if(SMCit == 1){
+                stubset->prepare(&write);            
+            }
         }
         return (((double)successful_runs)/((double)total_runs))*100.;
     }
