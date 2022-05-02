@@ -266,7 +266,15 @@ int main(int argc, const char** argv) {
             auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
 
             for (size_t i = 0; i < queries.size(); ++i) {
+                // begin timer
+                auto begin = std::chrono::high_resolution_clock::now();
+
                 double probability = SMC::SMCMain(net.get(), options, queries[i]);
+
+                // end timer
+                auto end = std::chrono::high_resolution_clock::now();
+                auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+                
                 std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << std::endl;
                 std::cout << "result percent: " << probability << std::endl;
             }

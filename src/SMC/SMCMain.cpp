@@ -91,6 +91,7 @@ namespace SMC
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         auto stubborn = stubset->stubborn();
+        int64_t preparationTime = 0;
         auto SMCit = options.smcit;
         
         if(SMCit){
@@ -102,7 +103,15 @@ namespace SMC
             else{
                 stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
+
+            // begin set preparation timer
+            auto begin = std::chrono::high_resolution_clock::now();
+
             stubset->prepare(&initialwrite);
+
+            // end set preparation timer
+            auto end = std::chrono::high_resolution_clock::now();
+            preparationTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         }
 
         for (int i = 0; i < options.smcruns; i++)
