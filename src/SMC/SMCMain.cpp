@@ -39,7 +39,9 @@ namespace SMC
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
                 int max_depth,
-                int SMCit)
+                int SMCit,
+                std::shared_ptr<SMC::SMCStubbornSet> stubset,
+                bool *stubborn)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -54,21 +56,6 @@ namespace SMC
         if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
         {
             return true;
-        }
-
-        auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
-        auto stubborn = stubset->stubborn();
-
-        if(SMCit){
-            // Am(phi)
-            if(SMCit == 1){
-                stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
-            }
-            // A(phi)
-            else{
-                stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
-            }
-            stubset->prepare(&write);
         }
 
         while(current_depth < max_depth && sgen.next(write, tindex))
@@ -99,10 +86,30 @@ namespace SMC
         int successful_runs = 0;
 
         SMCSuccessorGenerator sgen(*net);
+
+        Structures::State write(net->makeInitialMarking());
+        sgen.prepare(&write);
+        sgen.reset();
+
+        auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
+        auto stubborn = stubset->stubborn();
+        auto SMCit = options.smcit;
         
+        if(SMCit){
+            // Am(phi)
+            if(SMCit == 1){
+                stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
+            }
+            // A(phi)
+            else{
+                stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
+            }
+            stubset->prepare(&write);
+        }
+
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit))
+            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn))
             {
                 successful_runs++;
             }
