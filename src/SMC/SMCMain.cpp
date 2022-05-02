@@ -87,9 +87,7 @@ namespace SMC
 
         SMCSuccessorGenerator sgen(*net);
 
-        Structures::State write(net->makeInitialMarking());
-        sgen.prepare(&write);
-        sgen.reset();
+        Structures::State initialwrite(net->makeInitialMarking());
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         auto stubborn = stubset->stubborn();
@@ -104,7 +102,7 @@ namespace SMC
             else{
                 stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
-            stubset->prepare(&write);
+            stubset->prepare(&initialwrite);
         }
 
         for (int i = 0; i < options.smcruns; i++)
@@ -114,6 +112,11 @@ namespace SMC
                 successful_runs++;
             }
             total_runs++;
+
+            // reset Am(phi) to initial
+            if(SMCit == 1){
+                stubset->prepare(&initialwrite);
+            }
         }
         return (((double)successful_runs)/((double)total_runs))*100.;
     }
