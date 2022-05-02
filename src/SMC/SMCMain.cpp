@@ -60,9 +60,11 @@ namespace SMC
         auto stubborn = stubset->stubborn();
 
         if(SMCit){
+            // Am(phi)
             if(SMCit == 1){
                 stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
             }
+            // A(phi)
             else{
                 stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
@@ -80,7 +82,7 @@ namespace SMC
                     return true;
                 }
             }
-
+            // update Am(phi)
             if(SMCit == 1){
                 stubset->prepare(&write);
             }

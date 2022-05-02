@@ -51,7 +51,7 @@ namespace SMC
                     {
                         int p = _net.transitionPotency()[tindex];
                         n+=p;
-                        double randomNum = (double)rand()/RAND_MAX;
+                        double randomNum = (double)random()/RAND_MAX;
 
                         if (randomNum <= (double)p/(double)n)
                         {
