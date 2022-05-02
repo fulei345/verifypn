@@ -114,7 +114,7 @@ void printHelp() {
         "\n"
         "Options:\n"
         "  -smc <number of runs><depth>         Simulate a number of runs, with depth bound\n"
-        "  -i, <Interesting transitions>                 Interesting transitions:\n"
+        "  -i, <Interesting transitions>        Interesting transitions:\n"
         "                                       - SMCIT_ALL    Int trans for all trans\n"
         "                                       - SMCIT_AM     Int trans for given marking\n"
         "                                       - SMCIT_A      Int trans for a given p/n\n"
