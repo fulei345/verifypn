@@ -4,9 +4,12 @@ import sys
 
 if __name__ == '__main__':
     result_path = ""
+    cwd = os.getcwd()
+    if(len(sys.argv) > 1):
+        cwd = os.path.join(cwd,sys.argv[1])
+    print(cwd)
     file_list = []
     dir_list = []
-    cwd = os.getcwd()
     for root,dirs, files in os.walk(cwd):
         for dir in dirs:
             if "results" in dir:
@@ -40,8 +43,6 @@ if __name__ == '__main__':
     df_final = pd.merge(merged_frames[0],merged_frames[1])
     df_final = pd.merge(df_final,merged_frames[2])
     df_final = pd.merge(df_final,merged_frames[3])
-
-    print(df_final)
 
     for i in range(len(merged_frames)):
         df_split = pd.merge(merged_frames[i],df_final, how='inner')
