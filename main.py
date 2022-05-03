@@ -47,7 +47,7 @@ if __name__ == '__main__':
     for i in range(len(merged_frames)):
         df_split = pd.merge(merged_frames[i],df_final, how='inner')
         header_delete = df_split.columns.values.tolist()
-        del header_delete[0:12]
+        del header_delete[0:13]
         df_split = df_split.drop(columns=header_delete)
         filename = dir_list[i] + "("
         for file in file_list[0]:
