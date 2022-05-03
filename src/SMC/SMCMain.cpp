@@ -103,6 +103,13 @@ namespace SMC
                 stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
             stubset->prepare(&initialwrite);
+            for(int i = 0; i < net->numberOfTransitions(); i++)
+            {
+                if (stubborn[i])
+                {
+                    net->transitionPotency()[i] = 10;
+                }
+            }
         }
 
         for (int i = 0; i < options.smcruns; i++)
@@ -116,6 +123,17 @@ namespace SMC
             // reset Am(phi) to initial
             if(SMCit == 1){
                 stubset->prepare(&initialwrite);
+                for(int i = 0; i < net->numberOfTransitions(); i++)
+                {
+                    if (stubborn[i])
+                    {
+                        net->transitionPotency()[i] = 10;
+                    }
+                    else
+                    {
+                        net->transitionPotency()[i] = 1;
+                    }
+                }
             }
         }
         return (((double)successful_runs)/((double)total_runs))*100.;
