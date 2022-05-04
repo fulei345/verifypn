@@ -28,7 +28,7 @@ namespace SMC
     SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
-    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
+    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex, std::vector<int> potency)
     {
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
@@ -49,11 +49,10 @@ namespace SMC
                     }
                     else
                     {
-                        int p = _net.transitionPotency()[tindex];
-                        n+=p;
+                        n+=potency[tindex];
                         double randomNum = (double)random()/RAND_MAX;
 
-                        if (randomNum <= (double)p/(double)n)
+                        if (randomNum <= (double)potency[tindex]/(double)n)
                         {
                             tcurrent = tindex;
                         }

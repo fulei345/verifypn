@@ -27,7 +27,7 @@ namespace SMC{
         public:
         SMCSuccessorGenerator(const PetriNet &net);
 
-        bool next(Structures::State &write, uint32_t &tindex);
+        bool next(Structures::State &write, uint32_t &tindex, std::vector<int> potency);
 
         void fire(Structures::State &write, uint32_t tindex){
             _fire(write, tindex);

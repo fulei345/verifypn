@@ -41,7 +41,8 @@ namespace SMC
                 int max_depth,
                 int SMCit,
                 std::shared_ptr<SMC::SMCStubbornSet> stubset,
-                bool *stubborn)
+                bool *stubborn,
+                std::vector<int> potency)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -58,7 +59,7 @@ namespace SMC
             return true;
         }
 
-        while(current_depth < max_depth && sgen.next(write, tindex))
+        while(current_depth < max_depth && sgen.next(write, tindex, potency))
         {
             context.setMarking(write.marking());
 
@@ -68,10 +69,19 @@ namespace SMC
                 {
                     return true;
                 }
-            }
-            // update Am(phi)
-            if(SMCit == 1){
-                stubset->prepare(&write);
+                // update Am(phi)
+                if(SMCit == 1)
+                {
+                    stubset->prepare(&write);
+                    for(int i = 0; i < net->numberOfTransitions(); i++)
+                    {
+                        if (stubborn[i])
+                        {
+                            potency[i] = 10;
+                        }
+                        std::cout << "net.transitionPotency(): " << potency[i] << std::endl;
+                    }
+                }
             }
             current_depth++;
         }
@@ -92,6 +102,8 @@ namespace SMC
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         auto stubborn = stubset->stubborn();
         auto SMCit = options.smcit;
+
+        auto potency = net->transitionPotency();
         
         if(SMCit){
             // Am(phi)
@@ -107,14 +119,17 @@ namespace SMC
             {
                 if (stubborn[i])
                 {
-                    net->transitionPotency()[i] = 10;
+                    potency[i] = 10;
                 }
+                std::cout << "net.transitionPotency(): " << potency[i] << std::endl;
             }
         }
 
+        auto initpotency = potency;
+
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn))
+            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, potency))
             {
                 successful_runs++;
             }
@@ -123,17 +138,7 @@ namespace SMC
             // reset Am(phi) to initial
             if(SMCit == 1){
                 stubset->prepare(&initialwrite);
-                for(int i = 0; i < net->numberOfTransitions(); i++)
-                {
-                    if (stubborn[i])
-                    {
-                        net->transitionPotency()[i] = 10;
-                    }
-                    else
-                    {
-                        net->transitionPotency()[i] = 1;
-                    }
-                }
+                potency = initpotency;
             }
         }
         return (((double)successful_runs)/((double)total_runs))*100.;

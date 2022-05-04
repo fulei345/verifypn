@@ -90,12 +90,8 @@ namespace PetriEngine {
             return _transitionnames;
         }
 
-        std::vector<int>& transitionPotency()
+        const std::vector<int>& transitionPotency() const        
         {
-            return _transitionpotency;
-        }
-
-        const std::vector<int>& transitionPotency() const        {
             return _transitionpotency;
         }
 
