@@ -79,7 +79,10 @@ namespace SMC
                         {
                             potency[i] = 10;
                         }
-                        std::cout << "net.transitionPotency(): " << potency[i] << std::endl;
+                        else
+                        {
+                            potency[i] = 1;
+                        }
                     }
                 }
             }
@@ -121,7 +124,6 @@ namespace SMC
                 {
                     potency[i] = 10;
                 }
-                std::cout << "net.transitionPotency(): " << potency[i] << std::endl;
             }
         }
 
