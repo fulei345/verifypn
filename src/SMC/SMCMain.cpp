@@ -70,9 +70,7 @@ namespace SMC
                     std::cout << "depth: " << current_depth << std::endl;
                     return true;
                 }
-            }
-            // update Am(phi)
-            if(SMCit == 1){
+                // update Am(phi)
                 stubset->prepare(&write);
             }
             current_depth++;
