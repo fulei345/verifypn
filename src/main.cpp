@@ -276,7 +276,8 @@ int main(int argc, const char** argv) {
                 auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
                 
                 std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << std::endl;
-                std::cout << "result percent: " << probability << std::endl;
+                std::cout << "" << net->numberOfPlaces() << "," << net->numberOfTransitions() << "," << probability;
+                std::cout << "," << time << std::endl;
             }
             
             return to_underlying(ReturnValue::SuccessCode);

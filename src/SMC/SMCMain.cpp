@@ -55,6 +55,7 @@ namespace SMC
         // This if-statement is new :)
         if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
         {
+            std::cout << "depth: 0" << std::endl;
             return true;
         }
 
@@ -66,6 +67,7 @@ namespace SMC
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
+                    std::cout << "depth: " << current_depth << std::endl;
                     return true;
                 }
             }
@@ -91,7 +93,7 @@ namespace SMC
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         auto stubborn = stubset->stubborn();
-        int64_t preparationTime = 0;
+        //int64_t preparationTime = 0;
         auto SMCit = options.smcit;
         
         if(SMCit){
@@ -105,19 +107,20 @@ namespace SMC
             }
 
             // begin set preparation timer
-            auto begin = std::chrono::high_resolution_clock::now();
+            //auto begin = std::chrono::high_resolution_clock::now();
 
             stubset->prepare(&initialwrite);
 
             // end set preparation timer
-            auto end = std::chrono::high_resolution_clock::now();
-            preparationTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            //auto end = std::chrono::high_resolution_clock::now();
+            //preparationTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         }
 
         for (int i = 0; i < options.smcruns; i++)
         {
             if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn))
             {
+                return (double)i;
                 successful_runs++;
             }
             total_runs++;
