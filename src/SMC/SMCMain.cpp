@@ -71,7 +71,10 @@ namespace SMC
                     return true;
                 }
                 // update Am(phi)
-                stubset->prepare(&write);
+                if (SMCit == 1)
+                {
+                    stubset->prepare(&write);
+                }
             }
             current_depth++;
         }
