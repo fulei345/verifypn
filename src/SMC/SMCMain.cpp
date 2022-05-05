@@ -133,6 +133,7 @@ namespace SMC
         {
             if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, potency))
             {
+                return (double)i;
                 successful_runs++;
             }
             total_runs++;
