@@ -273,11 +273,11 @@ int main(int argc, const char** argv) {
 
                 // end timer
                 auto end = std::chrono::high_resolution_clock::now();
-                auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+                auto totalTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
                 
-                std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << std::endl;
                 std::cout << "" << net->numberOfPlaces() << "," << net->numberOfTransitions() << "," << probability;
-                std::cout << "," << time << std::endl;
+                std::cout << ",query," << i << "," << totalTime << std::endl;
+                std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << "\n" << std::endl;
             }
             
             return to_underlying(ReturnValue::SuccessCode);

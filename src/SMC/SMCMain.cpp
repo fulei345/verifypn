@@ -41,7 +41,9 @@ namespace SMC
                 int max_depth,
                 int SMCit,
                 std::shared_ptr<SMC::SMCStubbornSet> stubset,
-                bool *stubborn)
+                bool *stubborn,
+                int64_t &preparationTime,
+                int64_t &fireTime)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -55,10 +57,12 @@ namespace SMC
         // This if-statement is new :)
         if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
         {
-            std::cout << "depth: 0" << std::endl;
             return true;
         }
 
+        
+        // begin firing timer
+        auto fbegin = std::chrono::high_resolution_clock::now();
         while(current_depth < max_depth && sgen.next(write, tindex))
         {
             context.setMarking(write.marking());
@@ -67,17 +71,29 @@ namespace SMC
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
-                    std::cout << "depth: " << current_depth << std::endl;
+                    // end true fire timer
+                    auto fend = std::chrono::high_resolution_clock::now();
+                    fireTime = std::chrono::duration_cast<std::chrono::milliseconds>(fend - fbegin).count();
                     return true;
                 }
                 // update Am(phi)
                 if (SMCit == 1)
                 {
+                    // begin update timer
+                    auto begin = std::chrono::high_resolution_clock::now();
+
                     stubset->prepare(&write);
+
+                    // end update timer
+                    auto end = std::chrono::high_resolution_clock::now();
+                    preparationTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
                 }
             }
             current_depth++;
         }
+        // end false fire timer
+        auto fend = std::chrono::high_resolution_clock::now();
+        fireTime = std::chrono::duration_cast<std::chrono::milliseconds>(fend - fbegin).count();
         return false;
     }
 
@@ -94,7 +110,8 @@ namespace SMC
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         auto stubborn = stubset->stubborn();
-        //int64_t preparationTime = 0;
+        int64_t preparationTime = 0;
+        int64_t fireTime = 0;
         auto SMCit = options.smcit;
         
         if(SMCit){
@@ -108,19 +125,20 @@ namespace SMC
             }
 
             // begin set preparation timer
-            //auto begin = std::chrono::high_resolution_clock::now();
+            auto begin = std::chrono::high_resolution_clock::now();
 
             stubset->prepare(&initialwrite);
 
             // end set preparation timer
-            //auto end = std::chrono::high_resolution_clock::now();
-            //preparationTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            auto end = std::chrono::high_resolution_clock::now();
+            preparationTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         }
 
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn))
+            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, preparationTime, fireTime))
             {
+                std::cout << "ptime," << preparationTime << ",ftime," << fireTime << std::endl;
                 return (double)i;
                 successful_runs++;
             }
@@ -128,9 +146,17 @@ namespace SMC
 
             // reset Am(phi) to initial
             if(SMCit == 1){
+                // begin reset timer
+                auto begin = std::chrono::high_resolution_clock::now();
+
                 stubset->prepare(&initialwrite);
+                
+                // end reset timer
+                auto end = std::chrono::high_resolution_clock::now();
+                preparationTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             }
         }
+        std::cout << "ptime," << preparationTime << ",ftime," << fireTime << std::endl;
         return (((double)successful_runs)/((double)total_runs))*100.;
     }
 }
