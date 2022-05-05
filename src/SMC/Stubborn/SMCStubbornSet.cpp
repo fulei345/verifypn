@@ -26,7 +26,8 @@ namespace SMC {
     using namespace PetriEngine;
     bool SMCStubbornSet::prepare(const Structures::State *state) {
         reset();
-        auto _parent = state;
+        _parent = state;
+        constructEnabled();
 
         assert(!_queries.empty());
         for (auto &q : _queries) {
