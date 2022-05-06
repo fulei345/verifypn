@@ -28,6 +28,7 @@
 #include "PetriEngine/PQL/Evaluation.h"
 #include "PetriEngine/PQL/PredicateCheckers.h"
 #include "SMC/Stubborn/SMCStubbornSet.h"
+#include "SMC/Heuristic/SMCDistanceHeuristic.h"
 
 #include <vector>
 
@@ -46,50 +47,82 @@ namespace SMC
     {
         int current_depth = 0;
         uint32_t tindex = 0;
+        uint32_t last_heuristic = 0;
         
         Structures::State write(net->makeInitialMarking());
         sgen.prepare(&write);
         sgen.reset();
-        
-        PQL::EvaluationContext context(write.marking(), net);
-        
-        // This if-statement is new :)
-        if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
-        {
-            return true;
-        }
 
-        while(current_depth < max_depth && sgen.next(write, tindex, potency))
-        {
+        PQL::EvaluationContext context(write.marking(), net);
+        SMC::SMCDistanceHeuristic heuristic(net, query);
+
+
+        // Evaluate
+        // Prepare
+
+        do{
             context.setMarking(write.marking());
 
-            if(!SMCit || stubborn[tindex])
+            // Heuristic
+            if(SMCit)
+            {
+                uint32_t h = heuristic.eval(write, tindex);
+
+                if(!current_depth)
+                {
+                    last_heuristic = h;
+                }
+            
+                if(h < last_heuristic)
+                {
+                    potency[tindex] += 1;
+                }
+                else if(h > last_heuristic && potency[tindex] > 1)
+                {
+                    potency[tindex] -= 1;
+                }
+
+                last_heuristic = h;
+            
+                std::cout << "heurstic: " << h  << " tindex:" << tindex << std::endl;
+
+                for(int i = 0; i < net->numberOfTransitions(); i++)
+                {
+                    std::cout << "pot " << i << ": " << potency[i] << std::endl;
+                }
+
+            // for(int i = 0; i < net->numberOfTransitions(); i++)
+            //     {
+            //         if (stubborn[i])
+            //         {
+            //             potency[i] = 10;
+            //         }
+            //         else
+            //         {
+            //             potency[i] = 1;
+            //         }
+            //     }
+            }
+            // ALL, 
+            if(!SMCit || stubborn[tindex] || !current_depth)
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
                     return true;
                 }
                 // update Am(phi)
-                if(SMCit == 1)
+                if(SMCit == 1 && !current_depth)
                 {
                     stubset->prepare(&write);
-                    for(int i = 0; i < net->numberOfTransitions(); i++)
-                    {
-                        if (stubborn[i])
-                        {
-                            potency[i] = 10;
-                        }
-                        else
-                        {
-                            potency[i] = 1;
-                        }
-                    }
                 }
             }
             current_depth++;
         }
+        while(current_depth < max_depth && sgen.next(write, tindex, potency));
+        
         return false;
     }
+
 
     double SMCMain(const PetriNet *net,
                          options_t &options,
@@ -118,13 +151,6 @@ namespace SMC
                 stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
             stubset->prepare(&initialwrite);
-            for(int i = 0; i < net->numberOfTransitions(); i++)
-            {
-                if (stubborn[i])
-                {
-                    potency[i] = 10;
-                }
-            }
         }
 
         auto initpotency = potency;
