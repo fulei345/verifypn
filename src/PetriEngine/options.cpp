@@ -261,6 +261,20 @@ bool options_t::parse(int argc, const char** argv) {
             else {
                 throw base_error("Argument Error: Unrecognized search strategy ", std::quoted(s));
             }
+        } else if (std::strcmp(argv[i], "-u") == 0) {
+            if (i == argc - 1) {
+                throw base_error("Missing search strategy after ", std::quoted(argv[i]));
+            }
+            auto* s = argv[++i];
+            if (std::strcmp(s, "Static") == 0)
+                smch = 0;
+            else if (std::strcmp(s, "Distance") == 0)
+                smch = 1;
+            else if (std::strcmp(s, "Both") == 0)
+                smch = 2;
+            else {
+                throw base_error("Argument Error: Unrecognized search strategy ", std::quoted(s));
+            }
         } else if (std::strcmp(argv[i], "-s") == 0 || std::strcmp(argv[i], "--search-strategy") == 0) {
             if (i == argc - 1) {
                 throw base_error("Missing search strategy after ", std::quoted(argv[i]));

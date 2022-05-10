@@ -43,7 +43,8 @@ namespace SMC
                 int SMCit,
                 std::shared_ptr<SMC::SMCStubbornSet> stubset,
                 bool *stubborn,
-                std::vector<int> potency)
+                std::vector<int> &potency,
+                int SMCh)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -63,8 +64,22 @@ namespace SMC
         do{
             context.setMarking(write.marking());
 
+            if(!SMCh && SMCit == 1){
+                for(int i = 0; i < net->numberOfTransitions(); i++)
+                    {
+                        if (stubborn[i])
+                        {
+                            potency[i] = 10;
+                        }
+                        else
+                        {
+                            potency[i] = 1;
+                        }
+                    }
+            }
+
             // Heuristic
-            if(SMCit)
+            if(SMCh)
             {
                 uint32_t h = heuristic.eval(write, tindex);
 
@@ -83,25 +98,6 @@ namespace SMC
                 }
 
                 last_heuristic = h;
-            
-                std::cout << "heurstic: " << h  << " tindex:" << tindex << std::endl;
-
-                for(int i = 0; i < net->numberOfTransitions(); i++)
-                {
-                    std::cout << "pot " << i << ": " << potency[i] << std::endl;
-                }
-
-            // for(int i = 0; i < net->numberOfTransitions(); i++)
-            //     {
-            //         if (stubborn[i])
-            //         {
-            //             potency[i] = 10;
-            //         }
-            //         else
-            //         {
-            //             potency[i] = 1;
-            //         }
-            //     }
             }
             // ALL, 
             if(!SMCit || stubborn[tindex] || !current_depth)
@@ -151,13 +147,21 @@ namespace SMC
                 stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
             stubset->prepare(&initialwrite);
+            if(options.smch != 1)
+                for(int i = 0; i < net->numberOfTransitions(); i++)
+                {
+                    if (stubborn[i])
+                    {
+                        potency[i] = 10;
+                    }
+                }
         }
 
         auto initpotency = potency;
 
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, potency))
+            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, potency, options.smch))
             {
                 successful_runs++;
             }
@@ -166,7 +170,9 @@ namespace SMC
             // reset Am(phi) to initial
             if(SMCit == 1){
                 stubset->prepare(&initialwrite);
-                potency = initpotency;
+                if(!options.smch){
+                    potency = initpotency;
+                }
             }
         }
         return (((double)successful_runs)/((double)total_runs))*100.;
