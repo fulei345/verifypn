@@ -43,7 +43,8 @@ namespace SMC
                 std::shared_ptr<SMC::SMCStubbornSet> stubset,
                 bool *stubborn,
                 int64_t &preparationTime,
-                int64_t &fireTime)
+                int64_t &fireTime,
+                int64_t &evalTime)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -54,13 +55,20 @@ namespace SMC
         
         PQL::EvaluationContext context(write.marking(), net);
         
+        // begin eval timer
+        auto eval_begin = std::chrono::high_resolution_clock::now();
         // This if-statement is new :)
         if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
         {
+            // end eval timer
+            auto eval_end = std::chrono::high_resolution_clock::now();
+            evalTime += std::chrono::duration_cast<std::chrono::milliseconds>(eval_end - eval_begin).count();
             return true;
         }
+        // end eval timer
+        auto eval_end = std::chrono::high_resolution_clock::now();
+        evalTime += std::chrono::duration_cast<std::chrono::milliseconds>(eval_end - eval_begin).count();
 
-        
         // begin firing timer
         auto fbegin = std::chrono::high_resolution_clock::now();
         while(current_depth < max_depth && sgen.next(write, tindex))
@@ -68,14 +76,23 @@ namespace SMC
             context.setMarking(write.marking());
 
             if(!SMCit || stubborn[tindex])
-            {
+            {   
+                // begin eval timer
+                auto eval_begin = std::chrono::high_resolution_clock::now();
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
-                {
+                {                    
+                    // end eval timer
+                    auto eval_end = std::chrono::high_resolution_clock::now();
+                    evalTime += std::chrono::duration_cast<std::chrono::milliseconds>(eval_end - eval_begin).count();
                     // end true fire timer
                     auto fend = std::chrono::high_resolution_clock::now();
-                    fireTime = std::chrono::duration_cast<std::chrono::milliseconds>(fend - fbegin).count();
+                    fireTime += std::chrono::duration_cast<std::chrono::milliseconds>(fend - fbegin).count();
                     return true;
                 }
+                // end eval timer
+                auto eval_end = std::chrono::high_resolution_clock::now();
+                evalTime += std::chrono::duration_cast<std::chrono::milliseconds>(eval_end - eval_begin).count();
+                
                 // update Am(phi)
                 if (SMCit == 1)
                 {
@@ -91,9 +108,9 @@ namespace SMC
             }
             current_depth++;
         }
-        // end false fire timer
+        // add fire timer
         auto fend = std::chrono::high_resolution_clock::now();
-        fireTime = std::chrono::duration_cast<std::chrono::milliseconds>(fend - fbegin).count();
+        fireTime += std::chrono::duration_cast<std::chrono::milliseconds>(fend - fbegin).count();
         return false;
     }
 
@@ -112,8 +129,9 @@ namespace SMC
         auto stubborn = stubset->stubborn();
         int64_t preparationTime = 0;
         int64_t fireTime = 0;
+        int64_t evalTime = 0;
         auto SMCit = options.smcit;
-        
+
         if(SMCit){
             // Am(phi)
             if(SMCit == 1){
@@ -133,12 +151,13 @@ namespace SMC
             auto end = std::chrono::high_resolution_clock::now();
             preparationTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         }
-
+        // begin run timer
+        auto rbegin = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, preparationTime, fireTime))
+            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, preparationTime, fireTime, evalTime))
             {
-                std::cout << "ptime," << preparationTime << ",ftime," << fireTime << std::endl;
+                std::cout << "grep,preptime," << preparationTime << ",firetime," << fireTime << ",evaltime," << evalTime;
                 return (double)i;
                 successful_runs++;
             }
@@ -156,7 +175,7 @@ namespace SMC
                 preparationTime += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             }
         }
-        std::cout << "ptime," << preparationTime << ",ftime," << fireTime << std::endl;
+        std::cout << "false ptime," << preparationTime << ",ftime," << fireTime << std::endl;
         return (((double)successful_runs)/((double)total_runs))*100.;
     }
 }
