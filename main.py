@@ -38,7 +38,7 @@ def getDFinFolder(path, setting_index, index, results):
     headers = []
     for root,_, files in os.walk(path):
         for file in files:
-            if "results" in file:
+            if "results" in file or not results:
                 file_list.append(file) 
                 header = header_template_list[setting_index].copy()
                 for num in index_list[setting_index]:
@@ -99,7 +99,8 @@ def main(path, setting, merge, solo):
                 filename = filename + ").csv"
                 df_write = df_write.drop(columns=header_delete)
                 print(df_write)
-                df_write.to_csv(filename)
+                filepath = os.path.join(path, filename)
+                df_write.to_csv(filepath)
     else:
         if merge:
             for i in range(len(file_list[0])):
@@ -109,7 +110,8 @@ def main(path, setting, merge, solo):
                 df_write = df_final.copy()
                 df_write = df_write.drop(columns=header_delete)
                 print(df_write)
-                df_write.to_csv(filename)
+                filepath = os.path.join(path, filename)
+                df_write.to_csv(filepath)
         if solo:
             length = len(file_list[0])
             for i in range(length):
@@ -122,7 +124,8 @@ def main(path, setting, merge, solo):
                     df_write = df_write.drop(columns=header_delete)
                 filename = int_names[i] +"-solo.csv"
                 print(df_write)
-                df_write.to_csv(filename)
+                filepath = os.path.join(path, filename)
+                df_write.to_csv(filepath)
 
 if __name__ == '__main__':
     cwd = os.getcwd()
