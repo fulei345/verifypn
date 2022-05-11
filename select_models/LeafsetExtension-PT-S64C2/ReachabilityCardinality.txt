@@ -1,0 +1,80 @@
+Property gen-ReachabilityCardinality-00
+  "Automatically generated"
+  is:
+    A G ((((((#tokens("Node63HasAskedItsLeafSetToLxToReplaceNode8")) <= (#tokens("Node25WantsToManageTheBreakDownOfNode22")))) | (((((2) <= (#tokens("Node54HasAskedItsLeafSetToLxToReplaceNode22")))) & (((#tokens("Node11FailureProcessedByNode46")) <= (#tokens("Node17ManageTheBreakDownOfNode34")))))))) | (! ((((#tokens("Node25WantsToManageTheBreakDownOfNode34")) <= (#tokens("Node22ManageTheBreakDownOfNode7")))) & (((#tokens("Node60HasTheLeafSetOfLxToReplaceNode29")) <= (#tokens("Node23FailureProcessedByNode53")))))))
+  end.
+Property gen-ReachabilityCardinality-01
+  "Automatically generated"
+  is:
+    E F ((! ((((#tokens("Node4ManageTheBreakDownOfNode16")) <= (#tokens("Node3HasAskedItsLeafSetToLxToReplaceNode5")))) | (((2) <= (#tokens("Node61HasTheLeafSetOfRxToReplaceNode44")))))) | (! ((#tokens("Node11HasAskedItsLeafSetToLxToReplaceNode23")) <= (#tokens("Node55HasTheLeafSetOfLxToReplaceNode4")))))
+  end.
+Property gen-ReachabilityCardinality-02
+  "Automatically generated"
+  is:
+    A G ! ((((((2) <= (#tokens("Node61HasAskedItsLeafSetToRxToReplaceNode43")))) & (((1) <= (#tokens("Node63HasAskedItsLeafSetToLxToReplaceNode23")))))) | (((((1) <= (#tokens("Node62WantsToManageTheBreakDownOfNode41")))) & (((1) <= (#tokens("Node60WantsToManageTheBreakDownOfNode17")))))))
+  end.
+Property gen-ReachabilityCardinality-03
+  "Automatically generated"
+  is:
+    A G ! ((! ((2) <= (#tokens("Node8HasAskedItsLeafSetToRxToReplaceNode53")))) & (! ((#tokens("Node53ManageTheBreakDownOfNode27")) <= (#tokens("Node43FailureProcessedByNode16")))))
+  end.
+Property gen-ReachabilityCardinality-04
+  "Automatically generated"
+  is:
+    A G ((#tokens("Node20FailureProcessedByNode12")) <= (#tokens("Node8ManageTheBreakDownOfNode37")))
+  end.
+Property gen-ReachabilityCardinality-05
+  "Automatically generated"
+  is:
+    E F ((((((1) <= (#tokens("Node29ManageTheBreakDownOfNode39")))) & (((((#tokens("Node52WantsToManageTheBreakDownOfNode43")) <= (#tokens("Node15FailureProcessedByNode23")))) | (((#tokens("Node5FailureProcessedByNode33")) <= (#tokens("Node7HasTheLeafSetOfLxToReplaceNode26")))))))) | (((((#tokens("Node10FailureProcessedByNode41")) <= (#tokens("Node43HasAskedItsLeafSetToLxToReplaceNode15")))) & (((((#tokens("Node5ManageTheBreakDownOfNode39")) <= (#tokens("Node21ManageTheBreakDownOfNode23")))) & (((2) <= (#tokens("Node47HasTheLeafSetOfRxToReplaceNode46")))))))))
+  end.
+Property gen-ReachabilityCardinality-06
+  "Automatically generated"
+  is:
+    E F ((1) <= (#tokens("Node42HasAskedItsLeafSetToRxToReplaceNode49")))
+  end.
+Property gen-ReachabilityCardinality-07
+  "Automatically generated"
+  is:
+    A G ! ((! ((#tokens("Node53WantsToManageTheBreakDownOfNode9")) <= (#tokens("Node52FailureProcessedByNode55")))) & (((2) <= (#tokens("Node58HasTheLeafSetOfLxToReplaceNode17")))))
+  end.
+Property gen-ReachabilityCardinality-08
+  "Automatically generated"
+  is:
+    E F ((2) <= (#tokens("Node41HasTheLeafSetOfRxToReplaceNode63")))
+  end.
+Property gen-ReachabilityCardinality-09
+  "Automatically generated"
+  is:
+    E F ! ((! ((2) <= (#tokens("Node25FailureProcessedByNode7")))) | (! ((2) <= (#tokens("Node46FailureProcessedByNode14")))))
+  end.
+Property gen-ReachabilityCardinality-10
+  "Automatically generated"
+  is:
+    A G ((! ((((#tokens("Node25HasAskedItsLeafSetToRxToReplaceNode60")) <= (#tokens("Node15WantsToManageTheBreakDownOfNode39")))) & (((3) <= (#tokens("Node28FailureProcessedByNode57")))))) & (((#tokens("Node20ManageTheBreakDownOfNode15")) <= (#tokens("Node62ManageTheBreakDownOfNode19")))))
+  end.
+Property gen-ReachabilityCardinality-11
+  "Automatically generated"
+  is:
+    E F ! ((((#tokens("Node29HasTheLeafSetOfRxToReplaceNode43")) <= (#tokens("Node18ManageTheBreakDownOfNode0")))) | (((((#tokens("Node29FailureProcessedByNode47")) <= (#tokens("Node5HasAskedItsLeafSetToLxToReplaceNode1")))) & (((#tokens("Node62FailureProcessedByNode2")) <= (#tokens("Node58FailureProcessedByNode28")))))))
+  end.
+Property gen-ReachabilityCardinality-12
+  "Automatically generated"
+  is:
+    E F ((((1) <= (#tokens("Node4HasTheLeafSetOfLxToReplaceNode5")))) & (((3) <= (#tokens("Node20HasTheLeafSetOfLxToReplaceNode9")))))
+  end.
+Property gen-ReachabilityCardinality-13
+  "Automatically generated"
+  is:
+    E F ((((((((2) <= (#tokens("Node52HasTheLeafSetOfRxToReplaceNode39")))) | (((2) <= (#tokens("Node16WantsToManageTheBreakDownOfNode8")))))) & (((#tokens("Node31ManageTheBreakDownOfNode15")) <= (#tokens("Node12FailureProcessedByNode44")))))) & (! ((((1) <= (#tokens("Node58FailureProcessedByNode37")))) | (((#tokens("Node27FailureProcessedByNode33")) <= (#tokens("Node62WantsToManageTheBreakDownOfNode37")))))))
+  end.
+Property gen-ReachabilityCardinality-14
+  "Automatically generated"
+  is:
+    E F ((((1) <= (#tokens("Node40HasAskedItsLeafSetToRxToReplaceNode32")))) | (! ((((#tokens("Node54FailureProcessedByNode26")) <= (#tokens("Node55ManageTheBreakDownOfNode63")))) & (((#tokens("Node50FailureProcessedByNode11")) <= (#tokens("Node9HasTheLeafSetOfRxToReplaceNode55")))))))
+  end.
+Property gen-ReachabilityCardinality-15
+  "Automatically generated"
+  is:
+    E F ((((3) <= (#tokens("Node19ManageTheBreakDownOfNode35")))) & (((((((1) <= (#tokens("Node3FailureProcessedByNode7")))) & (((2) <= (#tokens("Node51FailureProcessedByNode22")))))) | (! ((#tokens("Node8ManageTheBreakDownOfNode45")) <= (#tokens("Node28WantsToManageTheBreakDownOfNode38")))))))
+  end.

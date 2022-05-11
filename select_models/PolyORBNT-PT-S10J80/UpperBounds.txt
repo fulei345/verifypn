@@ -1,0 +1,80 @@
+Property PolyORBNT-PT-S10J80-UpperBounds-00
+  "Automatically generated"
+  is:
+    bound("QueueJobE_1")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-01
+  "Automatically generated"
+  is:
+    bound("AvailableJobId_74", "AvailableJobId_43", "AvailableJobId_71", "AvailableJobId_18", "AvailableJobId_64", "AvailableJobId_25", "AvailableJobId_35", "AvailableJobId_45", "AvailableJobId_26", "AvailableJobId_73", "AvailableJobId_7", "AvailableJobId_17", "AvailableJobId_8", "AvailableJobId_63", "AvailableJobId_54", "AvailableJobId_65", "AvailableJobId_72", "AvailableJobId_79", "AvailableJobId_30", "AvailableJobId_16", "AvailableJobId_44", "AvailableJobId_9", "AvailableJobId_2", "AvailableJobId_37", "AvailableJobId_58", "AvailableJobId_23", "AvailableJobId_51", "AvailableJobId_52", "AvailableJobId_80", "AvailableJobId_15", "AvailableJobId_1", "AvailableJobId_38", "AvailableJobId_29", "AvailableJobId_66", "AvailableJobId_10", "AvailableJobId_24", "AvailableJobId_60", "AvailableJobId_67", "AvailableJobId_50", "AvailableJobId_32", "AvailableJobId_39", "AvailableJobId_4", "AvailableJobId_57", "AvailableJobId_11", "AvailableJobId_3", "AvailableJobId_78", "AvailableJobId_21", "AvailableJobId_68", "AvailableJobId_12", "AvailableJobId_40", "AvailableJobId_22", "AvailableJobId_49", "AvailableJobId_31", "AvailableJobId_59", "AvailableJobId_77", "AvailableJobId_6", "AvailableJobId_20", "AvailableJobId_34", "AvailableJobId_27", "AvailableJobId_13", "AvailableJobId_41", "AvailableJobId_48", "AvailableJobId_76", "AvailableJobId_55", "AvailableJobId_0", "AvailableJobId_5", "AvailableJobId_14", "AvailableJobId_69", "AvailableJobId_33", "AvailableJobId_42", "AvailableJobId_28", "AvailableJobId_62", "AvailableJobId_19", "AvailableJobId_75", "AvailableJobId_61", "AvailableJobId_56", "AvailableJobId_70", "AvailableJobId_47", "AvailableJobId_53", "AvailableJobId_46", "AvailableJobId_36")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-02
+  "Automatically generated"
+  is:
+    bound("CanInjectEvent")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-03
+  "Automatically generated"
+  is:
+    bound("NotifyEventJobQueuedE_1")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-04
+  "Automatically generated"
+  is:
+    bound("cSources")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-05
+  "Automatically generated"
+  is:
+    bound("NotifyEventEndOfCheckSourcesE_1")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-06
+  "Automatically generated"
+  is:
+    bound("Perform_Work_E_1")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-07
+  "Automatically generated"
+  is:
+    bound("NotifyEventEndOfCheckSourcesB_1")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-08
+  "Automatically generated"
+  is:
+    bound("f2_5")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-09
+  "Automatically generated"
+  is:
+    bound("CreatedJobs_27_4")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-10
+  "Automatically generated"
+  is:
+    bound("CreatedJobs_20_6")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-11
+  "Automatically generated"
+  is:
+    bound("f2_18")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-12
+  "Automatically generated"
+  is:
+    bound("CreatedJobs_59_2")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-13
+  "Automatically generated"
+  is:
+    bound("CreatedJobs_78_3")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-14
+  "Automatically generated"
+  is:
+    bound("CreatedJobs_13_6")
+  end.
+Property PolyORBNT-PT-S10J80-UpperBounds-15
+  "Automatically generated"
+  is:
+    bound("CreatedJobs_6_10")
+  end.

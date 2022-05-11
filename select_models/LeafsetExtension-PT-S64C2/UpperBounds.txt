@@ -1,0 +1,80 @@
+Property gen-UpperBounds-00
+  "Automatically generated"
+  is:
+    bound("Node58ManageTheBreakDownOfNode9")
+  end.
+Property gen-UpperBounds-01
+  "Automatically generated"
+  is:
+    bound("Node20FailureProcessedByNode18")
+  end.
+Property gen-UpperBounds-02
+  "Automatically generated"
+  is:
+    bound("Node40FailureProcessedByNode51")
+  end.
+Property gen-UpperBounds-03
+  "Automatically generated"
+  is:
+    bound("Node27ManageTheBreakDownOfNode29")
+  end.
+Property gen-UpperBounds-04
+  "Automatically generated"
+  is:
+    bound("Node62FailureProcessedByNode4")
+  end.
+Property gen-UpperBounds-05
+  "Automatically generated"
+  is:
+    bound("Node39HasAskedItsLeafSetToLxToReplaceNode31")
+  end.
+Property gen-UpperBounds-06
+  "Automatically generated"
+  is:
+    bound("Node63FailureProcessedByNode29")
+  end.
+Property gen-UpperBounds-07
+  "Automatically generated"
+  is:
+    bound("Node37ManageTheBreakDownOfNode42")
+  end.
+Property gen-UpperBounds-08
+  "Automatically generated"
+  is:
+    bound("Node38HasTheLeafSetOfRxToReplaceNode54")
+  end.
+Property gen-UpperBounds-09
+  "Automatically generated"
+  is:
+    bound("Node20ManageTheBreakDownOfNode63")
+  end.
+Property gen-UpperBounds-10
+  "Automatically generated"
+  is:
+    bound("Node23ManageTheBreakDownOfNode9")
+  end.
+Property gen-UpperBounds-11
+  "Automatically generated"
+  is:
+    bound("Node37HasTheLeafSetOfRxToReplaceNode62")
+  end.
+Property gen-UpperBounds-12
+  "Automatically generated"
+  is:
+    bound("Node27WantsToManageTheBreakDownOfNode51")
+  end.
+Property gen-UpperBounds-13
+  "Automatically generated"
+  is:
+    bound("Node15HasAskedItsLeafSetToLxToReplaceNode9")
+  end.
+Property gen-UpperBounds-14
+  "Automatically generated"
+  is:
+    bound("Node0HasAskedItsLeafSetToLxToReplaceNode32")
+  end.
+Property gen-UpperBounds-15
+  "Automatically generated"
+  is:
+    bound("Node13HasTheLeafSetOfLxToReplaceNode12")
+  end.
