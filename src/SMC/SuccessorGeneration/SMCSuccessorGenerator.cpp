@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include <chrono>
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
@@ -28,11 +28,14 @@ namespace SMC
     SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
-    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
+    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex, int64_t &timer)
     {
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
         int n = 0;
+        
+        // begin timer
+        auto begin = std::chrono::high_resolution_clock::now();
         
         for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
         {
@@ -50,33 +53,40 @@ namespace SMC
                     else
                     {
                         // uniform
-                        ++n;
-                        double randomNum = (double)random()/RAND_MAX;
-                        if (randomNum <= 1./((double)n))
-                        {
-                           tcurrent = tindex;
-                        }
+                        // ++n;
+                        // double randomNum = (double)random()/RAND_MAX;
+                        // if (randomNum <= 1./((double)n))
+                        // {
+                        //    tcurrent = tindex;
+                        // }
 
                         // non-uniform (also uniform)
-                        // int p = _net.transitionPotency()[tindex];
-                        // n += p;
+                        int p = _net.transitionPotency()[tindex];
+                        n += p;
                         
-                        // double randomNum = (double)random()/RAND_MAX;
-                        // if (randomNum <= (double)p/(double)n)
-                        // {
-                        //     tcurrent = tindex;
-                        // }
+                        double randomNum = (double)random()/RAND_MAX;
+                        if (randomNum <= (double)p/(double)n)
+                        {
+                            tcurrent = tindex;
+                        }
                     }
                 }
             }
         }
+        
         // Set tindex to chosen transition so we can read it in main
         tindex = tcurrent;
         if(tcurrent != std::numeric_limits<uint32_t>::max())
         {
             _fire(write, tcurrent);
+            // end timer
+            auto end = std::chrono::high_resolution_clock::now();
+            timer += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             return true;
         }
+        // end timer
+        auto end = std::chrono::high_resolution_clock::now();
+        timer += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         return false;
     }
 }

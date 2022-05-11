@@ -35,7 +35,8 @@ namespace SMCN
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
                 int max_depth,
-                int &outdepth)
+                int &outdepth,
+                int64_t &timer)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -44,10 +45,10 @@ namespace SMCN
         sgen.prepare(&write);
         sgen.reset();
         
-        PQL::EvaluationContext context(write.marking(), net);
-        while(current_depth < max_depth && sgen.next(write, tindex))
+        //PQL::EvaluationContext context(write.marking(), net);
+        while(current_depth < max_depth && sgen.next(write, tindex, timer))
         {
-            context.setMarking(write.marking());
+            //context.setMarking(write.marking());
             //if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
             //{
             //    return true;
@@ -73,21 +74,16 @@ namespace SMCN
 
         for (int i = 0; i < options.smcruns; i++)
         {
-            // begin timer
-            auto begin = std::chrono::high_resolution_clock::now();
+            int64_t timer = 0;
 
-            bool succ = SMCRun(sgen, net, query, options.smcdepth, outdepth);
+            bool succ = SMCRun(sgen, net, query, options.smcdepth, outdepth, timer);
             totaldepth += outdepth;
             if (succ)
             {
                 successful_runs++;
             }
 
-            // end timer
-            auto end = std::chrono::high_resolution_clock::now();
-            auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-
-            results.push_back(time);
+            results.push_back(timer);
         }
         //return (((double)successful_runs)/((double)options.smcruns))*100.;
         //return ((double)totaldepth/(double)options.smcruns);

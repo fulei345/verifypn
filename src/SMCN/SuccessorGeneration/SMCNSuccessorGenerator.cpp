@@ -19,7 +19,7 @@
  */
 
 #include <random>
-
+#include <chrono>
 #include "SMCN/SuccessorGeneration/SMCNSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
@@ -30,7 +30,7 @@ namespace SMCN
     SMCNSuccessorGenerator::SMCNSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
-    bool SMCNSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
+    bool SMCNSuccessorGenerator::next(Structures::State& write, uint32_t &tindex, int64_t &timer)
     {
         _parent = &write;
         std::vector<u_int32_t> enabled;
@@ -39,6 +39,8 @@ namespace SMCN
         std::random_device rd;
         std::mt19937 gen(rd());
         
+        // begin timer
+        auto begin = std::chrono::high_resolution_clock::now();
         for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
         {
             // orphans are currently under "place 0" as a special case
@@ -64,19 +66,25 @@ namespace SMCN
         if(!enabled.empty())
         {
             //uniform
-            std::uniform_int_distribution<> distr(0, enabled.size());
+            // std::uniform_int_distribution<> distr(0, enabled.size());
+            // int select_tindex = distr(gen);
+            // tindex = enabled[select_tindex];
+
+            //non-uniform (also uniform)
+            std::discrete_distribution<> distr(enabledPotencies.begin(), enabledPotencies.end());
             int select_tindex = distr(gen);
             tindex = enabled[select_tindex];
 
-            //non-uniform (also uniform)
-            // std::discrete_distribution<> distr(enabledPotencies.begin(), enabledPotencies.end());
-            // int select_tindex = distr(gen);
-            // tindex = enabled[select_tindex];
-            
             _fire(write, tindex);
+            // end timer
+            auto end = std::chrono::high_resolution_clock::now();
+            timer += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             return true;
         }
-        tindex = std::numeric_limits<uint32_t>::max();;
+        tindex = std::numeric_limits<uint32_t>::max();
+        // end timer
+        auto end = std::chrono::high_resolution_clock::now();
+        timer += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         return false;
     }
 }

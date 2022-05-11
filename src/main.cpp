@@ -314,14 +314,14 @@ int main(int argc, const char **argv)
             std::vector<int> probability;
 
             // random potency generator
-            // std::random_device rd;
-            // std::mt19937 gen(rd());
-            // std::uniform_int_distribution<> distr(1, 100);
-            // auto p_nums = net->transitionPotency().size();
-            // for (int i = 0; i < p_nums; i++)
-            // {
-            //     net->transitionPotency()[i] = distr(gen);
-            // }
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> distr(1, 100);
+            auto p_nums = net->transitionPotency().size();
+            for (int i = 0; i < p_nums; i++)
+            {
+                net->transitionPotency()[i] = distr(gen);
+            }
 
             for (size_t i = 0; i < queries.size(); ++i) {
                 probability = SMC::SMCMain(net.get(), options, queries[i]);
@@ -347,14 +347,14 @@ int main(int argc, const char **argv)
             std::vector<int> probability;
             
             // random potency generator
-            // std::random_device rd;
-            // std::mt19937 gen(rd());
-            // std::uniform_int_distribution<> distr(1, 100);
-            // auto p_nums = net->transitionPotency().size();
-            // for (int i = 0; i < p_nums; i++)
-            // {
-            //    net->transitionPotency()[i] = distr(gen);
-            // }
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> distr(1, 100);
+            auto p_nums = net->transitionPotency().size();
+            for (int i = 0; i < p_nums; i++)
+            {
+               net->transitionPotency()[i] = distr(gen);
+            }
 
             for (size_t i = 0; i < queries.size(); ++i)
             {

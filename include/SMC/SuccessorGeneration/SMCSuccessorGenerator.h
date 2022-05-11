@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "PetriEngine/SuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
@@ -27,7 +26,7 @@ namespace SMC{
         public:
         SMCSuccessorGenerator(const PetriNet &net);
 
-        bool next(Structures::State &write, uint32_t &tindex);
+        bool next(Structures::State &write, uint32_t &tindex, int64_t &timer);
 
         void fire(Structures::State &write, uint32_t tindex){
             _fire(write, tindex);
