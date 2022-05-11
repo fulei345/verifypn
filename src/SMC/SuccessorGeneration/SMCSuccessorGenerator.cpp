@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include <chrono>
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
@@ -28,12 +28,14 @@ namespace SMC
     SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
-    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex)
+    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex, int64_t &fireTime)
     {
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
         int n = 0;
-        
+
+        // begin timer
+        auto begin = std::chrono::high_resolution_clock::now();
         for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
         {
             // orphans are currently under "place 0" as a special case
@@ -65,8 +67,14 @@ namespace SMC
         if(tcurrent != std::numeric_limits<uint32_t>::max())
         {
             _fire(write, tcurrent);
+            // end timer
+            auto end = std::chrono::high_resolution_clock::now();
+            fireTime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
             return true;
         }
+        // end timer
+        auto end = std::chrono::high_resolution_clock::now();
+        fireTime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         return false;
     }
 }

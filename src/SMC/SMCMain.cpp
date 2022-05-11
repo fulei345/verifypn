@@ -70,9 +70,7 @@ namespace SMC
         auto eval_end = std::chrono::high_resolution_clock::now();
         evalTime += std::chrono::duration_cast<std::chrono::microseconds>(eval_end - eval_begin).count();
 
-        // begin firing timer
-        auto fbegin = std::chrono::high_resolution_clock::now();
-        while(current_depth < max_depth && sgen.next(write, tindex))
+        while(current_depth < max_depth && sgen.next(write, tindex, fireTime))
         {
             context.setMarking(write.marking());
 
@@ -86,9 +84,6 @@ namespace SMC
                     // end eval timer
                     auto eval_end = std::chrono::high_resolution_clock::now();
                     evalTime += std::chrono::duration_cast<std::chrono::microseconds>(eval_end - eval_begin).count();
-                    // end true fire timer
-                    auto fend = std::chrono::high_resolution_clock::now();
-                    fireTime += std::chrono::duration_cast<std::chrono::milliseconds>(fend - fbegin).count();
                     return true;
                 }
                 // end eval timer
@@ -110,9 +105,6 @@ namespace SMC
             }
             current_depth++;
         }
-        // add fire timer
-        auto fend = std::chrono::high_resolution_clock::now();
-        fireTime += std::chrono::duration_cast<std::chrono::milliseconds>(fend - fbegin).count();
         return false;
     }
 
@@ -153,8 +145,7 @@ namespace SMC
             auto end = std::chrono::high_resolution_clock::now();
             preparationTime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         }
-        // begin run timer
-        auto rbegin = std::chrono::high_resolution_clock::now();
+
         for (int i = 0; i < options.smcruns; i++)
         {
             int evalcounter = 1;
