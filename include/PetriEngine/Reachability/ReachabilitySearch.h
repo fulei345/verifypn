@@ -147,6 +147,9 @@ namespace PetriEngine {
                 }
 
                 // Search!
+
+                // begin timer
+                auto begin = std::chrono::high_resolution_clock::now();
                 for(auto nid = queue.pop(); nid != Structures::Queue::EMPTY; nid = queue.pop()) {
                     states.decode(state, nid);
                     generator.prepare(&state);
@@ -164,6 +167,10 @@ namespace PetriEngine {
                             ss.exploredStates++;
                             if (checkQueries(queries, results, working, ss, &states)) {
                                 if(printstats) printStats(ss, &states);
+                                // end timer
+                                auto end = std::chrono::high_resolution_clock::now();
+                                auto time = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+                                std::cout << "time," << time << std::endl;
                                 return true;
                             }
                         }

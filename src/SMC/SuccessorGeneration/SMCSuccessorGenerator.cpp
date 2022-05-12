@@ -28,7 +28,7 @@ namespace SMC
     SMCSuccessorGenerator::SMCSuccessorGenerator(const PetriNet &net)
     : SuccessorGenerator(net){}
 
-    bool SMCSuccessorGenerator::next(Structures::State& write, uint32_t &tindex, int64_t &fireTime)
+    bool SMCSuccessorGenerator::next(Structures::State &write, uint32_t &tindex, int64_t &fireTime)
     {
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
