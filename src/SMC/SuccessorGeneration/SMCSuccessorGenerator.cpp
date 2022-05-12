@@ -53,22 +53,22 @@ namespace SMC
                     else
                     {
                         // uniform
-                        // ++n;
-                        // double randomNum = (double)random()/RAND_MAX;
-                        // if (randomNum <= 1./((double)n))
-                        // {
-                        //    tcurrent = tindex;
-                        // }
+                        ++n;
+                        double randomNum = (double)random()/RAND_MAX;
+                        if (randomNum <= 1./((double)n))
+                        {
+                           tcurrent = tindex;
+                        }
 
                         // non-uniform (also uniform)
-                        int p = _net.transitionPotency()[tindex];
-                        n += p;
+                        // int p = _net.transitionPotency()[tindex];
+                        // n += p;
                         
-                        double randomNum = (double)random()/RAND_MAX;
-                        if (randomNum <= (double)p/(double)n)
-                        {
-                            tcurrent = tindex;
-                        }
+                        // double randomNum = (double)random()/RAND_MAX;
+                        // if (randomNum <= (double)p/(double)n)
+                        // {
+                        //     tcurrent = tindex;
+                        // }
                     }
                 }
             }
@@ -81,12 +81,12 @@ namespace SMC
             _fire(write, tcurrent);
             // end timer
             auto end = std::chrono::high_resolution_clock::now();
-            timer += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            timer += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
             return true;
         }
         // end timer
         auto end = std::chrono::high_resolution_clock::now();
-        timer += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+        timer += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         return false;
     }
 }

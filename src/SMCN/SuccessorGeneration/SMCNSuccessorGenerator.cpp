@@ -66,25 +66,25 @@ namespace SMCN
         if(!enabled.empty())
         {
             //uniform
-            // std::uniform_int_distribution<> distr(0, enabled.size());
-            // int select_tindex = distr(gen);
-            // tindex = enabled[select_tindex];
-
-            //non-uniform (also uniform)
-            std::discrete_distribution<> distr(enabledPotencies.begin(), enabledPotencies.end());
+            std::uniform_int_distribution<> distr(0, enabled.size());
             int select_tindex = distr(gen);
             tindex = enabled[select_tindex];
+
+            //non-uniform (also uniform)
+            // std::discrete_distribution<> distr(enabledPotencies.begin(), enabledPotencies.end());
+            // int select_tindex = distr(gen);
+            // tindex = enabled[select_tindex];
 
             _fire(write, tindex);
             // end timer
             auto end = std::chrono::high_resolution_clock::now();
-            timer += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            timer += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
             return true;
         }
         tindex = std::numeric_limits<uint32_t>::max();
         // end timer
         auto end = std::chrono::high_resolution_clock::now();
-        timer += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+        timer += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         return false;
     }
 }
