@@ -148,14 +148,13 @@ namespace SMC
             auto end = std::chrono::high_resolution_clock::now();
             preparationTime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         }
-
-        for (int i = 0; i < options.smcruns; i++)
+        for (int r = 1; r <= options.smcruns; ++r)
         {
             int evalCount = 1;
             if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, preparationTime, fireTime, evalTime, evalCount))
             {
                 std::cout << "grep,preptime," << preparationTime << ",firetime," << fireTime << ",evaltime," << evalTime << ",evalcount," << evalCount;
-                return (double)i;
+                return (double)r;
                 successful_runs++;
             }
             total_runs++;
