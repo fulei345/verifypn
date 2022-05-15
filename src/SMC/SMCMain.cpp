@@ -48,7 +48,7 @@ namespace SMC
     {
         int current_depth = 0;
         uint32_t tindex = 0;
-        uint32_t last_heuristic = 0;
+        std::vector<uint32_t> fired;
         
         Structures::State write(net->makeInitialMarking());
         sgen.prepare(&write);
@@ -57,6 +57,7 @@ namespace SMC
         PQL::EvaluationContext context(write.marking(), net);
         SMC::SMCDistanceHeuristic heuristic(net, query);
 
+        uint32_t last_heuristic = heuristic.eval(write, tindex);
 
         // Evaluate
         // Prepare
@@ -83,10 +84,10 @@ namespace SMC
             {
                 uint32_t h = heuristic.eval(write, tindex);
 
-                if(!current_depth)
-                {
-                    last_heuristic = h;
-                }
+                //if(!current_depth)
+                //{
+                //    last_heuristic = h;
+                //}
             
                 if(h < last_heuristic)
                 {
@@ -104,6 +105,11 @@ namespace SMC
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
+                    // remove? or just increse more
+                    for(uint32_t t : fired)
+                    {
+                        potency[t] += 1;
+                    }
                     return true;
                 }
                 // update Am(phi)
@@ -112,10 +118,33 @@ namespace SMC
                     stubset->prepare(&write);
                 }
             }
+            if(current_depth)
+            {
+                fired.push_back(tindex);
+            }
             current_depth++;
         }
         while(current_depth < max_depth && sgen.next(write, tindex, potency));
-        
+
+        uint32_t h = heuristic.eval(write, tindex);
+
+        if(h < last_heuristic)
+        {
+            for(uint32_t t : fired)
+            {
+                potency[t] += 1;
+                std::cout << "," << t;
+            }
+        }
+        else if(potency[tindex] > 1)
+        {
+            for(uint32_t t : fired)
+            {
+                potency[t] -= 1;
+                std::cout << "," << t;
+            }
+        }
+
         return false;
     }
 
