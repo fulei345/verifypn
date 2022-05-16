@@ -138,7 +138,6 @@ namespace SMC
                 for(uint32_t t : fired)
                 {
                     potency[t] += 1;
-                    std::cout << "," << t;
                 }
             }
             else if(potency[tindex] > 1)
@@ -146,7 +145,6 @@ namespace SMC
                 for(uint32_t t : fired)
                 {
                     potency[t] -= 1;
-                    std::cout << "," << t;
                 }
             }
         }
