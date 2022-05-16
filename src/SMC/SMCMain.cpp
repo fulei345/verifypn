@@ -66,7 +66,7 @@ namespace SMC
             context.setMarking(write.marking());
 
             if(heuristics[0] && SMCit == 1){
-                for(int i = 0; i < net->numberOfTransitions(); i++)
+                for(uint32_t i = 0; i < net->numberOfTransitions(); i++)
                     {
                         if (stubborn[i])
                         {
@@ -184,7 +184,7 @@ namespace SMC
             }
             stubset->prepare(&initialwrite);
             if(heuristics[0])
-                for(int i = 0; i < net->numberOfTransitions(); i++)
+                for(uint32_t i = 0; i < net->numberOfTransitions(); i++)
                 {
                     if (stubborn[i])
                     {
