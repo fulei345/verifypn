@@ -44,7 +44,7 @@ namespace SMC
                 std::shared_ptr<SMC::SMCStubbornSet> stubset,
                 bool *stubborn,
                 std::vector<int> &potency,
-                int SMCh)
+                std::vector<bool> heuristics)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -65,7 +65,7 @@ namespace SMC
         do{
             context.setMarking(write.marking());
 
-            if(!SMCh && SMCit == 1){
+            if(heuristics[0] && SMCit == 1){
                 for(int i = 0; i < net->numberOfTransitions(); i++)
                     {
                         if (stubborn[i])
@@ -80,7 +80,7 @@ namespace SMC
             }
 
             // Heuristic
-            if(SMCh)
+            if(heuristics[1])
             {
                 uint32_t h = heuristic.eval(write, tindex);
 
@@ -106,9 +106,12 @@ namespace SMC
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
                     // remove? or just increse more
-                    for(uint32_t t : fired)
+                    if(heuristics[2])
                     {
-                        potency[t] += 1;
+                        for(uint32_t t : fired)
+                        {
+                            potency[t] += 1;
+                        }
                     }
                     return true;
                 }
@@ -126,25 +129,27 @@ namespace SMC
         }
         while(current_depth < max_depth && sgen.next(write, tindex, potency));
 
-        uint32_t h = heuristic.eval(write, tindex);
-
-        if(h < last_heuristic)
+        if(heuristics[2])
         {
-            for(uint32_t t : fired)
+            uint32_t h = heuristic.eval(write, tindex);
+
+            if(h < last_heuristic)
             {
-                potency[t] += 1;
-                std::cout << "," << t;
+                for(uint32_t t : fired)
+                {
+                    potency[t] += 1;
+                    std::cout << "," << t;
+                }
+            }
+            else if(potency[tindex] > 1)
+            {
+                for(uint32_t t : fired)
+                {
+                    potency[t] -= 1;
+                    std::cout << "," << t;
+                }
             }
         }
-        else if(potency[tindex] > 1)
-        {
-            for(uint32_t t : fired)
-            {
-                potency[t] -= 1;
-                std::cout << "," << t;
-            }
-        }
-
         return false;
     }
 
@@ -163,6 +168,12 @@ namespace SMC
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         auto stubborn = stubset->stubborn();
         auto potency = net->transitionPotency();
+        std::vector<bool> heuristics (3, false);
+
+        for(int h : options.heuristicnumbers)
+        {
+            heuristics[h] = true;
+        }
         
         if(options.smcit){
             // Am(phi)
@@ -174,7 +185,7 @@ namespace SMC
                 stubset->SMC::SMCStubbornSet::setInterestingSMCVisitor<PetriEngine::InterestingSMCTransitionVisitor>();
             }
             stubset->prepare(&initialwrite);
-            if(options.smch != 1)
+            if(heuristics[0])
                 for(int i = 0; i < net->numberOfTransitions(); i++)
                 {
                     if (stubborn[i])
@@ -188,7 +199,7 @@ namespace SMC
 
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, options.smch))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics))
             {
                 successful_runs++;
             }
@@ -197,7 +208,7 @@ namespace SMC
             // reset Am(phi) to initial
             if(options.smcit == 1){
                 stubset->prepare(&initialwrite);
-                if(!options.smch){
+                if(heuristics[0]){
                     potency = initpotency;
                 }
             }
