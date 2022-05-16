@@ -62,9 +62,7 @@ struct options_t {
     int smcruns = 1000;
     int smcdepth = 1000;
     int smcit = 0;
-    bool smcstatic = false;
-    bool smcdistancefire = false;
-    bool smcdistancerun = false;
+    std::set<size_t> heuristicnumbers;
 
     int kbound = 0;
     const char* modelfile = nullptr;
