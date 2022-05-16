@@ -71,6 +71,7 @@ namespace SMC
         while(current_depth < max_depth && sgen.next(write, tindex, potency))
         {            
             context.setMarking(write.marking());
+            fired.push_back(tindex);
 
             if(heuristics[0] && SMCit == 1){
                 for(uint32_t i = 0; i < net->numberOfTransitions(); i++)
@@ -90,19 +91,22 @@ namespace SMC
             if(heuristics[1])
             {
                 uint32_t h = heuristic.eval(write, tindex);
-
-                //if(!current_depth)
-                //{
-                //    last_heuristic = h;
-                //}
+                int v = 1;
             
                 if(h < last_heuristic)
                 {
-                    potency[tindex] += 1;
+                    potency[tindex] += v;
                 }
-                else if(h > last_heuristic && potency[tindex] > 1)
+                else if(h > last_heuristic)
                 {
-                    potency[tindex] -= 1;
+                    if(potency[tindex] > v)
+                    {
+                        potency[tindex] -= v;
+                    }
+                    else
+                    {
+                        potency[tindex] = 1;
+                    }
                 }
 
                 last_heuristic = h;
@@ -129,7 +133,6 @@ namespace SMC
                     stubset->prepare(&write);
                 }
             }
-            fired.push_back(tindex);
             current_depth++;
         }
         while(current_depth < max_depth && sgen.next(write, tindex, potency));
@@ -137,19 +140,27 @@ namespace SMC
         if(heuristics[2])
         {
             uint32_t h = heuristic.eval(write, tindex);
+            int v = 1;
 
             if(h < last_heuristic)
             {
                 for(uint32_t t : fired)
                 {
-                    potency[t] += 1;
+                    potency[t] += v;
                 }
             }
-            else if(potency[tindex] > 1)
+            else
             {
                 for(uint32_t t : fired)
                 {
-                    potency[t] -= 1;
+                    if(potency[t] > v)
+                    {
+                        potency[t] -= v;
+                    }
+                    else
+                    {
+                        potency[t] = 1;
+                    }
                 }
             }
         }
