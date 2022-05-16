@@ -5,15 +5,16 @@ import functools as ft
 import os
 import argparse
 
-# Dir, Short, Long
+# Dir, Short, Long, Tapaal
 header_template_list = [["name", "places","transitions","run1","run2","run3","run4","run5"],
                         ["name","places","transitions","runs","time"],
-                        ["model", "query","prep","fire","eval","places","transitions","runs","totaltime"]]
-index_list = [[3,4,5,6,7],[3,4],[2,3,4,8]]
-usecols_list = [[0,1,2,3,4,5,6,7],[0,1,2,3,4],[0,1,3,5,7,8,9,10,12]]
+                        ["model", "query","prep","fire","eval","places","transitions","runs","totaltime"],
+                        ["mode", "query", "time"]]
+index_list = [[3,4,5,6,7],[3,4],[2,3,4,8],[2]]
+usecols_list = [[0,1,2,3,4,5,6,7],[0,1,2,3,4],[0,1,3,5,7,8,9,10,12],[0,1,2]]
 # Full length, numbered length
-length_list = [[8],[5],[9]]
-settings_int = 3
+length_list = [[8],[5],[9],[3]]
+settings_int = 4
 
 def mergeDFs(liste):
     df_result = pd.merge(liste[0],liste[1])
