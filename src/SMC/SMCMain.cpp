@@ -162,13 +162,11 @@ namespace SMC
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         auto stubborn = stubset->stubborn();
-        auto SMCit = options.smcit;
-
         auto potency = net->transitionPotency();
         
-        if(SMCit){
+        if(options.smcit){
             // Am(phi)
-            if(SMCit == 1){
+            if(options.smcit == 1){
                 stubset->SMC::SMCStubbornSet::setInterestingVisitor<PetriEngine::InterestingTransitionVisitor>();
             }
             // A(phi)
@@ -190,14 +188,14 @@ namespace SMC
 
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, potency, options.smch))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, options.smch))
             {
                 successful_runs++;
             }
             total_runs++;
 
             // reset Am(phi) to initial
-            if(SMCit == 1){
+            if(options.smcit == 1){
                 stubset->prepare(&initialwrite);
                 if(!options.smch){
                     potency = initpotency;
