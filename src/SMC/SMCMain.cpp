@@ -62,7 +62,14 @@ namespace SMC
         // Evaluate
         // Prepare
 
-        do{
+        // This if-statement is new :)
+        if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
+        {
+            return true;
+        }
+
+        while(current_depth < max_depth && sgen.next(write, tindex, potency))
+        {            
             context.setMarking(write.marking());
 
             if(heuristics[0] && SMCit == 1){
@@ -101,7 +108,7 @@ namespace SMC
                 last_heuristic = h;
             }
             // ALL, 
-            if(!SMCit || stubborn[tindex] || !current_depth)
+            if(!SMCit || stubborn[tindex])
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
@@ -116,15 +123,13 @@ namespace SMC
                     return true;
                 }
                 // update Am(phi)
-                if(SMCit == 1 && !current_depth)
+                if(SMCit == 1)
                 {
+                    // gem array med trans der er blevet fjernet fra stubset :D
                     stubset->prepare(&write);
                 }
             }
-            if(current_depth)
-            {
-                fired.push_back(tindex);
-            }
+            fired.push_back(tindex);
             current_depth++;
         }
         while(current_depth < max_depth && sgen.next(write, tindex, potency));
