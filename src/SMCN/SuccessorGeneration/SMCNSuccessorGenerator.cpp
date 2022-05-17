@@ -38,7 +38,7 @@ namespace SMCN
 
         std::random_device rd;
         std::mt19937 gen(rd());
-        
+        int sum = 0;
         // begin timer
         auto begin = std::chrono::high_resolution_clock::now();
         for (_suc_pcounter = 0; _suc_pcounter < _net.numberOfPlaces(); ++_suc_pcounter)
@@ -56,8 +56,10 @@ namespace SMCN
                     }
                     else
                     {
+                        int potency = _net.transitionPotency()[tindex];
+                        sum += potency;
                         enabled.push_back(tindex);
-                        enabledPotencies.push_back(_net.transitionPotency()[tindex]);
+                        enabledPotencies.push_back(potency);
                     }
                 }
             }
@@ -66,14 +68,32 @@ namespace SMCN
         if(!enabled.empty())
         {
             //uniform
-            std::uniform_int_distribution<> distr(0, enabled.size());
-            int select_tindex = distr(gen);
-            tindex = enabled[select_tindex];
+            // int current_sum = 0;
+            // std::uniform_int_distribution<> distr(0, enabled.size());
+            // int r = distr(gen);
+            // for (size_t i = 0; i < enabled.size(); i++)
+            // {
+            //     ++current_sum;
+            //     if (current_sum >= r)
+            //     {
+            //         tindex = enabled[i];
+            //         break;
+            //     }
+            // }
 
             //non-uniform (also uniform)
-            // std::discrete_distribution<> distr(enabledPotencies.begin(), enabledPotencies.end());
-            // int select_tindex = distr(gen);
-            // tindex = enabled[select_tindex];
+            int current_sum = 0;
+            std::uniform_int_distribution<> distr(0, sum);
+            int r = distr(gen);
+            for (size_t i = 0; i < enabled.size(); i++)
+            {
+                current_sum += enabledPotencies[i];
+                if (current_sum >= r)
+                {
+                    tindex = enabled[i];
+                    break;
+                }
+            }
 
             _fire(write, tindex);
             // end timer

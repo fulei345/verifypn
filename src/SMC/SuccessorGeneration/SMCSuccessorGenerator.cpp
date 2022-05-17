@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <chrono>
+#include <random>
 #include "SMC/SuccessorGeneration/SMCSuccessorGenerator.h"
 #include "PetriEngine/Structures/State.h"
 
@@ -32,8 +33,10 @@ namespace SMC
     {
         _parent = &write;
         u_int32_t tcurrent = std::numeric_limits<uint32_t>::max();
+        std::random_device rd;
+        std::mt19937 gen(rd());
         int n = 0;
-        
+
         // begin timer
         auto begin = std::chrono::high_resolution_clock::now();
         
@@ -51,24 +54,26 @@ namespace SMC
                         continue;
                     }
                     else
-                    {
+                    {   
                         // uniform
-                        ++n;
-                        double randomNum = (double)random()/RAND_MAX;
-                        if (randomNum <= 1./((double)n))
-                        {
-                           tcurrent = tindex;
-                        }
+                        // ++n;
+                        // std::uniform_real_distribution<> distr(0, 1);
+                        // double randomNum = distr(gen);
+                        // // double randomNum = (double)random()/RAND_MAX;
+                        // if (randomNum <= 1./((double)n))
+                        // {
+                        //    tcurrent = tindex;
+                        // }
 
                         // non-uniform (also uniform)
-                        // int p = _net.transitionPotency()[tindex];
-                        // n += p;
-                        
-                        // double randomNum = (double)random()/RAND_MAX;
-                        // if (randomNum <= (double)p/(double)n)
-                        // {
-                        //     tcurrent = tindex;
-                        // }
+                        int p = _net.transitionPotency()[tindex];
+                        n += p;
+                        std::uniform_real_distribution<> distr(0, 1);
+                        double randomNum = distr(gen);
+                        if (randomNum <= (double)p/(double)n)
+                        {
+                            tcurrent = tindex;
+                        }
                     }
                 }
             }
