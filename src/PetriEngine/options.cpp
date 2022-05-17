@@ -253,7 +253,7 @@ bool options_t::parse(int argc, const char** argv) {
             if (sscanf(argv[++i], "%d", &smcdepth) != 1 || smcdepth < 0) {
                 throw base_error("Argument Error: Invalid depth", std::quoted(argv[i]));
             }
-            smc = true;
+            smcn = true;
         } else if (std::strcmp(argv[i], "-s") == 0 || std::strcmp(argv[i], "--search-strategy") == 0) {
             if (i == argc - 1) {
                 throw base_error("Missing search strategy after ", std::quoted(argv[i]));
