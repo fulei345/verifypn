@@ -45,7 +45,7 @@ namespace SMC
                 bool *stubborn,
                 std::vector<int> &potency,
                 std::vector<bool> heuristics,
-                int64_t Time)
+                int64_t &time)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -120,7 +120,7 @@ namespace SMC
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
                     auto end = std::chrono::high_resolution_clock::now();
-                    Time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+                    time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
                     return true;
                 }
                 // update Am(phi)
@@ -162,7 +162,7 @@ namespace SMC
             }
         }
         auto end = std::chrono::high_resolution_clock::now();
-        Time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+        time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         return false;
     }
 
@@ -210,14 +210,14 @@ namespace SMC
 
         auto initpotency = potency;
 
-        int64_t Time = 0;
+        int64_t time = 0;
 
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics, Time))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics, *time))
             {
-                std::cout << "grep,time," << Time <<;
-                return (double)r;
+                std::cout << "grep,time," << time;
+                return (double)i;
                 successful_runs++;
             }
             total_runs++;
