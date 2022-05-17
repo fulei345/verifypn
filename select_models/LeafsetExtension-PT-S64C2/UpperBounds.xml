@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<property-set xmlns="http://mcc.lip6.fr/">
+  <property>
+    <id>gen-UpperBounds-00</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node58ManageTheBreakDownOfNode9</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-01</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node20FailureProcessedByNode18</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-02</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node40FailureProcessedByNode51</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-03</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node27ManageTheBreakDownOfNode29</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-04</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node62FailureProcessedByNode4</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-05</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node39HasAskedItsLeafSetToLxToReplaceNode31</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-06</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node63FailureProcessedByNode29</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-07</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node37ManageTheBreakDownOfNode42</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-08</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node38HasTheLeafSetOfRxToReplaceNode54</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-09</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node20ManageTheBreakDownOfNode63</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-10</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node23ManageTheBreakDownOfNode9</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-11</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node37HasTheLeafSetOfRxToReplaceNode62</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-12</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node27WantsToManageTheBreakDownOfNode51</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-13</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node15HasAskedItsLeafSetToLxToReplaceNode9</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-14</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node0HasAskedItsLeafSetToLxToReplaceNode32</place>
+      </place-bound>
+    </formula>
+  </property>
+  <property>
+    <id>gen-UpperBounds-15</id>
+    <description>Automatically generated</description>
+    <formula>
+      <place-bound>
+        <place>Node13HasTheLeafSetOfLxToReplaceNode12</place>
+      </place-bound>
+    </formula>
+  </property>
+</property-set>

@@ -1,0 +1,80 @@
+Property PolyORBNT-PT-S10J20-UpperBounds-00
+  "Automatically generated"
+  is:
+    bound("cJobCnt")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-01
+  "Automatically generated"
+  is:
+    bound("mo2")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-02
+  "Automatically generated"
+  is:
+    bound("place_782_1")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-03
+  "Automatically generated"
+  is:
+    bound("Check_Sources_E_1")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-04
+  "Automatically generated"
+  is:
+    bound("mi3")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-05
+  "Automatically generated"
+  is:
+    bound("place_482_1_7", "place_482_1_1", "place_482_1_9", "place_482_1_6", "place_482_1_8", "place_482_1_4", "place_482_1_5", "place_482_1_10", "place_482_1_2", "place_482_1_3")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-06
+  "Automatically generated"
+  is:
+    bound("mo2")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-07
+  "Automatically generated"
+  is:
+    bound("NotifyEventJobQueuedB_1_14", "NotifyEventJobQueuedB_1_13", "NotifyEventJobQueuedB_1_0", "NotifyEventJobQueuedB_1_6", "NotifyEventJobQueuedB_1_7", "NotifyEventJobQueuedB_1_19", "NotifyEventJobQueuedB_1_8", "NotifyEventJobQueuedB_1_12", "NotifyEventJobQueuedB_1_11", "NotifyEventJobQueuedB_1_9", "NotifyEventJobQueuedB_1_2", "NotifyEventJobQueuedB_1_20", "NotifyEventJobQueuedB_1_1", "NotifyEventJobQueuedB_1_10", "NotifyEventJobQueuedB_1_17", "NotifyEventJobQueuedB_1_18", "NotifyEventJobQueuedB_1_16", "NotifyEventJobQueuedB_1_3", "NotifyEventJobQueuedB_1_4", "NotifyEventJobQueuedB_1_15", "NotifyEventJobQueuedB_1_5")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-08
+  "Automatically generated"
+  is:
+    bound("place_522_1")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-09
+  "Automatically generated"
+  is:
+    bound("f1_1")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-10
+  "Automatically generated"
+  is:
+    bound("FetchJobE_1_8")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-11
+  "Automatically generated"
+  is:
+    bound("mi3")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-12
+  "Automatically generated"
+  is:
+    bound("f1_17")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-13
+  "Automatically generated"
+  is:
+    bound("CreatedJobs_19_9")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-14
+  "Automatically generated"
+  is:
+    bound("CreatedJobs_11_1")
+  end.
+Property PolyORBNT-PT-S10J20-UpperBounds-15
+  "Automatically generated"
+  is:
+    bound("f2_4")
+  end.
