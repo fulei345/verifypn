@@ -214,7 +214,7 @@ namespace SMC
 
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics, *time))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics, time))
             {
                 std::cout << "grep,time," << time;
                 return (double)i;
