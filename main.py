@@ -1,20 +1,22 @@
 import os
+from numpy import int64
 import pandas as pd
 import sys
 import functools as ft
 import os
 import argparse
 
-# Dir, Short, Long, Tapaal
-header_template_list = [["name", "places","transitions","run1","run2","run3","run4","run5"],
-                        ["name","places","transitions","runs","time"],
+# Dir, Short, Long, Tapaal, Evalset
+header_template_list = [["model", "places","transitions","run1","run2","run3","run4","run5"],
+                        ["model","places","transitions","runs","time"],
                         ["model", "query","prep","fire","eval","places","transitions","runs","totaltime"],
-                        ["mode", "query", "time"]]
-index_list = [[3,4,5,6,7],[3,4],[2,3,4,8],[2]]
-usecols_list = [[0,1,2,3,4,5,6,7],[0,1,2,3,4],[0,1,3,5,7,8,9,10,12],[0,1,2]]
+                        ["mode", "query", "time"],
+                        ["model", "query","prep","fire","eval","eval_count","places","transitions","runs","totaltime"]]
+index_list = [[3,4,5,6,7],[3,4],[2,3,4,8],[2],[2,3,4,5,8,9]]
+usecols_list = [[0,1,2,3,4,5,6,7],[0,1,2,3,4],[0,1,3,5,7,8,9,10,12],[0,1,3],[0,1,4,6,8,10,11,12,14,18]]
 # Full length, numbered length
-length_list = [[8],[5],[9],[3]]
-settings_int = 4
+length_list = [[8],[5],[9],[3],[10]]
+settings_int = 5
 
 def mergeDFs(liste):
     df_result = pd.merge(liste[0],liste[1])
@@ -32,23 +34,34 @@ def getDirectories(path):
     dir_list.sort()
     return dir_list
 
-def getDFinFolder(path, setting_index, index, results):
-    temp_index = index
-    data_frames = []
+def getFiles(dir, results):
     file_list = []
-    headers = []
-    for root,_, files in os.walk(path):
+    path_file_list = []
+    for root,_, files in os.walk(dir):
         for file in files:
             if "results" in file or not results:
-                file_list.append(file) 
-                header = header_template_list[setting_index].copy()
-                for num in index_list[setting_index]:
-                    header[num] = "_".join([str(temp_index),str(header[num])])
-                df = pd.read_csv(os.path.join(root,file), usecols=usecols_list[setting_index], names=header, header=None)
-                data_frames.append(df)
-                temp_index = temp_index + 1
-                headers.append(header)
-    return data_frames, file_list, headers, temp_index
+                file_list.append(file)
+                path_file_list.append(os.path.join(dir,file))
+    file_list.sort()
+    path_file_list.sort()
+    return file_list, path_file_list
+
+def getDataFrame(file_list, setting_index, index):
+    temp_index = index
+    data_frames = []
+    headers = []
+    for file in file_list: 
+
+        header = header_template_list[setting_index].copy()
+        for num in index_list[setting_index]:
+            header[num] = "_".join([str(temp_index),str(header[num])])
+        type_dict = dict.fromkeys(header, int64)
+        type_dict["model"] = str
+        df = pd.read_csv(file, usecols=usecols_list[setting_index], names=header, header=None, dtype=type_dict)
+        data_frames.append(df)
+        temp_index = temp_index + 1
+        headers.append(header)
+    return data_frames, headers, temp_index
 
 def main(path, setting, merge, solo):
     index = 1
@@ -57,22 +70,28 @@ def main(path, setting, merge, solo):
     merged_frames = []
     file_list = []
     dir_list = []
-    int_names = ["A", "ALL", "AM"]
+    path_file_list = []
 
     if setting == 0:
         dir_list = getDirectories(path)
         for dir in dir_list:
-            df_list, files, headers, index = getDFinFolder(dir, 0, index, False)
-            data_frames_list.append(df_list)
+            files, path_file_list = getFiles(dir,False)
             file_list.append(files)
+    else:
+        dir_list.append(path)
+        files, path_file_list = getFiles(path,True)
+        file_list.append(files)
+
+    if setting == 0:
+        for file_list in path_file_list:
+            df_list, headers, index = getDataFrame(file_list, setting, index)
+            data_frames_list.append(df_list)
             header_list.append(headers)
     else:
-        # Load dataframes for each folder
-        df_list, files, headers, index = getDFinFolder(path, setting, index, True)
+        df_list, headers, index = getDataFrame(path_file_list, setting, index)
         data_frames_list.append(df_list)
-        file_list.append(files)
         header_list.append(headers)
-
+    
     # Merge all frames
     for exp in data_frames_list:
         df_merge = mergeDFs(exp)
@@ -84,6 +103,7 @@ def main(path, setting, merge, solo):
         df_final = merged_frames[0]
 
     print(df_final)
+    print(file_list)
 
     if setting == 0:
         if merge:
@@ -107,12 +127,15 @@ def main(path, setting, merge, solo):
             for i in range(len(file_list[0])):
                 header_delete = set(df_final.columns.values.tolist())
                 header_delete.difference_update(set(header_list[0][i]))
-                filename = int_names[i] + "-merged.csv"
+                temp = file_list[0][i].replace("results","")
+                filename = temp + "-merged.csv"
                 df_write = df_final.copy()
                 df_write = df_write.drop(columns=header_delete)
                 print(df_write)
                 filepath = os.path.join(path, filename)
                 df_write.to_csv(filepath)
+            # df_final.to_csv("merged.csv")
+
         if solo:
             length = len(file_list[0])
             for i in range(length):
@@ -123,7 +146,8 @@ def main(path, setting, merge, solo):
                     header_delete = set(df_write.columns.values.tolist())
                     header_delete.difference_update(set(header_list[0][i]))
                     df_write = df_write.drop(columns=header_delete)
-                filename = int_names[i] +"-solo.csv"
+                temp = file_list[0][i].replace("results","")
+                filename = temp +"-solo.csv"
                 print(df_write)
                 filepath = os.path.join(path, filename)
                 df_write.to_csv(filepath)
