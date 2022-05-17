@@ -44,7 +44,8 @@ namespace SMC
                 std::shared_ptr<SMC::SMCStubbornSet> stubset,
                 bool *stubborn,
                 std::vector<int> &potency,
-                std::vector<bool> heuristics)
+                std::vector<bool> heuristics,
+                int64_t Time)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -58,6 +59,8 @@ namespace SMC
         SMC::SMCDistanceHeuristic heuristic(net, query);
 
         uint32_t last_heuristic = heuristic.eval(write, tindex);
+
+        auto begin = std::chrono::high_resolution_clock::now();
 
         // Evaluate
         // Prepare
@@ -116,14 +119,8 @@ namespace SMC
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
-                    // remove? or just increse more
-                    if(heuristics[2])
-                    {
-                        for(uint32_t t : fired)
-                        {
-                            potency[t] += 1;
-                        }
-                    }
+                    auto end = std::chrono::high_resolution_clock::now();
+                    Time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
                     return true;
                 }
                 // update Am(phi)
@@ -164,6 +161,8 @@ namespace SMC
                 }
             }
         }
+        auto end = std::chrono::high_resolution_clock::now();
+        Time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
         return false;
     }
 
@@ -211,10 +210,14 @@ namespace SMC
 
         auto initpotency = potency;
 
+        int64_t Time = 0;
+
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics, Time))
             {
+                std::cout << "grep,time," << Time <<;
+                return (double)r;
                 successful_runs++;
             }
             total_runs++;
