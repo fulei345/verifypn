@@ -216,7 +216,7 @@ namespace SMC
         {
             if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics, time))
             {
-                std::cout << "grep,time," << time;
+                std::cout << "grep,time," << time << std::endl;
                 return (double)i;
                 successful_runs++;
             }
