@@ -42,10 +42,11 @@ namespace SMC
                 int SMCit,
                 std::shared_ptr<SMC::SMCStubbornSet> stubset,
                 bool *stubborn,
-                int64_t &preparationTime,
+                int64_t &prepTime,
                 int64_t &fireTime,
                 int64_t &evalTime,
-                int &evalCount)
+                int &evalCount,
+                int &outdepth)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -63,7 +64,7 @@ namespace SMC
 
         // end eval timer
         auto eval_end = std::chrono::high_resolution_clock::now();
-        evalTime += std::chrono::duration_cast<std::chrono::microseconds>(eval_end - eval_begin).count();
+        evalTime = std::chrono::duration_cast<std::chrono::microseconds>(eval_end - eval_begin).count();
 
         // if query is true initially
         if(queryeval)
@@ -88,7 +89,7 @@ namespace SMC
                 evalTime += std::chrono::duration_cast<std::chrono::microseconds>(eval_end - eval_begin).count();
 
                 if(queryeval)
-                {                    
+                {                   
                     return true;
                 }
                 
@@ -102,11 +103,13 @@ namespace SMC
 
                     // end update timer
                     auto end = std::chrono::high_resolution_clock::now();
-                    preparationTime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+                    prepTime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
                 }
             }
             current_depth++;
+            outdepth = current_depth+1;
         }
+        outdepth = current_depth+1;
         return false;
     }
 
@@ -123,11 +126,8 @@ namespace SMC
 
         auto stubset = std::make_shared<SMCStubbornSet>(*net, query);
         auto stubborn = stubset->stubborn();
-        int64_t preparationTime = 0;
-        int64_t fireTime = 0;
-        int64_t evalTime = 0;
-        int64_t setTime = 0;
         auto SMCit = options.smcit;
+        int64_t preparationTime = 0;
 
         if(SMCit){
             // Am(phi)
@@ -149,11 +149,15 @@ namespace SMC
             preparationTime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         }
         for (int r = 1; r <= options.smcruns; ++r)
-        {
+        {   
+            int64_t prepTime = preparationTime;
+            int64_t fireTime = 0;
+            int64_t evalTime = 0;
+            int outdepth = 1;
             int evalCount = 1;
-            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, preparationTime, fireTime, evalTime, evalCount))
+            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, prepTime, fireTime, evalTime, evalCount, outdepth))
             {
-                std::cout << "grep,preptime," << preparationTime << ",firetime," << fireTime << ",evaltime," << evalTime << ",evalcount," << evalCount;
+                std::cout << "grep,preptime," << prepTime << ",firetime," << fireTime << ",evaltime," << evalTime << ",evalcount," << evalCount << ",steps," << outdepth;
                 return (double)r;
                 successful_runs++;
             }
@@ -168,7 +172,7 @@ namespace SMC
                 
                 // end reset timer
                 auto end = std::chrono::high_resolution_clock::now();
-                preparationTime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+                preparationTime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
             }
         }
         return (((double)successful_runs)/((double)total_runs))*100.;
