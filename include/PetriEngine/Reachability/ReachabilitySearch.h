@@ -134,9 +134,15 @@ namespace PetriEngine {
                 // check initial marking
                 if(ss.usequeries)
                 {
+                    // begin timer
+                    auto begin = std::chrono::high_resolution_clock::now();
                     if(checkQueries(queries, results, working, ss, &states))
                     {
                         if(printstats) printStats(ss, &states);
+                            // end timer
+                            auto end = std::chrono::high_resolution_clock::now();
+                            auto time = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+                            std::cout << "time," << time << std::endl;
                             return true;
                     }
                 }
