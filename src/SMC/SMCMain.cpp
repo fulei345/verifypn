@@ -203,7 +203,7 @@ namespace SMC
                 {
                     if (stubborn[i])
                     {
-                        potency[i] = 10;
+                        potency[i] = 100;
                     }
                 }
         }
