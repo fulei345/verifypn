@@ -66,8 +66,16 @@ namespace SMC
         // Prepare
 
         // This if-statement is new :)
-        if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
+        if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE )
         {
+            auto end = std::chrono::high_resolution_clock::now();
+            time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+            if(query->isInvariant())
+            {
+                std::cout << "grep,false,time," << time << std::endl;
+                return true;
+            }
+            std::cout << "grep,true,time," << time << std::endl;
             return true;
         }
 
@@ -121,6 +129,12 @@ namespace SMC
                 {
                     auto end = std::chrono::high_resolution_clock::now();
                     time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+                    if(query->isInvariant())
+                    {
+                        std::cout << "grep,false,time," << time << std::endl;
+                        return true;
+                    }
+                    std::cout << "grep,true,time," << time << std::endl;
                     return true;
                 }
                 // update Am(phi)
@@ -216,7 +230,6 @@ namespace SMC
         {
             if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics, time))
             {
-                std::cout << "grep,time," << time << std::endl;
                 return (double)i;
                 successful_runs++;
             }
