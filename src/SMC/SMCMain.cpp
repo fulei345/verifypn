@@ -79,6 +79,11 @@ namespace SMC
             return true;
         }
 
+        uint32_t h;
+        std::pair<uint32_t,uint32_t> bestdist;
+        bestdist.first = last_heuristic;
+        bestdist.second = -1;
+
         while(current_depth < max_depth && sgen.next(write, tindex, potency))
         {            
             context.setMarking(write.marking());
@@ -98,10 +103,14 @@ namespace SMC
                     }
             }
 
+            if(heuristics[1] || heuristics[2])
+            {
+                h = heuristic.eval(write, tindex);
+            }
+
             // Heuristic
             if(heuristics[1])
             {
-                uint32_t h = heuristic.eval(write, tindex);
                 int v = 1;
             
                 if(h < last_heuristic)
@@ -122,6 +131,13 @@ namespace SMC
 
                 last_heuristic = h;
             }
+
+            if(heuristics[2] && h < bestdist.first)
+            {
+                bestdist.first = h;
+                bestdist.second = current_depth;
+            }
+
             // ALL, 
             if(!SMCit || stubborn[tindex])
             {
@@ -150,14 +166,21 @@ namespace SMC
 
         if(heuristics[2])
         {
-            uint32_t h = heuristic.eval(write, tindex);
             int v = 1;
 
-            if(h < last_heuristic)
+            if(bestdist.first < last_heuristic)
             {
-                for(uint32_t t : fired)
+                for(uint32_t t = 0; t < bestdist.second; t++)
                 {
-                    potency[t] += v;
+                    potency[fired[t]] += v;
+                }
+                if(potency[fired[bestdist.second+1]] > v)
+                {
+                    potency[fired[bestdist.second+1]] -= v;
+                }
+                else
+                {
+                    potency[fired[bestdist.second+1]] = 1;
                 }
             }
             else
