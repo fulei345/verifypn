@@ -48,7 +48,6 @@ namespace SMC
                 int &evalCount,
                 int &outdepth)
     {
-        int current_depth = 0;
         uint32_t tindex = 0;
         
         Structures::State write(net->makeInitialMarking());
@@ -64,7 +63,8 @@ namespace SMC
 
         // end eval timer
         auto eval_end = std::chrono::high_resolution_clock::now();
-        evalTime = std::chrono::duration_cast<std::chrono::microseconds>(eval_end - eval_begin).count();
+        evalTime += std::chrono::duration_cast<std::chrono::microseconds>(eval_end - eval_begin).count();
+        evalCount++;
 
         // if query is true initially
         if(queryeval)
@@ -107,9 +107,9 @@ namespace SMC
                 }
             }
             current_depth++;
-            outdepth = current_depth+1;
+            outdepth++;
         }
-        outdepth = current_depth+1;
+        outdepth++;
         return false;
     }
 
@@ -147,17 +147,17 @@ namespace SMC
             // end set preparation timer
             auto end = std::chrono::high_resolution_clock::now();
             preparationTime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+            int64_t evalTime = 0;
+            int evalCount = 0;
+            int outdepth = 0;
         }
         for (int r = 1; r <= options.smcruns; ++r)
         {   
-            int64_t prepTime = preparationTime;
             int64_t fireTime = 0;
-            int64_t evalTime = 0;
-            int outdepth = 1;
-            int evalCount = 1;
-            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, prepTime, fireTime, evalTime, evalCount, outdepth))
+
+            if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, preparationTime, fireTime, evalTime, evalCount, outdepth))
             {
-                std::cout << "grep,preptime," << prepTime << ",firetime," << fireTime << ",evaltime," << evalTime << ",evalcount," << evalCount << ",steps," << outdepth;
+                std::cout << "grep,preptime," << preparationTime << ",firetime," << fireTime << ",evaltime," << evalTime << ",evalcount," << evalCount << ",steps," << outdepth;
                 return (double)r;
                 successful_runs++;
             }
@@ -172,9 +172,10 @@ namespace SMC
                 
                 // end reset timer
                 auto end = std::chrono::high_resolution_clock::now();
-                preparationTime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+                preparationTime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
             }
         }
+        std::cout << "grep,preptime," << preparationTime << ",firetime," << fireTime << ",evaltime," << evalTime << ",evalcount," << evalCount << ",steps," << outdepth;
         return (((double)successful_runs)/((double)total_runs))*100.;
     }
 }
