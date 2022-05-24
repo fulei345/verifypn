@@ -48,6 +48,7 @@ namespace SMC
                 int &evalCount,
                 int &outdepth)
     {
+        int current_depth = 0;
         uint32_t tindex = 0;
         
         Structures::State write(net->makeInitialMarking());
@@ -128,6 +129,10 @@ namespace SMC
         auto stubborn = stubset->stubborn();
         auto SMCit = options.smcit;
         int64_t preparationTime = 0;
+        int64_t fireTime = 0;
+        int64_t evalTime = 0;
+        int evalCount = 0;
+        int outdepth = 1;
 
         if(SMCit){
             // Am(phi)
@@ -147,14 +152,10 @@ namespace SMC
             // end set preparation timer
             auto end = std::chrono::high_resolution_clock::now();
             preparationTime = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-            int64_t evalTime = 0;
-            int evalCount = 0;
-            int outdepth = 0;
+            
         }
         for (int r = 1; r <= options.smcruns; ++r)
         {   
-            int64_t fireTime = 0;
-
             if (SMCRun(sgen, net, query, options.smcdepth, SMCit, stubset, stubborn, preparationTime, fireTime, evalTime, evalCount, outdepth))
             {
                 std::cout << "grep,preptime," << preparationTime << ",firetime," << fireTime << ",evaltime," << evalTime << ",evalcount," << evalCount << ",steps," << outdepth;
