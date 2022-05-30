@@ -1,8 +1,0 @@
-# For Mergehere:
-./resultscript.sh
-./separate.sh
-./cleaner.sh
-./counter.sh
-
-# For grepped Results (cleaner.py should be in folder)
-./runcleaner.sh
