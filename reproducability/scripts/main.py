@@ -1,25 +1,27 @@
 import os
+import numpy as np
 from numpy import int64
 import pandas as pd
-import os
 import argparse
 
-# Dir, Short, Eval_Step, Tapaal, Evalset
+# Exp 1, Exp 2, Exp 3, Exp 3.1 Tables
 header_template_list = [["model", "places","transitions","run1","run2","run3","run4","run5"],
-                        ["model","places","transitions","runs","time"],
                         ["model", "query","prep","fire","eval","eval_count", "steps", "places","transitions","runs","totaltime"],
                         ["model", "query", "time"],
-                        ["model", "query","prep","fire","eval","eval_count","places","transitions","runs","totaltime"]]
-index_list = [[3,4,5,6,7],[3,4],[2,3,4,5,6,9,10],[2],[2,3,4,5,8,9]]
-usecols_list = [[0,1,2,3,4,5,6,7],[0,1,2,3,4],[0,1,4,6,8,10,12,13,14,20,22],[0,1,3],[0,1,4,6,8,10,11,12,14,18]]
-# Full length, numbered length
-length_list = [[8],[5],[10],[3],[10]]
-settings_int = 5
+                        ["model", "query", "time"]]
 
-def mergeDFs(liste):
-    df_result = pd.merge(liste[0],liste[1])
+# Columns to index
+index_list = [[3,4,5,6,7],[2,3,4,5,6,9,10],[2],[2]]
+# Columns to import to pands
+usecols_list = [[0,1,2,3,4,5,6,7],[0,1,4,6,8,10,12,13,14,16,18],[0,1,3],[0,1,3]]
+# In folders
+in_folder = [True,False,False,True]
+settings_int = 4
+
+def mergeDFs(liste, how):
+    df_result = pd.merge(liste[0],liste[1],how=how)
     for i in range(2,len(liste)):
-        df_result = pd.merge(df_result,liste[i])
+        df_result = pd.merge(df_result,liste[i],how=how)
     return df_result
 
 def getDirectories(path):
@@ -27,10 +29,21 @@ def getDirectories(path):
     # Get the directory for the results
     for root,dirs, _ in os.walk(path):
         for dir in dirs:
-            if "results" in dir:
-                dir_list.append(os.path.join(root, dir))
+            dir_list.append(os.path.join(root, dir))
     dir_list.sort()
     return dir_list
+
+def getSolos(df_list,index,header_list):
+    length = len(df_list)
+    df_write = df_list[index].copy() 
+    for k in range(1, length):
+        df_write = pd.merge(df_write,df_list[(index+k)%length], how="left",indicator=True)
+        df_write = df_write.loc[df_write['_merge'] == 'left_only']
+        header_delete = set(df_write.columns.values.tolist())
+        header_delete.difference_update(set(header_list[index]))
+        df_write = df_write.drop(columns=header_delete)
+    return df_write
+
 
 def getFiles(dir, results):
     file_list = []
@@ -48,8 +61,7 @@ def getDataFrame(file_list, setting_index, index):
     temp_index = index
     data_frames = []
     headers = []
-    for file in file_list: 
-
+    for file in file_list:
         header = header_template_list[setting_index].copy()
         for num in index_list[setting_index]:
             header[num] = "_".join([str(temp_index),str(header[num])])
@@ -61,99 +73,231 @@ def getDataFrame(file_list, setting_index, index):
         headers.append(header)
     return data_frames, headers, temp_index
 
-def main(path, setting, merge, solo):
+def main(path, setting, inner, outer, solo, plots):
     index = 1
     data_frames_list = []
     header_list = []
     merged_frames = []
-    file_list = []
+    filename_list = []
     dir_list = []
     path_file_list = []
+    unique = 0
+    unique_df = None
 
-    if setting == 0:
-        dir_list = getDirectories(path)
-        for dir in dir_list:
-            files, path_file_list = getFiles(dir,False)
-            file_list.append(files)
-    else:
+    # Import dataframes
+    dir_list = getDirectories(path)
+    print(path)
+    if len(dir_list) == 0:
         dir_list.append(path)
-        files, path_file_list = getFiles(path,True)
-        file_list.append(files)
-
-    if setting == 0:
-        for file_list in path_file_list:
-            df_list, headers, index = getDataFrame(file_list, setting, index)
-            data_frames_list.append(df_list)
-            header_list.append(headers)
+        files, path_file = getFiles(path,True)
+        filename_list.append(files)
+        path_file_list.append(path_file)
     else:
-        df_list, headers, index = getDataFrame(path_file_list, setting, index)
+        for dir in dir_list:
+            files, path_file = getFiles(dir,False)
+            filename_list.append(files)
+            path_file_list.append(path_file)
+
+    for file_list in path_file_list:
+        df_list, headers, index = getDataFrame(file_list, setting, index)
         data_frames_list.append(df_list)
         header_list.append(headers)
     
     # Merge all frames
-    for exp in data_frames_list:
-        df_merge = mergeDFs(exp)
-        merged_frames.append(df_merge)
+    if setting < 2 or inner:
+        for exp in data_frames_list:
+            df_merge = mergeDFs(exp,"inner")
+            merged_frames.append(df_merge)
 
-    if setting == 0:
-        df_final = mergeDFs(merged_frames)
-    else:
-        df_final = merged_frames[0]
+        if in_folder[setting]:
+            df_final = mergeDFs(merged_frames,"inner")
+        else:
+            df_final = merged_frames[0]
+        print(df_final)
 
-    print(df_final)
-    print(file_list)
+    print(filename_list)
 
-    if setting == 0:
-        if merge:
-            for i in range(len(dir_list)):
+    if inner:
+        for i in range(len(dir_list)):
+            if in_folder[setting]:
                 header_set = set()
                 header_delete = set(df_final.columns.values.tolist())
-                df_write = df_final.copy()
                 for header in header_list[i]:
                     header_set = header_set.union(set(header))
                 header_delete.difference_update(header_set)
-                filename = dir_list[i] +"("
-                for file in file_list[i]:
+                df_write = df_final.copy()
+                dirs = os.path.split(dir_list[i])[-1]
+                filename = dirs +"("
+                for file in filename_list[i]:
                     filename = filename + file + " "
                 filename = filename + ").csv"
                 df_write = df_write.drop(columns=header_delete)
                 print(df_write)
                 filepath = os.path.join(path, filename)
                 df_write.to_csv(filepath)
-    else:
-        if merge:
-            for i in range(len(file_list[0])):
-                header_delete = set(df_final.columns.values.tolist())
-                header_delete.difference_update(set(header_list[0][i]))
-                temp = file_list[0][i].replace("results","")
-                filename = temp + "-merged.csv"
-                df_write = df_final.copy()
-                df_write = df_write.drop(columns=header_delete)
-                print(df_write)
-                filepath = os.path.join(path, filename)
-                df_write.to_csv(filepath)
-            # df_final.to_csv("merged.csv")
+            else:
+                for k in range(len(filename_list[0])):
+                    header_delete = set(df_final.columns.values.tolist())
+                    df_write = df_final.copy()
+                    header_delete.difference_update(header_list[i][k])
+                    filename = filename_list[0][i].replace("results","")
+                    filename = filename + "-merged.csv"
+                    df_write = df_write.drop(columns=header_delete)
+                    print(df_write)
+                    filepath = os.path.join(path, filename)
+                    df_write.to_csv(filepath)
 
-        if solo:
-            length = len(file_list[0])
+    if outer:
+            for exp in data_frames_list:
+                df_merge = mergeDFs(exp,"outer")
+            df_write = df_merge["model"]
+            print(df_write)
+            filename = "outer.csv"
+            filepath = os.path.join(path, filename)
+            df_write.to_csv(filepath)
+
+    if solo:
+        for h in range(len(dir_list)):
+            length = len(filename_list[h])
             for i in range(length):
-                df_write = data_frames_list[0][i].copy() 
+                df_write = data_frames_list[h][i].copy() 
                 for k in range(1, length):
-                    df_write = pd.merge(df_write,data_frames_list[0][(i+k)%length], how="left",indicator=True)
+                    df_write = pd.merge(df_write,data_frames_list[h][(i+k)%length], how="left",indicator=True)
                     df_write = df_write.loc[df_write['_merge'] == 'left_only']
                     header_delete = set(df_write.columns.values.tolist())
-                    header_delete.difference_update(set(header_list[0][i]))
+                    header_delete.difference_update(set(header_list[h][i]))
                     df_write = df_write.drop(columns=header_delete)
-                temp = file_list[0][i].replace("results","")
+                temp = filename_list[h][i].replace("results","")
                 filename = temp +"-solo.csv"
                 print(df_write)
                 filepath = os.path.join(path, filename)
                 df_write.to_csv(filepath)
+    if plots:
+        if setting == 0:
+            for i in range(len(dir_list)):
+                ratio_list = []
+                series_list = []
+                for k in range(len(data_frames_list[i])):
+                    header_delete = set(df_final.columns.values.tolist())
+                    df_write = df_final.copy()
+                    header_delete.difference_update(header_list[i][k])
+                    header_delete.add("places")
+                    header_delete.add("transitions")
+                    df_write = df_write.drop(columns=header_delete)
+                    result_series = df_write.median(axis='columns',numeric_only=True)
+                    result_series = result_series.apply(lambda x: np.true_divide(x, 1000000))
+                    ratio_series = result_series.copy(deep=True)
+                    ratio_list.append(ratio_series)
+                    result_series = result_series.sort_values(ignore_index=True)
+                    series_list.append(result_series)
+                df_write = pd.concat(series_list,ignore_index=True, axis=1)
+                df_write.columns = ["Naive","Online"]
+                print(df_write)
+                "plot.csv"
+                filepath = os.path.join(path, filename)
+                df_write.to_csv(filepath)
+
+                print(ratio_list)
+                series_write = (ratio_list[1]/ ratio_list[0])
+                series_write = series_write.sort_values(ignore_index=True)
+                frame = {'Ratio': series_write}
+                df_write = pd.DataFrame(frame)
+                print(df_write)
+                filename = "ratio-plot.csv"
+                filepath = os.path.join(path, filename)
+                df_write.to_csv(filepath)
+
+        if setting == 1:
+            # pps
+            a = pd.Series([0.0001])
+            a = a.repeat(len(df_final)).reset_index(drop=True)
+            series_list = []
+            series_list.append((df_final['1_prep']/ df_final['1_steps']))
+            series_list.append(a)
+            series_list.append((df_final['3_prep']/ df_final['3_steps']))
+            series_list[0] = series_list[0].sort_values(ignore_index=True)
+            series_list[2] = series_list[2].sort_values(ignore_index=True)
+            df_write = pd.concat(series_list,ignore_index=True, axis=1)
+            df_write.columns = ["A0","AT","AM"]
+            print(df_write)
+            filename = "pps-plot.csv"
+            filepath = os.path.join(path, filename)
+            df_write.to_csv(filepath)
+
+            # eval count
+            series_list = []
+            series_list.append((df_final['1_eval_count']))
+            series_list.append((df_final['2_eval_count']))
+            series_list.append((df_final['3_eval_count']))
+            series_list[0] = series_list[0].sort_values(ignore_index=True)
+            series_list[1] = series_list[1].sort_values(ignore_index=True)
+            series_list[2] = series_list[2].sort_values(ignore_index=True)
+            df_write = pd.concat(series_list,ignore_index=True, axis=1)
+            df_write.columns = ["A0","AT","AM"]
+            print(df_write)
+            filename = "count-plot.csv"
+            filepath = os.path.join(path, filename)
+            df_write.to_csv(filepath)
+
+            # total
+            series_list = []
+            series_list.append((df_final['1_eval'] + df_final['1_prep']))
+            series_list.append((df_final['2_eval'] + df_final['2_prep']))
+            series_list.append((df_final['3_eval'] + df_final['3_prep']))
+            series_list[0] = series_list[0].sort_values(ignore_index=True)
+            series_list[1] = series_list[1].sort_values(ignore_index=True)
+            series_list[2] = series_list[2].sort_values(ignore_index=True)
+            df_write = pd.concat(series_list,ignore_index=True, axis=1)
+            df_write.columns = ["A0","AT","AM"]
+            print(df_write)
+            filename = "total-plot.csv"
+            filepath = os.path.join(path, filename)
+            df_write.to_csv(filepath)
+
+        if setting == 2:
+            for i in range(len(dir_list)):
+                series_list = []
+                for k in range(len(data_frames_list[i])):
+                    series = data_frames_list[i][k][str(k+1) + "_time"]
+                    series = series.sort_values(ignore_index=True)
+                    series_list.append(series)
+                df_write = pd.concat(series_list,ignore_index=True, axis=1)
+                df_write.columns = ["Staic","Distance","Closest","Static + Distance","BFS","DFS","BestFS"]
+                print(df_write)
+                filename = "big-plot.csv"
+                filepath = os.path.join(path, filename)
+                df_write.to_csv(filepath)
+
+    if setting == 3:
+        for i in range(len(dir_list)):
+            unique_df = mergeDFs(data_frames_list[i],"outer")
+            merge_df = mergeDFs(data_frames_list[i],"inner")
+            unique_df = unique_df.drop(columns=["model","query"])
+            merge_df = merge_df.drop(columns=["model","query"])
+            winners = merge_df.idxmin(axis=1)
+            dirs = os.path.split(dir_list[i])[-1]
+            print(dirs + " Table")
+            winners = winners.value_counts()
+            table_list = []
+            for k in range(len(data_frames_list[i])):
+                solos = getSolos(data_frames_list[i],k,header_list[i])
+                answers = len(data_frames_list[i][k])
+                res_dict =  ["lol",answers,0,winners[str(i*4 +k+1) + "_time"],len(solos)]
+                table_list.append(res_dict)
+
+            table_list[0][0] = dirs
+            table_list[1][0] = "BFS"
+            table_list[2][0] = "DFS"
+            table_list[3][0] = "BestFS"
+            table_list.append(table_list[0])
+            table_list.pop(0)
+            df_write = pd.DataFrame(table_list, columns = ["Name",'Answers', 'Timeouts',"Winner","Solo Answers"])
+            print(df_write)
 
 if __name__ == '__main__':
     cwd = os.getcwd()
 
-    parser = argparse.ArgumentParser(description='For intersection or finding solo results')
+    parser = argparse.ArgumentParser(description='For cleaning and sorting')
 
     parser.add_argument('--f', metavar='N', type=str, nargs=1,
                         help='Path to ')
@@ -161,18 +305,38 @@ if __name__ == '__main__':
     parser.add_argument('-format', metavar='N', type=int, nargs=1, required=True,
                     help='An integer for settings')
 
-    parser.add_argument('--m', default=False, action='store_true',
-                        help='Get Merging Results')
+    # Options:
+    #   Inner merge all
+    #   Outer merge all
+    #   Solo for all
+
+
+    parser.add_argument('--i', default=False, action='store_true',
+                        help='Get Inner Merging Results')
+
+    parser.add_argument('--o', default=False, action='store_true',
+                        help='Get Outer Merging Results')
 
     parser.add_argument('--s', default=False, action='store_true',
                         help='Get Solo Results')
 
+    parser.add_argument('--p', default=False, action='store_true',
+                        help='Get Files for Plots')
+
+    # Tables
+    #   Count things
+
+    # Formats
+    #   Experiment 1
+    #   Experiment 2
+    #   Experiment 3
+    #       Expirement 3.1 Tables
+    #
     args = parser.parse_args()
     if args.format[0] > settings_int:
         print("Not a format")
     elif args.f is None:
-        main(cwd,args.format[0] -1,args.m,args.s)
+        main(cwd,args.format[0]-1,args.i,args.o,args.s,args.p)
     else:
-        print(args.f)
         cwd = os.path.join(cwd,args.f[0])
-        main(cwd,args.format[0]-1,args.m,args.s)
+        main(cwd,args.format[0]-1,args.i,args.o,args.s,args.p)
