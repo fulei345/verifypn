@@ -4,6 +4,8 @@ from numpy import int64
 import pandas as pd
 import argparse
 
+exp3_list["Our ", "BFS ", "DSF ","BestFS "]
+
 # Exp 1, Exp 2, Exp 3, Exp 3.1 Tables
 header_template_list = [["model", "places","transitions","run1","run2","run3","run4","run5"],
                         ["model", "query","prep","fire","eval","eval_count", "steps", "places","transitions","runs","totaltime"],
@@ -73,7 +75,7 @@ def getDataFrame(file_list, setting_index, index):
         headers.append(header)
     return data_frames, headers, temp_index
 
-def main(path, setting, inner, outer, solo, plots):
+def main(path, setting, inner, outer, solo, plots,winners):
     index = 1
     data_frames_list = []
     header_list = []
@@ -267,32 +269,15 @@ def main(path, setting, inner, outer, solo, plots):
                 filename = "big-plot.csv"
                 filepath = os.path.join(path, filename)
                 df_write.to_csv(filepath)
-
-    if setting == 3:
+    if winners:
         for i in range(len(dir_list)):
-            unique_df = mergeDFs(data_frames_list[i],"outer")
-            merge_df = mergeDFs(data_frames_list[i],"inner")
-            unique_df = unique_df.drop(columns=["model","query"])
-            merge_df = merge_df.drop(columns=["model","query"])
-            winners = merge_df.idxmin(axis=1)
-            dirs = os.path.split(dir_list[i])[-1]
-            print(dirs + " Table")
+            df_final = df_final.drop(columns=["model","query"])
+            winners = df_final.idxmin(axis=1)
             winners = winners.value_counts()
-            table_list = []
-            for k in range(len(data_frames_list[i])):
-                solos = getSolos(data_frames_list[i],k,header_list[i])
-                answers = len(data_frames_list[i][k])
-                res_dict =  ["lol",answers,0,winners[str(i*4 +k+1) + "_time"],len(solos)]
-                table_list.append(res_dict)
-
-            table_list[0][0] = dirs
-            table_list[1][0] = "BFS"
-            table_list[2][0] = "DFS"
-            table_list[3][0] = "BestFS"
-            table_list.append(table_list[0])
-            table_list.pop(0)
-            df_write = pd.DataFrame(table_list, columns = ["Name",'Answers', 'Timeouts',"Winner","Solo Answers"])
-            print(df_write)
+            f = open(os.path.join(dir_list,"winners.txt"), "w")
+            for k in range(len(dir_list[i])):
+                f.write(exp3_list[k] + str(winners[str(k+1) + "_time"]) + "\n")
+            f.close()
 
 if __name__ == '__main__':
     cwd = os.getcwd()
@@ -323,6 +308,9 @@ if __name__ == '__main__':
     parser.add_argument('--p', default=False, action='store_true',
                         help='Get Files for Plots')
 
+    parser.add_argument('--w', default=False, action='store_true',
+                        help='Get Winners')
+
     # Tables
     #   Count things
 
@@ -336,7 +324,7 @@ if __name__ == '__main__':
     if args.format[0] > settings_int:
         print("Not a format")
     elif args.f is None:
-        main(cwd,args.format[0]-1,args.i,args.o,args.s,args.p)
+        main(cwd,args.format[0]-1,args.i,args.o,args.s,args.p,args.w)
     else:
         cwd = os.path.join(cwd,args.f[0])
-        main(cwd,args.format[0]-1,args.i,args.o,args.s,args.p)
+        main(cwd,args.format[0]-1,args.i,args.o,args.s,args.p,args.w)
