@@ -229,8 +229,6 @@ namespace SMC
                 }
         }
 
-        auto initpotency = potency;
-
         int64_t time = 0;
 
         for (int i = 0; i < options.smcruns; i++)
