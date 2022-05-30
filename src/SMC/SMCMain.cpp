@@ -72,10 +72,9 @@ namespace SMC
             time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
             if(query->isInvariant())
             {
-                std::cout << "grep,false,time," << time << std::endl;
+                //false
                 return true;
             }
-            std::cout << "grep,true,time," << time << std::endl;
             return true;
         }
 
@@ -133,10 +132,9 @@ namespace SMC
                     time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
                     if(query->isInvariant())
                     {
-                        std::cout << "grep,false,time," << time << std::endl;
+                        //false
                         return true;
                     }
-                    std::cout << "grep,true,time," << time << std::endl;
                     return true;
                 }
                 // update Am(phi)
