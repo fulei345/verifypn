@@ -89,20 +89,6 @@ namespace SMC
             context.setMarking(write.marking());
             fired.push_back(tindex);
 
-            if(heuristics[0] && SMCit == 1){
-                for(uint32_t i = 0; i < net->numberOfTransitions(); i++)
-                    {
-                        if (stubborn[i])
-                        {
-                            potency[i] = 10;
-                        }
-                        else
-                        {
-                            potency[i] = 1;
-                        }
-                    }
-            }
-
             if(heuristics[1] || heuristics[2])
             {
                 h = heuristic.eval(write, tindex);
@@ -261,9 +247,6 @@ namespace SMC
             // reset Am(phi) to initial
             if(options.smcit == 1){
                 stubset->prepare(&initialwrite);
-                if(heuristics[0]){
-                    potency = initpotency;
-                }
             }
         }
         return (((double)successful_runs)/((double)total_runs))*100.;
