@@ -71,7 +71,9 @@ namespace PetriEngine {
         uint32_t numberOfTransitions() const {
             return _ntransitions;
         }
-
+        const std::vector<uint32_t> placeToPtrs() const{
+            return _placeToPtrs;
+        }
         uint32_t numberOfPlaces() const {
             return _nplaces;
         }
@@ -86,6 +88,11 @@ namespace PetriEngine {
         const std::vector<std::string>& transitionNames() const
         {
             return _transitionnames;
+        }
+
+        const std::vector<int>& transitionPotency() const
+        {
+            return _transitionpotency;
         }
 
         const std::vector<std::string>& placeNames() const
@@ -140,6 +147,8 @@ namespace PetriEngine {
 
         std::vector< std::tuple<double, double> > _placelocations;
         std::vector< std::tuple<double, double> > _transitionlocations;
+
+        std::vector<int> _transitionpotency;
 
         friend class PetriNetBuilder;
         friend class Reducer;

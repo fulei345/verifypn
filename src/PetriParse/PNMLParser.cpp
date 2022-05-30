@@ -73,9 +73,9 @@ void PNMLParser::parse(std::istream& xml,
     //Add all the transition
     for (auto & transition : _transitions)
         if (!isColored) {
-            builder->addTransition(transition.id, transition._player, transition.x, transition.y);
+            builder->addTransition(transition.id, transition._player, transition.x, transition.y, transition.potency);
         } else {
-            builder->addTransition(transition.id, transition.expr, transition._player, transition.x, transition.y);
+            builder->addTransition(transition.id, transition.expr, transition._player, transition.x, transition.y, transition.potency);
         }
 
     //Add all the arcs
@@ -745,7 +745,7 @@ void PNMLParser::parseTransition(rapidxml::xml_node<>* element) {
     t.y = 0;
     t.id = element->first_attribute("id")->value();
     t.expr = nullptr;
-
+    t.potency = 10;
 
     for (auto it = element->first_node(); it; it = it->next_sibling()) {
         // name element is ignored
@@ -753,6 +753,10 @@ void PNMLParser::parseTransition(rapidxml::xml_node<>* element) {
             parsePosition(it, t.x, t.y);
         } else if (strcmp(it->name(), "condition") == 0) {
             t.expr = parseGuardExpression(it->first_node("structure"), false);
+        } else if (strcmp(it->name(), "potency") == 0) {
+            std::string text;
+            parseValue(it, text);
+            t.potency = atoll(text.c_str());
         } else if (strcmp(it->name(), "conditions") == 0) {
             throw base_error("conditions not supported");
         } else if (strcmp(it->name(), "assignments") == 0) {

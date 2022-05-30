@@ -43,7 +43,8 @@ namespace PetriEngine {
         void addTransition(const std::string& name,
                 int32_t player,
                 double x,
-                double y) override;
+                double y,
+                int potency) override; 
         void addInputArc(const std::string& place,
                 const std::string& transition,
                 bool inhibitor,
@@ -136,6 +137,8 @@ namespace PetriEngine {
 
         std::vector< std::tuple<double, double> > _placelocations;
         std::vector< std::tuple<double, double> > _transitionlocations;
+
+        std::vector<int> _transitionpotency;
 
         std::vector<PetriEngine::Transition> _transitions;
         std::vector<PetriEngine::Place> _places;

@@ -19,7 +19,7 @@ namespace PetriEngine {
                 }
 
                 for (auto& transition : _builder.transitions()) {
-                    pnBuilder.addTransition(transition.name, transition._player, transition._x, transition._y);
+                    pnBuilder.addTransition(transition.name, transition._player, transition._x, transition._y, transition._potency);
                     for (const auto& arc : transition.input_arcs) {
                         try {
                             pnBuilder.addInputArc(_builder.places()[arc.place].name, _builder.transitions()[arc.transition].name, false,
@@ -151,7 +151,7 @@ namespace PetriEngine {
                     const std::string name = transition.name + "_" + std::to_string(i++);
 
                     hasBindings = true;
-                    ptBuilder.addTransition(name, transition._player, transition._x, transition._y + offset);
+                    ptBuilder.addTransition(name, transition._player, transition._x, transition._y + offset, transition._potency);
                     offset += 15;
 
                     for (auto& arc : transition.input_arcs) {
@@ -172,7 +172,7 @@ namespace PetriEngine {
                 size_t i = 0;
                 for (const auto &b : gen) {
                     const std::string &name = transition.name + "_" + std::to_string(i++);
-                    ptBuilder.addTransition(name, transition._player, transition._x, transition._y + offset);
+                    ptBuilder.addTransition(name, transition._player, transition._x, transition._y + offset, transition._potency);
                     offset += 15;
 
                     for (const auto& arc : transition.input_arcs) {

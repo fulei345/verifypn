@@ -261,6 +261,26 @@ int main(int argc, const char** argv) {
 
         options.queryReductionTimeout = 0;
 
+        //-------------------------- SMC Simulation --------------------------//
+        if (options.smc){
+            auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
+
+            for (size_t i = 0; i < queries.size(); ++i) {
+                auto res = SMC::SMCMain(net.get(), options, queries[i]);
+                if(res == 0)
+                {
+                    std::cout << "Unable to decide if query index " << i << " is satisfied.";
+                }
+                else
+                {         
+                    std::cout << "Query index " << i << " was solved" << std::endl;
+                    std::cout << "Query is " << ((res > 0) ? "" : "NOT ") << "satisfied." << std::endl;
+                } 
+            }
+            
+            return to_underlying(ReturnValue::SuccessCode);
+        }
+
         //--------------------- Apply Net Reduction ---------------//
 
         if (options.enablereduction > 0) {
