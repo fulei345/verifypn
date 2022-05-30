@@ -18,39 +18,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SMC/Stubborn/InterestingSMCTransitionVisitor.h"
-#include "PetriEngine/Stubborn/InterestingTransitionVisitor.h"
+#include "PetriEngine/PetriNet.h"
+#include "PetriEngine/Structures/State.h"
 
+
+#include <iostream>
 
 namespace SMC {
-    using namespace PetriEngine;
-    class SMCStubbornSet : public StubbornSet {
+    class SMCHeuristic{
     public:
-        SMCStubbornSet(const PetriNet &net, const PQL::Condition_ptr &query, bool closure = false)
-                : StubbornSet(net, query), _closure(closure) {
-        }
+        virtual void prepare(const Structures::State &state) {}
 
-        bool prepare(const Structures::State *state) override;
+        virtual uint32_t eval(const Structures::State &state, uint32_t tid) = 0;
 
-        template <typename TVisitor>
-        void setInterestingVisitor()
+        /**
+         * Does the heuristic provide a prioritisation from this state.
+         * @return True if a heuristic can be calculated from this state.
+         */
+        virtual bool has_heuristic(const Structures::State &)
         {
-                _interesting = std::make_unique<TVisitor>(*this, _closure);
-        }
-        template <typename TVisitorSMC>
-        void setInterestingSMCVisitor()
-        {
-                _interestingSMC = std::make_unique<TVisitorSMC>(*this, _closure);
-                Aphi = true;
+            return true;
         }
 
-    private:
-        std::unique_ptr<PetriEngine::InterestingTransitionVisitor> _interesting;
-        std::unique_ptr<PetriEngine::InterestingSMCTransitionVisitor> _interestingSMC;
+        virtual void push(uint32_t tid) {};
 
-        bool Aphi = false;
+        virtual void pop(uint32_t tid) {};
 
-        bool _closure;
+        virtual ~SMCHeuristic() = default;
+
+        virtual std::ostream &output(std::ostream &os) = 0;
     };
 }
 

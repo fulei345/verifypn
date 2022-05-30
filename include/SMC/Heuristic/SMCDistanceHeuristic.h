@@ -18,39 +18,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SMC/Stubborn/InterestingSMCTransitionVisitor.h"
-#include "PetriEngine/Stubborn/InterestingTransitionVisitor.h"
+#include "SMC/Heuristic/SMCHeuristic.h"
 
+#include <utility>
+#include "PetriEngine/PQL/Contexts.h"
 
 namespace SMC {
-    using namespace PetriEngine;
-    class SMCStubbornSet : public StubbornSet {
+    class SMCDistanceHeuristic : public SMCHeuristic {
     public:
-        SMCStubbornSet(const PetriNet &net, const PQL::Condition_ptr &query, bool closure = false)
-                : StubbornSet(net, query), _closure(closure) {
-        }
+        SMCDistanceHeuristic(const PetriEngine::PetriNet *net, PetriEngine::PQL::Condition_ptr cond) : _net(net), _cond(std::move(cond)) {}
 
-        bool prepare(const Structures::State *state) override;
-
-        template <typename TVisitor>
-        void setInterestingVisitor()
+        uint32_t eval(const Structures::State &state, uint32_t tid) override
         {
-                _interesting = std::make_unique<TVisitor>(*this, _closure);
-        }
-        template <typename TVisitorSMC>
-        void setInterestingSMCVisitor()
-        {
-                _interestingSMC = std::make_unique<TVisitorSMC>(*this, _closure);
-                Aphi = true;
+            PetriEngine::PQL::DistanceContext context{_net, state.marking()};
+            return _cond->distance(context);
         }
 
+        std::ostream &output(std::ostream &os) {
+            return os << "DIST_HEUR";
+        }
     private:
-        std::unique_ptr<PetriEngine::InterestingTransitionVisitor> _interesting;
-        std::unique_ptr<PetriEngine::InterestingSMCTransitionVisitor> _interestingSMC;
-
-        bool Aphi = false;
-
-        bool _closure;
+        const PetriEngine::PetriNet *_net;
+        const PetriEngine::PQL::Condition_ptr _cond;
     };
 }
-

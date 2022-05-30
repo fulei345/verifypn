@@ -118,6 +118,10 @@ void printHelp() {
         "                                       - ALL    Verify property when a transition is fired\n"
         "                                       - AM     Verify property when an interesting transition for a marking is fired\n"
         "                                       - A         Verify property when an interesting transition for the p/n is fired\n"
+        "  -u, <heuristic index>                Comma-seperated list of all heurstic that wants to be used\n"
+        "                                        1 = Static\n"
+        "                                        2 = Distance Fire\n"
+        "                                        3 = Distance Run\n"
         "  -k, --k-bound <number of tokens>     Token bound, 0 to ignore (default)\n"
         "  -t, --trace                          Provide XML-trace to stderr\n"
         "  -s, --search-strategy <strategy>     Search strategy:\n"
@@ -260,6 +264,19 @@ bool options_t::parse(int argc, const char** argv) {
                 smcit = 2;
             else {
                 throw base_error("Argument Error: Unrecognized search strategy ", std::quoted(s));
+            }
+        } else if (std::strcmp(argv[i], "-u") == 0) {
+            if (i == argc - 1) {
+                throw base_error("Missing search strategy after ", std::quoted(argv[i]));
+            }
+            std::vector<std::string> q = explode(argv[++i]);
+            for (auto& qn : q) {
+                int32_t n;
+                if (sscanf(qn.c_str(), "%d", &n) != 1 || n <= 0) {
+                    throw base_error("Error in Heuristic numbers ", std::quoted(qn));
+                } else {
+                    heuristicnumbers.insert(--n);
+                }
             }
         } else if (std::strcmp(argv[i], "-s") == 0 || std::strcmp(argv[i], "--search-strategy") == 0) {
             if (i == argc - 1) {

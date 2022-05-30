@@ -62,6 +62,8 @@ struct options_t {
     int smcruns = 1000;
     int smcdepth = 1000;
     int smcit = 0;
+    std::set<size_t> heuristicnumbers;
+
     int kbound = 0;
     const char* modelfile = nullptr;
     const char* queryfile = nullptr;
