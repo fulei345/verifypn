@@ -1,0 +1,25 @@
+- for evaluation set results
+- in output-eval for ALL set (same for A_M and A)
+grep -H -A1 "Query is satisfied" ALL-* | grep , >> ../evalresults/ALL-results
+
+timed
+grep -H -B2 "Query is satisfied" A-* | grep , > ../timedresults/A-results
+
+- Tapaal results:
+- for queries solved by "methods"
+- in output-heur (same for output-dfs and output-bfs)
+grep -H -A5 EXPLICIT * | grep -A2 'Query is' | grep time > ../tapaalresults/heurtotalresults
+
+grep -H -A5 EXPLICIT * | grep -A2 'Query is sat' | grep time > ../tapaalresults/heurpositiveresults
+
+grep -H -A5 EXPLICIT * | grep -A2 'Query is NOT' | grep time > ../tapaalresults/heurnegativeresults
+
+
+- for queries solved by simplification/reduction
+- in output-heur (same for output-dfs and output-bfs)
+grep -L time, * > notimelist
+grep -H -A4 EXPLICIT $(cat notimelist) | grep 'Query is NOT' > ../tapaalresults/notimeheur-false-results
+
+grep -L time, * > notimelist
+grep -H -A4 EXPLICIT $(cat notimelist) | grep 'Query is sat' > ../tapaalresults/notimeheur-true-results
+
