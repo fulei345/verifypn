@@ -44,8 +44,7 @@ namespace SMC
                 std::shared_ptr<SMC::SMCStubbornSet> stubset,
                 bool *stubborn,
                 std::vector<int> &potency,
-                std::vector<bool> heuristics,
-                int64_t &time)
+                std::vector<bool> heuristics)
     {
         int current_depth = 0;
         uint32_t tindex = 0;
@@ -60,16 +59,9 @@ namespace SMC
 
         uint32_t last_heuristic = heuristic.eval(write, tindex);
 
-        auto begin = std::chrono::high_resolution_clock::now();
-
-        // Evaluate
-        // Prepare
-
         // This if-statement is new :)
         if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE )
         {
-            auto end = std::chrono::high_resolution_clock::now();
-            time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
             if(query->isInvariant())
             {
                 //false
@@ -128,8 +120,6 @@ namespace SMC
             {
                 if(PQL::evaluate(query.get(), context) == PQL::Condition::RTRUE)
                 {
-                    auto end = std::chrono::high_resolution_clock::now();
-                    time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
                     if(query->isInvariant())
                     {
                         //false
@@ -182,8 +172,6 @@ namespace SMC
                 }
             }
         }
-        auto end = std::chrono::high_resolution_clock::now();
-        time += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
         return false;
     }
 
@@ -229,11 +217,9 @@ namespace SMC
                 }
         }
 
-        int64_t time = 0;
-
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics, time))
+            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics))
             {
                 return (double)i;
                 successful_runs++;
