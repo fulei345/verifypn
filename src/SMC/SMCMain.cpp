@@ -36,7 +36,7 @@ using namespace PetriEngine;
 
 namespace SMC
 {
-    bool SMCRun(SMCSuccessorGenerator &sgen,
+    int SMCRun(SMCSuccessorGenerator &sgen,
                 const PetriNet *net,
                 const PQL::Condition_ptr &query,
                 int max_depth,
@@ -65,9 +65,9 @@ namespace SMC
             if(query->isInvariant())
             {
                 //false
-                return true;
+                return -1;
             }
-            return true;
+            return 1;
         }
 
         uint32_t h;
@@ -123,9 +123,9 @@ namespace SMC
                     if(query->isInvariant())
                     {
                         //false
-                        return true;
+                        return -1;
                     }
-                    return true;
+                    return 1;
                 }
                 // update Am(phi)
                 if(SMCit == 1)
@@ -172,17 +172,14 @@ namespace SMC
                 }
             }
         }
-        return false;
+        return 0;
     }
 
 
-    double SMCMain(const PetriNet *net,
+    int SMCMain(const PetriNet *net,
                          options_t &options,
                          const PQL::Condition_ptr &query)
     {
-        int total_runs = 0;
-        int successful_runs = 0;
-
         SMCSuccessorGenerator sgen(*net);
 
         Structures::State initialwrite(net->makeInitialMarking());
@@ -219,18 +216,17 @@ namespace SMC
 
         for (int i = 0; i < options.smcruns; i++)
         {
-            if (SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics))
+            auto res = SMCRun(sgen, net, query, options.smcdepth, options.smcit, stubset, stubborn, potency, heuristics);
+            if (res != 0)
             {
-                return (double)i;
-                successful_runs++;
+                return res;
             }
-            total_runs++;
 
             // reset Am(phi) to initial
             if(options.smcit == 1){
                 stubset->prepare(&initialwrite);
             }
         }
-        return (((double)successful_runs)/((double)total_runs))*100.;
+        return 0;
     }
 }

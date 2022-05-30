@@ -266,9 +266,16 @@ int main(int argc, const char** argv) {
             auto net = std::unique_ptr<PetriNet>(b2.makePetriNet(false));
 
             for (size_t i = 0; i < queries.size(); ++i) {
-                double probability = SMC::SMCMain(net.get(), options, queries[i]);
-                std::cout << "Query is " << ((probability > 0) ? "" : "NOT ") << "satisfied." << std::endl;
-                std::cout << "result percent: " << probability << std::endl;
+                auto res = SMC::SMCMain(net.get(), options, queries[i]);
+                if(res == 0)
+                {
+                    std::cout << "Unable to decide if query index " << i << " is satisfied.";
+                }
+                else
+                {         
+                    std::cout << "Query index " << i << " was solved" << std::endl;
+                    std::cout << "Query is " << ((res > 0) ? "" : "NOT ") << "satisfied." << std::endl;
+                } 
             }
             
             return to_underlying(ReturnValue::SuccessCode);
